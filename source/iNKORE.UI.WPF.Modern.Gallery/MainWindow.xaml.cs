@@ -30,6 +30,13 @@ namespace iNKORE.UI.WPF.Modern.Gallery
             Current = this;
             InitializeComponent();
             InitialzeApp();
+            Closing += MainWindow_OnClosing;
+        }
+
+        private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
+        {
+            Hide();
+            e.Cancel = true;
         }
 
         private async void InitialzeApp()
