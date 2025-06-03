@@ -291,7 +291,7 @@ namespace iNKORE.UI.WPF.Modern.Controls
                 nameof(UseBitmapCache),
                 typeof(bool),
                 typeof(ToggleSwitch),
-                new PropertyMetadata(false));
+                new PropertyMetadata(true));
 
         public bool UseBitmapCache
         {

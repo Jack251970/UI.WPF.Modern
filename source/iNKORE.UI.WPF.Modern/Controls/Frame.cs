@@ -231,7 +231,7 @@ namespace iNKORE.UI.WPF.Modern.Controls
                 nameof(UseBitmapCache),
                 typeof(bool),
                 typeof(Frame),
-                new PropertyMetadata(false));
+                new PropertyMetadata(true));
 
         public bool UseBitmapCache
         {

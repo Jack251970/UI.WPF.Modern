@@ -112,7 +112,7 @@
 				</ui:AutoSuggestBox>
             </ui:NavigationView.AutoSuggestBox>
 
-            <ui:Frame x:Name="rootFrame" Navigating="OnRootFrameNavigating" Navigated="OnRootFrameNavigated" />
+            <ui:Frame x:Name="rootFrame" UseBitmapCache="False" Navigating="OnRootFrameNavigating" Navigated="OnRootFrameNavigated" />
         </ui:NavigationView>
     </Grid>
 </ui:Page>

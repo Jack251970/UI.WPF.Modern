@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-    mc:Ignorable="d" Loaded="Page_Loaded">
+    Loaded="Page_Loaded"
+    mc:Ignorable="d">
     <StackPanel>
         <local:ControlExample x:Name="Example1" HeaderText="An indeterminate progress ring.">
             <ui:ProgressRing
@@ -25,8 +26,9 @@
                         Header="Toggle work"
                         IsOn="True"
                         OffContent="Do work"
-                        OnContent="Working" 
-                        Toggled="ProgressToggle_Toggled"/>
+                        OnContent="Working"
+                        Toggled="ProgressToggle_Toggled"
+                        UseBitmapCache="False" />
                 </StackPanel>
             </local:ControlExample.Options>
         </local:ControlExample>
@@ -48,8 +50,8 @@
                     Maximum="100"
                     Minimum="0"
                     SpinButtonPlacementMode="Inline"
-                    Value="{Binding Value, ElementName=ProgressRing2, Mode=TwoWay}" 
-                    ValueChanged="ProgressValue_ValueChanged"/>
+                    ValueChanged="ProgressValue_ValueChanged"
+                    Value="{Binding Value, ElementName=ProgressRing2, Mode=TwoWay}" />
             </StackPanel>
         </local:ControlExample>
     </StackPanel>

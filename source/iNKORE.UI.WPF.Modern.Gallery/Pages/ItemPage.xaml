@@ -5,8 +5,8 @@
     xmlns:common="clr-namespace:iNKORE.UI.WPF.Modern.Gallery.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:datamodel="clr-namespace:iNKORE.UI.WPF.Modern.Gallery.DataModel"
-    xmlns:local="clr-namespace:iNKORE.UI.WPF.Modern.Gallery"
     xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
+    xmlns:local="clr-namespace:iNKORE.UI.WPF.Modern.Gallery"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:str="clr-namespace:iNKORE.UI.WPF.Modern.Gallery.Properties"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
@@ -48,7 +48,10 @@
                         Style="{DynamicResource BodyTextBlockStyle}"
                         Text="{Binding Description}" />
 
-                    <ui:Frame x:Name="contentFrame" Grid.Row="1" />
+                    <ui:Frame
+                        x:Name="contentFrame"
+                        Grid.Row="1"
+                        UseBitmapCache="False" />
 
                     <Grid
                         x:Name="seeAlsoPanel"

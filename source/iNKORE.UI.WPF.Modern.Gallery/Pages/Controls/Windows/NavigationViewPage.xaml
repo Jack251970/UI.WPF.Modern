@@ -9,7 +9,8 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     Title="NavigationView Page"
     d:DesignWidth="1206"
-    mc:Ignorable="d" Loaded="Page_Loaded">
+    Loaded="Page_Loaded"
+    mc:Ignorable="d">
     <ui:Page.Resources>
         <converters:MenuItemTemplateSelector x:Key="selector">
             <converters:MenuItemTemplateSelector.ItemTemplate>
@@ -67,7 +68,8 @@
             </ui:ResourceDictionaryEx>
         </StackPanel.Resources>
 
-        <local:ControlExample x:Name="Example1"
+        <local:ControlExample
+            x:Name="Example1"
             VerticalAlignment="Top"
             HorizontalContentAlignment="Stretch"
             HeaderText="NavigationView with default PaneDisplayMode"
@@ -92,41 +94,37 @@
                     PaneDisplayMode="Auto"
                     SelectionChanged="NavigationView_SelectionChanged5">
                     <ui:NavigationView.MenuItems>
-                        <ui:NavigationViewItem
-                            Content="Menu Item1"
-                            Tag="SamplePage1">
+                        <ui:NavigationViewItem Content="Menu Item1" Tag="SamplePage1">
                             <ui:NavigationViewItem.Icon>
-                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Play}"/>
+                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Play}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
-                        <ui:NavigationViewItem
-                            Content="Menu Item2"
-                            Tag="SamplePage2">
+                        <ui:NavigationViewItem Content="Menu Item2" Tag="SamplePage2">
                             <ui:NavigationViewItem.Icon>
-                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Save}"/>
+                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Save}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
-                        <ui:NavigationViewItem
-                            Content="Menu Item3"
-                            Tag="SamplePage3">
+                        <ui:NavigationViewItem Content="Menu Item3" Tag="SamplePage3">
                             <ui:NavigationViewItem.Icon>
-                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Refresh}"/>
+                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Refresh}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
-                        <ui:NavigationViewItem
-                            Content="Menu Item4"
-                            Tag="SamplePage4">
+                        <ui:NavigationViewItem Content="Menu Item4" Tag="SamplePage4">
                             <ui:NavigationViewItem.Icon>
-                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Download}"/>
+                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Download}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
                     </ui:NavigationView.MenuItems>
-                    <ui:Frame x:Name="contentFrame5" Margin="0,0,0,0" />
+                    <ui:Frame
+                        x:Name="contentFrame5"
+                        Margin="0,0,0,0"
+                        UseBitmapCache="False" />
                 </ui:NavigationView>
             </Grid>
         </local:ControlExample>
 
-        <local:ControlExample x:Name="Example2"
+        <local:ControlExample
+            x:Name="Example2"
             VerticalAlignment="Top"
             HorizontalContentAlignment="Stretch"
             HeaderText="NavigationView with PaneDisplayMode set to Top"
@@ -157,12 +155,13 @@
                         <ui:NavigationViewItem Content="Menu Item4" Tag="SamplePage3" />
                     </ui:NavigationView.MenuItems>
 
-                    <ui:Frame x:Name="contentFrame6" />
+                    <ui:Frame x:Name="contentFrame6" UseBitmapCache="False" />
                 </ui:NavigationView>
             </Grid>
         </local:ControlExample>
 
-        <local:ControlExample x:Name="Example3"
+        <local:ControlExample
+            x:Name="Example3"
             VerticalAlignment="Top"
             HorizontalContentAlignment="Stretch"
             HeaderText="NavigationView that switches pane orientation based on window width"
@@ -193,13 +192,14 @@
                     </ui:NavigationView.MenuItems>
 
                     <ui:NavigationView.Content>
-                        <ui:Frame x:Name="contentFrame2" />
+                        <ui:Frame x:Name="contentFrame2" UseBitmapCache="False" />
                     </ui:NavigationView.Content>
                 </ui:NavigationView>
             </Grid>
         </local:ControlExample>
 
-        <local:ControlExample x:Name="Example4"
+        <local:ControlExample
+            x:Name="Example4"
             VerticalAlignment="Top"
             HorizontalContentAlignment="Stretch"
             HeaderText="Tying selection and focus - Tabs"
@@ -230,12 +230,13 @@
                         <ui:NavigationViewItem Content="Item3" Tag="SamplePage3" />
                         <ui:NavigationViewItem Content="Item4" Tag="SamplePage4" />
                     </ui:NavigationView.MenuItems>
-                    <ui:Frame x:Name="contentFrame7" />
+                    <ui:Frame x:Name="contentFrame7" UseBitmapCache="False" />
                 </ui:NavigationView>
             </Grid>
         </local:ControlExample>
 
-        <local:ControlExample x:Name="Example5"
+        <local:ControlExample
+            x:Name="Example5"
             VerticalAlignment="Top"
             HorizontalContentAlignment="Stretch"
             HeaderText="Data binding"
@@ -255,19 +256,23 @@
                     x:Name="nvSample4"
                     Grid.Row="2"
                     Height="460"
-                    IsTabStop="False"
                     IsPaneOpen="False"
+                    IsTabStop="False"
                     MenuItemTemplateSelector="{StaticResource selector}"
                     MenuItemsSource="{Binding Categories, Mode=OneWay}"
                     SelectionChanged="NavigationView_SelectionChanged4">
                     <StackPanel>
-                        <ui:Frame x:Name="contentFrame4" Margin="0,0,0,0" />
+                        <ui:Frame
+                            x:Name="contentFrame4"
+                            Margin="0,0,0,0"
+                            UseBitmapCache="False" />
                     </StackPanel>
                 </ui:NavigationView>
             </Grid>
         </local:ControlExample>
 
-        <local:ControlExample x:Name="Example6"
+        <local:ControlExample
+            x:Name="Example6"
             VerticalAlignment="Top"
             HorizontalContentAlignment="Stretch"
             HeaderText="Hierarchical NavigationView">
@@ -331,7 +336,7 @@
                             Tag="SamplePage1"
                             ToolTipService.ToolTip="Home">
                             <ui:NavigationViewItem.Icon>
-                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Home}"/>
+                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Home}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
                         <ui:NavigationViewItem
@@ -339,7 +344,7 @@
                             Tag="SamplePage2"
                             ToolTipService.ToolTip="Account">
                             <ui:NavigationViewItem.Icon>
-                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Contact}"/>
+                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Contact}" />
                             </ui:NavigationViewItem.Icon>
                             <ui:NavigationViewItem.MenuItems>
                                 <ui:NavigationViewItem
@@ -347,7 +352,7 @@
                                     Tag="SamplePage3"
                                     ToolTipService.ToolTip="Mail">
                                     <ui:NavigationViewItem.Icon>
-                                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Mail}"/>
+                                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Mail}" />
                                     </ui:NavigationViewItem.Icon>
                                 </ui:NavigationViewItem>
                                 <ui:NavigationViewItem
@@ -355,7 +360,7 @@
                                     Tag="SamplePage4"
                                     ToolTipService.ToolTip="Calendar">
                                     <ui:NavigationViewItem.Icon>
-                                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Calendar}"/>
+                                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Calendar}" />
                                     </ui:NavigationViewItem.Icon>
                                 </ui:NavigationViewItem>
                             </ui:NavigationViewItem.MenuItems>
@@ -365,7 +370,7 @@
                             SelectsOnInvoked="False"
                             ToolTipService.ToolTip="Document options">
                             <ui:NavigationViewItem.Icon>
-                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Page}"/>
+                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Page}" />
                             </ui:NavigationViewItem.Icon>
                             <ui:NavigationViewItem.MenuItems>
                                 <ui:NavigationViewItem
@@ -373,7 +378,7 @@
                                     Tag="SamplePage5"
                                     ToolTipService.ToolTip="Create new">
                                     <ui:NavigationViewItem.Icon>
-                                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.NewFolder}"/>
+                                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.NewFolder}" />
                                     </ui:NavigationViewItem.Icon>
                                 </ui:NavigationViewItem>
                                 <ui:NavigationViewItem
@@ -381,18 +386,19 @@
                                     Tag="SamplePage6"
                                     ToolTipService.ToolTip="Upload file">
                                     <ui:NavigationViewItem.Icon>
-                                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.OpenLocal}"/>
+                                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.OpenLocal}" />
                                     </ui:NavigationViewItem.Icon>
                                 </ui:NavigationViewItem>
                             </ui:NavigationViewItem.MenuItems>
                         </ui:NavigationViewItem>
                     </ui:NavigationView.MenuItems>
-                    <ui:Frame x:Name="contentFrame8" />
+                    <ui:Frame x:Name="contentFrame8" UseBitmapCache="False" />
                 </ui:NavigationView>
             </Grid>
         </local:ControlExample>
 
-        <local:ControlExample x:Name="Example7"
+        <local:ControlExample
+            x:Name="Example7"
             VerticalAlignment="Top"
             HorizontalContentAlignment="Stretch"
             HeaderText="API in action"
@@ -424,7 +430,8 @@
                     <TextBox
                         x:Name="headerText"
                         AutomationProperties.Name="Header property"
-                        Text="Header" TextChanged="headerText_TextChanged"/>
+                        Text="Header"
+                        TextChanged="headerText_TextChanged" />
                     <CheckBox
                         x:Name="headerCheck"
                         Click="headerCheck_Click"
@@ -434,7 +441,8 @@
                     <TextBox
                         x:Name="paneText"
                         AutomationProperties.Name="PaneTitle property"
-                        Text="Pane Title" TextChanged="paneText_TextChanged"/>
+                        Text="Pane Title"
+                        TextChanged="paneText_TextChanged" />
                     <CheckBox
                         x:Name="panemc_Check"
                         Click="panemc_Check_Click"
@@ -522,7 +530,7 @@
                 <ui:NavigationView.AutoSuggestBox>
                     <ui:AutoSuggestBox AutomationProperties.Name="Search">
                         <ui:AutoSuggestBox.QueryIcon>
-                            <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Search}"/>
+                            <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Search}" />
                         </ui:AutoSuggestBox.QueryIcon>
                     </ui:AutoSuggestBox>
                 </ui:NavigationView.AutoSuggestBox>
@@ -534,18 +542,18 @@
                         Visibility="Collapsed">
                         <ui:NavigationViewItem AutomationProperties.Name="download">
                             <ui:NavigationViewItem.Icon>
-                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Download}"/>
+                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Download}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
                         <ui:NavigationViewItem AutomationProperties.Name="favorite">
                             <ui:NavigationViewItem.Icon>
-                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.FavoriteStar}"/>
+                                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.FavoriteStar}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
                     </StackPanel>
                 </ui:NavigationView.PaneFooter>
 
-                <ui:Frame x:Name="contentFrame" />
+                <ui:Frame x:Name="contentFrame" UseBitmapCache="False" />
             </ui:NavigationView>
         </local:ControlExample>
     </StackPanel>

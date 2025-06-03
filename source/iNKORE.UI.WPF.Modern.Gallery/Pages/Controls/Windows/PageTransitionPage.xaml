@@ -6,14 +6,16 @@
     xmlns:local="clr-namespace:iNKORE.UI.WPF.Modern.Gallery"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-    mc:Ignorable="d" Loaded="Page_Loaded">
+    Loaded="Page_Loaded"
+    mc:Ignorable="d">
     <StackPanel>
         <local:ControlExample x:Name="Example1" HeaderText="Page transitions">
 
             <ui:Frame
                 x:Name="ContentFrame"
                 MinHeight="600"
-                HorizontalAlignment="Stretch">
+                HorizontalAlignment="Stretch"
+                UseBitmapCache="False">
                 <ui:Frame.ContentTransitions>
                     <ui:TransitionCollection>
                         <ui:NavigationThemeTransition />
