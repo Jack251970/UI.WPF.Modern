@@ -51,7 +51,7 @@
                     <ui:Frame
                         x:Name="contentFrame"
                         Grid.Row="1"
-                        UseBitmapCache="False" />
+                         />
 
                     <Grid
                         x:Name="seeAlsoPanel"

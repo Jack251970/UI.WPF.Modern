@@ -42,7 +42,7 @@
                                 RenderOptions.BitmapScalingMode="HighQuality"
                                 Source="/Assets/WpfLibrary_256w.png" />
                         </ui:SettingsCard.HeaderIcon>
-                        <ui:ToggleSwitch UseBitmapCache="False" />
+                        <ui:ToggleSwitch />
                     </ui:SettingsCard>
 
                     <ui:SettingsCard Header="A card with custom objects as its Description" IsEnabled="{Binding ElementName=EnableToggle1, Path=IsOn}">
@@ -74,8 +74,7 @@
                         x:Name="EnableToggle1"
                         Header="Is Enabled"
                         IsOn="True"
-                        Toggled="EnableToggle1_Toggled"
-                        UseBitmapCache="False" />
+                        Toggled="EnableToggle1_Toggled" />
                 </StackPanel>
             </local:ControlExample.Options>
         </local:ControlExample>
@@ -139,8 +138,7 @@
                         x:Name="EnableToggle2"
                         Header="Is Enabled"
                         IsOn="True"
-                        Toggled="EnableToggle2_Toggled"
-                        UseBitmapCache="False" />
+                        Toggled="EnableToggle2_Toggled" />
                 </StackPanel>
             </local:ControlExample.Options>
         </local:ControlExample>

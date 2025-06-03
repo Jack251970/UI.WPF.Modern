@@ -16,7 +16,7 @@
             HeaderText="Compact Sizing for controls"
             Loaded="Example1_Loaded">
             <local:ControlExample.Example>
-                <ui:Frame x:Name="ContentFrame" UseBitmapCache="False" />
+                <ui:Frame x:Name="ContentFrame"  />
             </local:ControlExample.Example>
 
             <local:ControlExample.Options>

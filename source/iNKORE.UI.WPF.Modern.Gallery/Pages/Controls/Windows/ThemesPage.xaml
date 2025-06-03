@@ -131,7 +131,7 @@
                         Header="High contrast"
                         IsEnabled="False"
                         IsOn="{Binding Path=(SystemParameters.HighContrast), Mode=OneWay}"
-                        UseBitmapCache="False" />
+                         />
                 </ikw:SimpleStackPanel>
             </GroupBox>
         </ikw:SimpleStackPanel>

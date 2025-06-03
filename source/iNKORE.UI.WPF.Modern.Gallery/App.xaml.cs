@@ -3,12 +3,18 @@ using System.Reflection;
 using System;
 using System.Diagnostics;
 using System.Windows;
+using iNKORE.UI.WPF.Modern.Common;
 
 namespace iNKORE.UI.WPF.Modern.Gallery
 {
     public partial class App
     {
         public static bool IsMultiThreaded { get; } = false;
+
+        public App()
+        {
+            ShadowAssist.UseBitmapCache = false;
+        }
 
         public static TEnum GetEnum<TEnum>(string text) where TEnum : struct
         {

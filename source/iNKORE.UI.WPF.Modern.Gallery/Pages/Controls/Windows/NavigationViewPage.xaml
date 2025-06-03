@@ -118,7 +118,7 @@
                     <ui:Frame
                         x:Name="contentFrame5"
                         Margin="0,0,0,0"
-                        UseBitmapCache="False" />
+                         />
                 </ui:NavigationView>
             </Grid>
         </local:ControlExample>
@@ -155,7 +155,7 @@
                         <ui:NavigationViewItem Content="Menu Item4" Tag="SamplePage3" />
                     </ui:NavigationView.MenuItems>
 
-                    <ui:Frame x:Name="contentFrame6" UseBitmapCache="False" />
+                    <ui:Frame x:Name="contentFrame6"  />
                 </ui:NavigationView>
             </Grid>
         </local:ControlExample>
@@ -192,7 +192,7 @@
                     </ui:NavigationView.MenuItems>
 
                     <ui:NavigationView.Content>
-                        <ui:Frame x:Name="contentFrame2" UseBitmapCache="False" />
+                        <ui:Frame x:Name="contentFrame2"  />
                     </ui:NavigationView.Content>
                 </ui:NavigationView>
             </Grid>
@@ -230,7 +230,7 @@
                         <ui:NavigationViewItem Content="Item3" Tag="SamplePage3" />
                         <ui:NavigationViewItem Content="Item4" Tag="SamplePage4" />
                     </ui:NavigationView.MenuItems>
-                    <ui:Frame x:Name="contentFrame7" UseBitmapCache="False" />
+                    <ui:Frame x:Name="contentFrame7"  />
                 </ui:NavigationView>
             </Grid>
         </local:ControlExample>
@@ -265,7 +265,7 @@
                         <ui:Frame
                             x:Name="contentFrame4"
                             Margin="0,0,0,0"
-                            UseBitmapCache="False" />
+                             />
                     </StackPanel>
                 </ui:NavigationView>
             </Grid>
@@ -392,7 +392,7 @@
                             </ui:NavigationViewItem.MenuItems>
                         </ui:NavigationViewItem>
                     </ui:NavigationView.MenuItems>
-                    <ui:Frame x:Name="contentFrame8" UseBitmapCache="False" />
+                    <ui:Frame x:Name="contentFrame8"  />
                 </ui:NavigationView>
             </Grid>
         </local:ControlExample>
@@ -553,7 +553,7 @@
                     </StackPanel>
                 </ui:NavigationView.PaneFooter>
 
-                <ui:Frame x:Name="contentFrame" UseBitmapCache="False" />
+                <ui:Frame x:Name="contentFrame"  />
             </ui:NavigationView>
         </local:ControlExample>
     </StackPanel>

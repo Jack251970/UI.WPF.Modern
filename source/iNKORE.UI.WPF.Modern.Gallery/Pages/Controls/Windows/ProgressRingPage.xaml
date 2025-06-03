@@ -28,7 +28,7 @@
                         OffContent="Do work"
                         OnContent="Working"
                         Toggled="ProgressToggle_Toggled"
-                        UseBitmapCache="False" />
+                         />
                 </StackPanel>
             </local:ControlExample.Options>
         </local:ControlExample>

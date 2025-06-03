@@ -15,7 +15,7 @@
                 x:Name="ContentFrame"
                 MinHeight="600"
                 HorizontalAlignment="Stretch"
-                UseBitmapCache="False">
+                >
                 <ui:Frame.ContentTransitions>
                     <ui:TransitionCollection>
                         <ui:NavigationThemeTransition />

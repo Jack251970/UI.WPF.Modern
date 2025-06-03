@@ -72,7 +72,7 @@
                         Header="InfoBadge Opacity"
                         IsOn="True"
                         Toggled="ToggleInfoBadgeOpacity_Toggled"
-                        UseBitmapCache="False" />
+                         />
                     <ComboBox
                         x:Name="NavigationViewDisplayMode"
                         ui:ControlHelper.Header="Display Mode"

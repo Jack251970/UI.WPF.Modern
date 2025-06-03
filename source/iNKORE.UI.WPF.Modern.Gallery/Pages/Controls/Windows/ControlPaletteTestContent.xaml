@@ -116,8 +116,8 @@
 
         <HeaderedContentControl Header="Toggle switch">
             <ikw:SimpleStackPanel>
-                <ui:ToggleSwitch IsOn="False" UseBitmapCache="False" />
-                <ui:ToggleSwitch IsOn="True" UseBitmapCache="False" />
+                <ui:ToggleSwitch IsOn="False"  />
+                <ui:ToggleSwitch IsOn="True"  />
             </ikw:SimpleStackPanel>
         </HeaderedContentControl>
 

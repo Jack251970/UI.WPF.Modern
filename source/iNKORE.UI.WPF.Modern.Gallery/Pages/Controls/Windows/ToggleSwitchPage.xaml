@@ -10,7 +10,7 @@
     mc:Ignorable="d">
     <ikw:SimpleStackPanel>
         <local:ControlExample x:Name="Example1" HeaderText="A simple ToggleSwitch.">
-            <ui:ToggleSwitch AutomationProperties.Name="simple ToggleSwitch" UseBitmapCache="False" />
+            <ui:ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"  />
         </local:ControlExample>
 
         <local:ControlExample x:Name="Example2" HeaderText="A ToggleSwitch with custom header and content.">
@@ -22,7 +22,7 @@
                     IsOn="True"
                     OffContent="Do work"
                     OnContent="Working"
-                    UseBitmapCache="False" />
+                     />
                 <ui:ProgressRing
                     Width="64"
                     Height="64"

@@ -44,7 +44,7 @@
                         OffContent="Left"
                         OnContent="Right"
                         Toggled="PanePlacement_Toggled"
-                        UseBitmapCache="False" />
+                         />
 
                     <ComboBox
                         x:Name="displayModeCombobox"

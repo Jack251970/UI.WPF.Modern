@@ -102,14 +102,12 @@
                         x:Name="EnableToggle1"
                         Header="Is Enabled"
                         IsOn="True"
-                        Toggled="EnableToggle1_Toggled"
-                        UseBitmapCache="False" />
+                        Toggled="EnableToggle1_Toggled" />
                     <ui:ToggleSwitch
                         x:Name="ExpandedToggle1"
                         Header="Is Expanded"
                         IsOn="False"
-                        Toggled="ExpandedToggle1_Toggled"
-                        UseBitmapCache="False" />
+                        Toggled="ExpandedToggle1_Toggled" />
                 </ikw:SimpleStackPanel>
             </local:ControlExample.Options>
         </local:ControlExample>
@@ -260,7 +258,7 @@
                                 <ui:SettingsCard.HeaderIcon>
                                     <ui:FontIcon Glyph="&#xE799;" />
                                 </ui:SettingsCard.HeaderIcon>
-                                <ui:ToggleSwitch IsOn="True" UseBitmapCache="False" />
+                                <ui:ToggleSwitch IsOn="True"  />
                             </ui:SettingsCard>
 
                             <ui:SettingsExpander Description="The SettingsExpander has the same properties as a SettingsCard" Header="SettingsExpander">
