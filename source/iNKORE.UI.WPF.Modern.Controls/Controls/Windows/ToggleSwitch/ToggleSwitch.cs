@@ -47,6 +47,8 @@ namespace iNKORE.UI.WPF.Modern.Controls
         private double _startTranslation;
         private bool _wasDragged;
 
+        private BitmapCache _bitmapCache;
+
         static ToggleSwitch()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ToggleSwitch), new FrameworkPropertyMetadata(typeof(ToggleSwitch)));
@@ -282,6 +284,22 @@ namespace iNKORE.UI.WPF.Modern.Controls
 
         #endregion
 
+        #region UseBitmapCache
+
+        public static readonly DependencyProperty UseBitmapCacheProperty =
+            DependencyProperty.Register(
+                nameof(UseBitmapCache),
+                typeof(bool),
+                typeof(ToggleSwitch),
+                new PropertyMetadata(false));
+
+        public bool UseBitmapCache
+        {
+            get => (bool)GetValue(UseBitmapCacheProperty);
+            set => SetValue(UseBitmapCacheProperty, value);
+        }
+
+        #endregion
 
         private ContentPresenter HeaderContentPresenter { get; set; }
 
@@ -303,6 +321,10 @@ namespace iNKORE.UI.WPF.Modern.Controls
                 SwitchThumb.DragStarted -= OnSwitchThumbDragStarted;
                 SwitchThumb.DragDelta -= OnSwitchThumbDragDelta;
                 SwitchThumb.DragCompleted -= OnSwitchThumbDragCompleted;
+                if (UseBitmapCache)
+                {
+                    SwitchThumb.ClearValue(CacheModeProperty);
+                }
             }
 
             base.OnApplyTemplate();
@@ -321,6 +343,20 @@ namespace iNKORE.UI.WPF.Modern.Controls
                 SwitchThumb.DragStarted += OnSwitchThumbDragStarted;
                 SwitchThumb.DragDelta += OnSwitchThumbDragDelta;
                 SwitchThumb.DragCompleted += OnSwitchThumbDragCompleted;
+
+                if (UseBitmapCache)
+                {
+                    if (_bitmapCache == null)
+                    {
+#if NET462_OR_NEWER
+                        _bitmapCache = new BitmapCache(VisualTreeHelper.GetDpi(this).PixelsPerDip);
+#else
+                    _bitmapCache = new BitmapCache(2);
+#endif
+                    }
+
+                    SwitchThumb.CacheMode = _bitmapCache;
+                }
             }
 
             UpdateHeaderContentPresenterVisibility();
@@ -368,6 +404,11 @@ namespace iNKORE.UI.WPF.Modern.Controls
         protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
         {
             base.OnDpiChanged(oldDpi, newDpi);
+
+            if (UseBitmapCache && _bitmapCache != null)
+            {
+                _bitmapCache.RenderAtScale = newDpi.PixelsPerDip;
+            }
         }
 #endif
 

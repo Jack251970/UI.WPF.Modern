@@ -9,12 +9,17 @@ namespace iNKORE.UI.WPF.Modern.Media.Animation
     {
         static NavigationAnimation()
         {
+            _defaultBitmapCache = new BitmapCache();
+            _defaultBitmapCache.Freeze();
         }
 
-        public NavigationAnimation(FrameworkElement element, Storyboard storyboard)
+        private readonly bool _useBitmapCache;
+
+        public NavigationAnimation(FrameworkElement element, Storyboard storyboard, bool useBitmapCache)
         {
             _element = element;
             _storyboard = storyboard;
+            _useBitmapCache = useBitmapCache;
             _storyboard.CurrentStateInvalidated += OnCurrentStateInvalidated;
             _storyboard.Completed += OnCompleted;
         }
@@ -23,6 +28,10 @@ namespace iNKORE.UI.WPF.Modern.Media.Animation
 
         public void Begin()
         {
+            if (_useBitmapCache && _element.CacheMode is not BitmapCache)
+            {
+                _element.SetCurrentValue(UIElement.CacheModeProperty, GetBitmapCache());
+            }
             _storyboard.Begin(_element, true);
         }
 
@@ -31,6 +40,10 @@ namespace iNKORE.UI.WPF.Modern.Media.Animation
             if (_currentState != ClockState.Stopped)
             {
                 _storyboard.Stop(_element);
+            }
+            if (_useBitmapCache)
+            {
+                _element.InvalidateProperty(UIElement.CacheModeProperty);
             }
             _element.InvalidateProperty(UIElement.RenderTransformProperty);
             _element.InvalidateProperty(UIElement.RenderTransformOriginProperty);
@@ -48,6 +61,17 @@ namespace iNKORE.UI.WPF.Modern.Media.Animation
         {
             Completed?.Invoke(this, EventArgs.Empty);
         }
+
+        private BitmapCache GetBitmapCache()
+        {
+#if NET462_OR_NEWER
+            return new BitmapCache(VisualTreeHelper.GetDpi(_element).PixelsPerDip);
+#else
+            return _defaultBitmapCache;
+#endif
+        }
+
+        private static readonly BitmapCache _defaultBitmapCache;
 
         private readonly FrameworkElement _element;
         private readonly Storyboard _storyboard;

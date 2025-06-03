@@ -49,6 +49,23 @@ namespace iNKORE.UI.WPF.Modern.Controls
 
         #endregion
 
+        #region UseBitmapCache
+
+        public static readonly DependencyProperty UseBitmapCacheProperty =
+            DependencyProperty.Register(
+                nameof(UseBitmapCache),
+                typeof(bool),
+                typeof(FlyoutPresenter),
+                new PropertyMetadata(false));
+
+        public bool UseBitmapCache
+        {
+            get => (bool)GetValue(UseBitmapCacheProperty);
+            set => SetValue(UseBitmapCacheProperty, value);
+        }
+
+        #endregion
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
@@ -67,6 +84,11 @@ namespace iNKORE.UI.WPF.Modern.Controls
         protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
         {
             base.OnDpiChanged(oldDpi, newDpi);
+
+            if (UseBitmapCache && CacheMode is BitmapCache bitmapCache)
+            {
+                bitmapCache.RenderAtScale = newDpi.PixelsPerDip;
+            }
         }
 #endif
     }
