@@ -850,7 +850,7 @@ namespace Flow.Bar.Controls.NavigationView
         {
             if (baseValue is double value)
             {
-                ((NavigationView)d).CoerceToGreaterThanZero(ref value);
+                NavigationView.CoerceToGreaterThanZero(ref value);
                 return value;
             }
             return baseValue;

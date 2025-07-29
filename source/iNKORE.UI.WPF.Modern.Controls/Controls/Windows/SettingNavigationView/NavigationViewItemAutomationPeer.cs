@@ -147,11 +147,11 @@ public class NavigationViewItemAutomationPeer :
 
     void IExpandCollapseProvider.Collapse()
     {
-        if (GetParentNavigationView() is { } navView)
+        if (GetParentNavigationView() is { })
         {
             if (Owner is NavigationViewItem navigationViewItem)
             {
-                navView.Collapse(navigationViewItem);
+                NavigationView.Collapse(navigationViewItem);
                 RaiseExpandCollapseAutomationEvent(ExpandCollapseState.Collapsed);
             }
         }
@@ -159,11 +159,11 @@ public class NavigationViewItemAutomationPeer :
 
     void IExpandCollapseProvider.Expand()
     {
-        if (GetParentNavigationView() is { } navView)
+        if (GetParentNavigationView() is { })
         {
             if (Owner is NavigationViewItem navigationViewItem)
             {
-                navView.Expand(navigationViewItem);
+                NavigationView.Expand(navigationViewItem);
                 RaiseExpandCollapseAutomationEvent(ExpandCollapseState.Expanded);
             }
         }
@@ -223,11 +223,11 @@ public class NavigationViewItemAutomationPeer :
 
     ItemsRepeater GetParentItemsRepeater()
     {
-        if (GetParentNavigationView() is { } navview)
+        if (GetParentNavigationView() is { })
         {
             if (Owner is NavigationViewItemBase navigationViewItem)
             {
-                return navview.GetParentItemsRepeaterForContainer(navigationViewItem);
+                return NavigationView.GetParentItemsRepeaterForContainer(navigationViewItem);
             }
         }
         return null;

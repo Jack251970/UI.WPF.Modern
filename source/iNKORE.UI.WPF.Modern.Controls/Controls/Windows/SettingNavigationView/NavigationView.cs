@@ -18,7 +18,6 @@ using System.Windows.Shell;
 using System.Windows.Threading;
 using iNKORE.UI.WPF.Helpers;
 using iNKORE.UI.WPF.Modern.Common;
-using iNKORE.UI.WPF.Modern.Common.IconKeys;
 using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Primitives;
 using iNKORE.UI.WPF.Modern.Input;
@@ -28,13 +27,13 @@ using static iNKORE.UI.WPF.Modern.Common.ResourceAccessor;
 
 namespace Flow.Bar.Controls.NavigationView
 {
-    enum TopNavigationViewLayoutState
+    internal enum TopNavigationViewLayoutState
     {
         Uninitialized = 0,
         Initialized
     }
 
-    enum NavigationRecommendedTransitionDirection
+    internal enum NavigationRecommendedTransitionDirection
     {
         FromOverflow, // mapping to SlideNavigationTransitionInfo FromLeft
         FromLeft, // SlideNavigationTransitionInfo
@@ -45,68 +44,68 @@ namespace Flow.Bar.Controls.NavigationView
     public partial class NavigationView : ContentControl, IControlProtected
     {
         // General items
-        const string c_togglePaneButtonName = "TogglePaneButton";
-        const string c_paneTitleHolderFrameworkElement = "PaneTitleHolder";
-        const string c_paneTitleFrameworkElement = "PaneTitleTextBlock";
-        const string c_rootSplitViewName = "RootSplitView";
-        const string c_menuItemsHost = "MenuItemsHost";
-        const string c_footerMenuItemsHost = "FooterMenuItemsHost";
-        const string c_paneContentGridName = "PaneContentGrid";
-        const string c_rootGridName = "RootGrid";
-        const string c_contentGridName = "ContentGrid";
-        const string c_searchButtonName = "PaneAutoSuggestButton";
-        const string c_togglePaneTopPadding = "TogglePaneTopPadding";
-        const string c_contentPaneTopPadding = "ContentPaneTopPadding";
-        const string c_contentLeftPadding = "ContentLeftPadding";
-        const string c_navViewBackButton = "NavigationViewBackButton";
-        const string c_navViewBackButtonToolTip = "NavigationViewBackButtonToolTip";
-        const string c_navViewCloseButton = "NavigationViewCloseButton";
-        const string c_navViewCloseButtonToolTip = "NavigationViewCloseButtonToolTip";
-        const string c_flyoutRootGrid = "FlyoutRootGrid";
+        private const string c_togglePaneButtonName = "TogglePaneButton";
+        private const string c_paneTitleHolderFrameworkElement = "PaneTitleHolder";
+        private const string c_paneTitleFrameworkElement = "PaneTitleTextBlock";
+        private const string c_rootSplitViewName = "RootSplitView";
+        private const string c_menuItemsHost = "MenuItemsHost";
+        private const string c_footerMenuItemsHost = "FooterMenuItemsHost";
+        private const string c_paneContentGridName = "PaneContentGrid";
+        private const string c_rootGridName = "RootGrid";
+        private const string c_contentGridName = "ContentGrid";
+        private const string c_searchButtonName = "PaneAutoSuggestButton";
+        private const string c_togglePaneTopPadding = "TogglePaneTopPadding";
+        private const string c_contentPaneTopPadding = "ContentPaneTopPadding";
+        private const string c_contentLeftPadding = "ContentLeftPadding";
+        private const string c_navViewBackButton = "NavigationViewBackButton";
+        private const string c_navViewBackButtonToolTip = "NavigationViewBackButtonToolTip";
+        private const string c_navViewCloseButton = "NavigationViewCloseButton";
+        private const string c_navViewCloseButtonToolTip = "NavigationViewCloseButtonToolTip";
+        private const string c_flyoutRootGrid = "FlyoutRootGrid";
 
         // DisplayMode Top specific items
-        const string c_topNavMenuItemsHost = "TopNavMenuItemsHost";
-        const string c_topNavFooterMenuItemsHost = "TopFooterMenuItemsHost";
-        const string c_topNavOverflowButton = "TopNavOverflowButton";
-        const string c_topNavMenuItemsOverflowHost = "TopNavMenuItemsOverflowHost";
-        const string c_topNavGrid = "TopNavGrid";
-        const string c_topNavContentOverlayAreaGrid = "TopNavContentOverlayAreaGrid";
-        const string c_leftNavPaneAutoSuggestBoxPresenter = "PaneAutoSuggestBoxPresenter";
-        const string c_topNavPaneAutoSuggestBoxPresenter = "TopPaneAutoSuggestBoxPresenter";
-        const string c_paneTitlePresenter = "PaneTitlePresenter";
+        private const string c_topNavMenuItemsHost = "TopNavMenuItemsHost";
+        private const string c_topNavFooterMenuItemsHost = "TopFooterMenuItemsHost";
+        private const string c_topNavOverflowButton = "TopNavOverflowButton";
+        private const string c_topNavMenuItemsOverflowHost = "TopNavMenuItemsOverflowHost";
+        private const string c_topNavGrid = "TopNavGrid";
+        private const string c_topNavContentOverlayAreaGrid = "TopNavContentOverlayAreaGrid";
+        private const string c_leftNavPaneAutoSuggestBoxPresenter = "PaneAutoSuggestBoxPresenter";
+        private const string c_topNavPaneAutoSuggestBoxPresenter = "TopPaneAutoSuggestBoxPresenter";
+        private const string c_paneTitlePresenter = "PaneTitlePresenter";
 
         // DisplayMode Left specific items
-        const string c_leftNavFooterContentBorder = "FooterContentBorder";
-        const string c_leftNavPaneHeaderContentBorder = "PaneHeaderContentBorder";
-        const string c_leftNavPaneCustomContentBorder = "PaneCustomContentBorder";
+        private const string c_leftNavFooterContentBorder = "FooterContentBorder";
+        private const string c_leftNavPaneHeaderContentBorder = "PaneHeaderContentBorder";
+        private const string c_leftNavPaneCustomContentBorder = "PaneCustomContentBorder";
 
-        const string c_itemsContainer = "ItemsContainerGrid";
-        const string c_itemsContainerRow = "ItemsContainerRow";
-        const string c_visualItemsSeparator = "VisualItemsSeparator";
-        const string c_menuItemsScrollViewer = "MenuItemsScrollViewer";
-        const string c_footerItemsScrollViewer = "FooterItemsScrollViewer";
+        private const string c_itemsContainer = "ItemsContainerGrid";
+        private const string c_itemsContainerRow = "ItemsContainerRow";
+        private const string c_visualItemsSeparator = "VisualItemsSeparator";
+        private const string c_menuItemsScrollViewer = "MenuItemsScrollViewer";
+        private const string c_footerItemsScrollViewer = "FooterItemsScrollViewer";
 
-        const string c_paneHeaderOnTopPane = "PaneHeaderOnTopPane";
-        const string c_paneTitleOnTopPane = "PaneTitleOnTopPane";
-        const string c_paneCustomContentOnTopPane = "PaneCustomContentOnTopPane";
-        const string c_paneFooterOnTopPane = "PaneFooterOnTopPane";
-        const string c_paneHeaderCloseButtonColumn = "PaneHeaderCloseButtonColumn";
-        const string c_paneHeaderToggleButtonColumn = "PaneHeaderToggleButtonColumn";
-        const string c_paneHeaderContentBorderRow = "PaneHeaderContentBorderRow";
+        private const string c_paneHeaderOnTopPane = "PaneHeaderOnTopPane";
+        private const string c_paneTitleOnTopPane = "PaneTitleOnTopPane";
+        private const string c_paneCustomContentOnTopPane = "PaneCustomContentOnTopPane";
+        private const string c_paneFooterOnTopPane = "PaneFooterOnTopPane";
+        private const string c_paneHeaderCloseButtonColumn = "PaneHeaderCloseButtonColumn";
+        private const string c_paneHeaderToggleButtonColumn = "PaneHeaderToggleButtonColumn";
+        private const string c_paneHeaderContentBorderRow = "PaneHeaderContentBorderRow";
 
-        const int c_backButtonHeight = 40;
-        const int c_backButtonWidth = 40;
-        const int c_paneToggleButtonHeight = 40;
-        const int c_paneToggleButtonWidth = 40;
-        const int c_toggleButtonHeightWhenShouldPreserveNavigationViewRS3Behavior = 56;
-        const int c_backButtonRowDefinition = 1;
+        private const int c_backButtonHeight = 40;
+        private const int c_backButtonWidth = 40;
+        private const int c_paneToggleButtonHeight = 40;
+        private const int c_paneToggleButtonWidth = 40;
+        private const int c_toggleButtonHeightWhenShouldPreserveNavigationViewRS3Behavior = 56;
+        private const int c_backButtonRowDefinition = 1;
 
-        const int c_mainMenuBlockIndex = 0;
-        const int c_footerMenuBlockIndex = 1;
+        private const int c_mainMenuBlockIndex = 0;
+        private const int c_footerMenuBlockIndex = 1;
 
-        const int s_itemNotFound = -1;
+        private const int s_itemNotFound = -1;
 
-        static readonly Size c_infSize = new(double.PositiveInfinity, double.PositiveInfinity);
+        private static readonly Size c_infSize = new(double.PositiveInfinity, double.PositiveInfinity);
 
         internal static readonly ControlStrings ResourceAccessor = new(typeof(NavigationView), ModernControlCategory.Windows);
 
@@ -115,7 +114,7 @@ namespace Flow.Bar.Controls.NavigationView
             return new NavigationViewAutomationPeer(this);
         }
 
-        void UnhookEventsAndClearFields(bool isFromDestructor = false)
+        private void UnhookEventsAndClearFields(bool isFromDestructor = false)
         {
             if (m_coreTitleBar != null)
             {
@@ -216,9 +215,7 @@ namespace Flow.Bar.Controls.NavigationView
 
             SizeChanged += OnSizeChanged;
 
-            m_selectionModelSource = new List<object>(2);
-            m_selectionModelSource.Add(null);
-            m_selectionModelSource.Add(null);
+            m_selectionModelSource = [null, null];
 
             var items = new ObservableCollection<object>();
             SetValue(MenuItemsProperty, items);
@@ -255,7 +252,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnSelectionModelChildrenRequested(SelectionModel selectionModel, SelectionModelChildrenRequestedEventArgs e)
+        private void OnSelectionModelChildrenRequested(SelectionModel selectionModel, SelectionModelChildrenRequestedEventArgs e)
         {
             // this is main menu or footer
             if (e.SourceIndex.GetSize() == 1)
@@ -264,7 +261,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
             else if (e.Source is NavigationViewItem nvi)
             {
-                e.Children = GetChildren(nvi);
+                e.Children = NavigationView.GetChildren(nvi);
             }
             else if (GetChildrenForItemInIndexPath(e.SourceIndex, true /*forceRealize*/) is { } children)
             {
@@ -272,7 +269,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnFooterItemsSourceCollectionChanged(object sender, object e)
+        private void OnFooterItemsSourceCollectionChanged(object sender, object e)
         {
             UpdateFooterRepeaterItemsSource(false /*sourceCollectionReset*/, true /*sourceCollectionChanged*/);
 
@@ -280,7 +277,7 @@ namespace Flow.Bar.Controls.NavigationView
             UpdatePaneLayout();
         }
 
-        void OnOverflowItemsSourceCollectionChanged(object sender, object e)
+        private void OnOverflowItemsSourceCollectionChanged(object sender, object e)
         {
             if (m_topNavRepeaterOverflowView.ItemsSourceView.Count == 0)
             {
@@ -288,7 +285,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnSelectionModelSelectionChanged(SelectionModel selectionModel, SelectionModelSelectionChangedEventArgs e)
+        private void OnSelectionModelSelectionChanged(SelectionModel selectionModel, SelectionModelSelectionChangedEventArgs e)
         {
             var selectedItem = selectionModel.SelectedItem;
 
@@ -310,9 +307,7 @@ namespace Flow.Bar.Controls.NavigationView
             if (IsTopNavigationView())
             {
                 // If selectedIndex does not exist, means item is being deselected through API
-                var isInOverflow = (selectedIndex != null && selectedIndex.GetSize() > 1)
-                    ? selectedIndex.GetAt(0) == c_mainMenuBlockIndex && !m_topDataProvider.IsItemInPrimaryList(selectedIndex.GetAt(1))
-                    : false;
+                var isInOverflow = (selectedIndex != null && selectedIndex.GetSize() > 1) && selectedIndex.GetAt(0) == c_mainMenuBlockIndex && !m_topDataProvider.IsItemInPrimaryList(selectedIndex.GetAt(1));
                 if (isInOverflow)
                 {
                     // We only want to close the overflow flyout and move the item on selection if it is a leaf node
@@ -324,7 +319,7 @@ namespace Flow.Bar.Controls.NavigationView
                             {
                                 if (selectedContainer is NavigationViewItem selectedNVI)
                                 {
-                                    if (DoesNavigationViewItemHaveChildren(selectedNVI))
+                                    if (NavigationView.DoesNavigationViewItemHaveChildren(selectedNVI))
                                     {
                                         return false;
                                     }
@@ -353,7 +348,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void SelectandMoveOverflowItem(object selectedItem, IndexPath selectedIndex, bool closeFlyout)
+        private void SelectandMoveOverflowItem(object selectedItem, IndexPath selectedIndex, bool closeFlyout)
         {
             // SelectOverflowItem is moving data in/out of overflow.
             try
@@ -377,7 +372,7 @@ namespace Flow.Bar.Controls.NavigationView
         }
 
         // We only need to close the flyout if the selected item is a leaf node
-        void CloseFlyoutIfRequired(NavigationViewItem selectedItem)
+        private void CloseFlyoutIfRequired(NavigationViewItem selectedItem)
         {
             var selectedIndex = m_selectionModel.SelectedIndex;
             bool isInModeWithFlyout;
@@ -396,7 +391,7 @@ namespace Flow.Bar.Controls.NavigationView
                 isInModeWithFlyout = init();
             }
 
-            if (isInModeWithFlyout && selectedIndex != null && !DoesNavigationViewItemHaveChildren(selectedItem))
+            if (isInModeWithFlyout && selectedIndex != null && !NavigationView.DoesNavigationViewItemHaveChildren(selectedItem))
             {
                 // Item selected is a leaf node, find top level parent and close flyout
                 if (GetContainerForIndex(selectedIndex.GetAt(1), selectedIndex.GetAt(0) == c_footerMenuBlockIndex /* inFooter */) is { } rootItem)
@@ -538,8 +533,10 @@ namespace Flow.Bar.Controls.NavigationView
                 var toolTip = ToolTipService.GetToolTip(topNavOverflowButton);
                 if (toolTip is null)
                 {
-                    var tooltip = new ToolTip();
-                    tooltip.Content = ResourceAccessor.GetLocalizedStringResource(SR_NavigationOverflowButtonToolTip);
+                    var tooltip = new ToolTip
+                    {
+                        Content = ResourceAccessor.GetLocalizedStringResource(SR_NavigationOverflowButtonToolTip)
+                    };
                     ToolTipService.SetToolTip(topNavOverflowButton, tooltip);
                 }
 
@@ -728,7 +725,7 @@ namespace Flow.Bar.Controls.NavigationView
             UpdatePaneOverlayGroup();
         }
 
-        void UpdateRepeaterItemsSource(bool forceSelectionModelUpdate)
+        private void UpdateRepeaterItemsSource(bool forceSelectionModelUpdate)
         {
             object itemsSource;
             {
@@ -772,14 +769,14 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateLeftRepeaterItemSource(object items)
+        private void UpdateLeftRepeaterItemSource(object items)
         {
             UpdateItemsRepeaterItemsSource(m_leftNavRepeater, items);
             // Left pane repeater has a new items source, update pane layout.
             UpdatePaneLayout();
         }
 
-        void UpdateTopNavRepeatersItemSource(object items)
+        private void UpdateTopNavRepeatersItemSource(object items)
         {
             // Change data source and setup vectors
             m_topDataProvider.SetDataSource(items);
@@ -789,7 +786,7 @@ namespace Flow.Bar.Controls.NavigationView
             UpdateTopNavOverflowRepeaterItemsSource(items);
         }
 
-        void UpdateTopNavPrimaryRepeaterItemsSource(object items)
+        private void UpdateTopNavPrimaryRepeaterItemsSource(object items)
         {
             if (items != null)
             {
@@ -801,7 +798,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateTopNavOverflowRepeaterItemsSource(object items)
+        private void UpdateTopNavOverflowRepeaterItemsSource(object items)
         {
             m_topNavOverflowItemsCollectionChangedRevoker?.Revoke();
 
@@ -829,7 +826,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateItemsRepeaterItemsSource(ItemsRepeater ir,
+        private static void UpdateItemsRepeaterItemsSource(ItemsRepeater ir,
              object itemsSource)
         {
             if (ir != null)
@@ -838,7 +835,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateFooterRepeaterItemsSource(bool sourceCollectionReset, bool sourceCollectionChanged)
+        private void UpdateFooterRepeaterItemsSource(bool sourceCollectionReset, bool sourceCollectionChanged)
         {
             if (!m_appliedTemplate) return;
 
@@ -913,7 +910,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnFlyoutClosing(object sender, FlyoutBaseClosingEventArgs args)
+        private void OnFlyoutClosing(object sender, FlyoutBaseClosingEventArgs args)
         {
             // If the user selected an parent item in the overflow flyout then the item has not been moved to top primary yet.
             // So we need to move it.
@@ -938,7 +935,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnNavigationViewItemIsSelectedPropertyChanged(DependencyObject sender, DependencyProperty args)
+        private void OnNavigationViewItemIsSelectedPropertyChanged(DependencyObject sender, DependencyProperty args)
         {
             if (sender is NavigationViewItem nvi)
             {
@@ -969,7 +966,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnNavigationViewItemExpandedPropertyChanged(DependencyObject sender, DependencyProperty args)
+        private void OnNavigationViewItemExpandedPropertyChanged(DependencyObject sender, DependencyProperty args)
         {
             if (sender is NavigationViewItem nvi)
             {
@@ -987,7 +984,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void RaiseItemInvokedForNavigationViewItem(NavigationViewItem nvi)
+        private void RaiseItemInvokedForNavigationViewItem(NavigationViewItem nvi)
         {
             object nextItem = null;
             var prevItem = SelectedItem;
@@ -1044,7 +1041,7 @@ namespace Flow.Bar.Controls.NavigationView
                 var ip = GetIndexPathForContainer(nvi);
 
                 // Determine if we will update collapse/expand which will happen iff the item has children
-                if (DoesNavigationViewItemHaveChildren(nvi))
+                if (NavigationView.DoesNavigationViewItemHaveChildren(nvi))
                 {
                     m_shouldIgnoreUIASelectionRaiseAsExpandCollapseWillRaise = true;
                 }
@@ -1066,7 +1063,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        bool IsRootItemsRepeater(DependencyObject element)
+        private bool IsRootItemsRepeater(DependencyObject element)
         {
             if (element != null)
             {
@@ -1079,7 +1076,7 @@ namespace Flow.Bar.Controls.NavigationView
             return false;
         }
 
-        bool IsRootGridOfFlyout(DependencyObject element)
+        private static bool IsRootGridOfFlyout(DependencyObject element)
         {
             if (element is Grid grid)
             {
@@ -1088,7 +1085,7 @@ namespace Flow.Bar.Controls.NavigationView
             return false;
         }
 
-        ItemsRepeater GetParentRootItemsRepeaterForContainer(NavigationViewItemBase nvib)
+        private ItemsRepeater GetParentRootItemsRepeaterForContainer(NavigationViewItemBase nvib)
         {
             var parentIR = GetParentItemsRepeaterForContainer(nvib);
             var currentNvib = nvib;
@@ -1105,7 +1102,7 @@ namespace Flow.Bar.Controls.NavigationView
             return parentIR;
         }
 
-        internal ItemsRepeater GetParentItemsRepeaterForContainer(NavigationViewItemBase nvib)
+        static internal ItemsRepeater GetParentItemsRepeaterForContainer(NavigationViewItemBase nvib)
         {
             if (VisualTreeHelper.GetParent(nvib) is { } parent)
             {
@@ -1117,7 +1114,7 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        NavigationViewItem GetParentNavigationViewItemForContainer(NavigationViewItemBase nvib)
+        private NavigationViewItem GetParentNavigationViewItemForContainer(NavigationViewItemBase nvib)
         {
             // TODO: This scenario does not find parent items when in a flyout, which causes problems if item if first loaded
             // straight in the flyout. Fix. This logic can be merged with the 'GetIndexPathForContainer' logic below.
@@ -1136,10 +1133,10 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        IndexPath GetIndexPathForContainer(NavigationViewItemBase nvib)
+        private IndexPath GetIndexPathForContainer(NavigationViewItemBase nvib)
         {
             var path = new List<int>();
-            bool isInFooterMenu = false;
+            bool isInFooterMenu;
 
             DependencyObject child = nvib;
             var parent = VisualTreeHelper.GetParent(child);
@@ -1278,7 +1275,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void ApplyCustomMenuItemContainerStyling(NavigationViewItemBase nvib, ItemsRepeater ir, int index)
+        private void ApplyCustomMenuItemContainerStyling(NavigationViewItemBase nvib, ItemsRepeater ir, int index)
         {
             if (MenuItemContainerStyle is { } menuItemContainerStyle)
             {
@@ -1349,7 +1346,7 @@ namespace Flow.Bar.Controls.NavigationView
             return base.MeasureOverride(availableSize);
         }
 
-        void OnLayoutUpdated(object sender, object e)
+        private void OnLayoutUpdated(object sender, object e)
         {
             // We only need to handle once after MeasureOverride, so revoke the token.
             LayoutUpdated -= OnLayoutUpdated;
@@ -1367,14 +1364,14 @@ namespace Flow.Bar.Controls.NavigationView
                 }, DispatcherPriority.Send);
             }
 
-            if (m_OrientationChangedPendingAnimation)
+            if (m_orientationChangedPendingAnimation)
             {
-                m_OrientationChangedPendingAnimation = false;
+                m_orientationChangedPendingAnimation = false;
                 AnimateSelectionChanged(SelectedItem);
             }
         }
 
-        void OnSizeChanged(object sender, SizeChangedEventArgs args)
+        private void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
             var width = args.NewSize.Width;
             UpdateOpenPaneWidth(width);
@@ -1386,12 +1383,12 @@ namespace Flow.Bar.Controls.NavigationView
             UpdatePaneButtonsWidths();
         }
 
-        void OnItemsContainerSizeChanged(object sender, SizeChangedEventArgs e)
+        private void OnItemsContainerSizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdatePaneLayout();
         }
 
-        void UpdateOpenPaneWidth(double width)
+        private void UpdateOpenPaneWidth(double width)
         {
             if (!IsTopNavigationView() && m_rootSplitView != null)
             {
@@ -1403,7 +1400,7 @@ namespace Flow.Bar.Controls.NavigationView
         }
 
         // forceSetDisplayMode: On first call to SetDisplayMode, force setting to initial values
-        void UpdateAdaptiveLayout(double width, bool forceSetDisplayMode = false)
+        private void UpdateAdaptiveLayout(double width, bool forceSetDisplayMode = false)
         {
             // In top nav, there is no adaptive pane layout
             if (IsTopNavigationView())
@@ -1452,14 +1449,14 @@ namespace Flow.Bar.Controls.NavigationView
                 Environment.FailFast(null);
             }
 
-            if (!forceSetDisplayMode && m_InitialNonForcedModeUpdate)
+            if (!forceSetDisplayMode && m_initialNonForcedModeUpdate)
             {
                 if (displayMode == NavigationViewDisplayMode.Minimal ||
                     displayMode == NavigationViewDisplayMode.Compact)
                 {
                     ClosePane();
                 }
-                m_InitialNonForcedModeUpdate = false;
+                m_initialNonForcedModeUpdate = false;
             }
 
             var previousMode = DisplayMode;
@@ -1481,7 +1478,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdatePaneLayout()
+        private void UpdatePaneLayout()
         {
 
             if (!IsTopNavigationView())
@@ -1637,7 +1634,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnPaneToggleButtonClick(object sender, RoutedEventArgs args)
+        private void OnPaneToggleButtonClick(object sender, RoutedEventArgs args)
         {
             if (IsPaneOpen)
             {
@@ -1651,7 +1648,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnPaneSearchButtonClick(object sender, RoutedEventArgs args)
+        private void OnPaneSearchButtonClick(object sender, RoutedEventArgs args)
         {
             m_wasForceClosed = false;
             OpenPane();
@@ -1665,12 +1662,12 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnPaneTitleHolderSizeChanged(object sender, SizeChangedEventArgs args)
+        private void OnPaneTitleHolderSizeChanged(object sender, SizeChangedEventArgs args)
         {
             UpdateBackAndCloseButtonsVisibility();
         }
 
-        void OpenPane()
+        private void OpenPane()
         {
             try
             {
@@ -1684,7 +1681,7 @@ namespace Flow.Bar.Controls.NavigationView
         }
 
         // Call this when you want an uncancellable close
-        void ClosePane()
+        private void ClosePane()
         {
             CollapseMenuItemsInRepeater(m_leftNavRepeater);
             try
@@ -1700,7 +1697,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         // Call this when NavigationView itself is going to trigger a close
         // where you will stop the close if the cancel is triggered
-        bool AttemptClosePaneLightly()
+        private bool AttemptClosePaneLightly()
         {
             bool pendingPaneClosingCancel = false;
 
@@ -1721,7 +1718,7 @@ namespace Flow.Bar.Controls.NavigationView
             return false;
         }
 
-        void OnSplitViewClosedCompactChanged(DependencyObject sender, DependencyProperty args)
+        private void OnSplitViewClosedCompactChanged(DependencyObject sender, DependencyProperty args)
         {
             if (args == SplitView.IsPaneOpenProperty ||
                 args == SplitView.DisplayModeProperty)
@@ -1730,12 +1727,12 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnSplitViewPaneClosed(DependencyObject sender, object obj)
+        private void OnSplitViewPaneClosed(DependencyObject sender, object obj)
         {
             PaneClosed?.Invoke(this, null);
         }
 
-        void OnSplitViewPaneClosing(DependencyObject sender, SplitViewPaneClosingEventArgs args)
+        private void OnSplitViewPaneClosing(DependencyObject sender, SplitViewPaneClosingEventArgs args)
         {
             bool pendingPaneClosingCancel = false;
             if (PaneClosing != null)
@@ -1757,7 +1754,7 @@ namespace Flow.Bar.Controls.NavigationView
             {
                 if (m_rootSplitView is { } splitView)
                 {
-                    if (m_leftNavRepeater is { } paneList)
+                    if (m_leftNavRepeater is { })
                     {
                         if (splitView.DisplayMode == SplitViewDisplayMode.CompactOverlay || splitView.DisplayMode == SplitViewDisplayMode.CompactInline)
                         {
@@ -1770,12 +1767,12 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnSplitViewPaneOpened(DependencyObject sender, object obj)
+        private void OnSplitViewPaneOpened(DependencyObject sender, object obj)
         {
             PaneOpened?.Invoke(this, null);
         }
 
-        void OnSplitViewPaneOpening(DependencyObject sender, object obj)
+        private void OnSplitViewPaneOpening(DependencyObject sender, object obj)
         {
             if (m_leftNavRepeater != null)
             {
@@ -1786,7 +1783,7 @@ namespace Flow.Bar.Controls.NavigationView
             PaneOpening?.Invoke(this, null);
         }
 
-        void UpdateIsClosedCompact()
+        private void UpdateIsClosedCompact()
         {
             if (m_rootSplitView is { } splitView)
             {
@@ -1801,17 +1798,6 @@ namespace Flow.Bar.Controls.NavigationView
                     m_initialListSizeStateSet = true;
                     VisualStateManager.GoToState(this, m_isClosedCompact ? "ListSizeCompact" : "ListSizeFull", true /*useTransitions*/);
                 }
-                //else if (!SharedHelpers.IsRS3OrHigher()) // Do any changes that would otherwise happen on opening/closing for RS2 and earlier:
-                //{
-                //    // RS3+ animation timing enhancement:
-                //    // Pre-RS3, we didn't have the full suite of Closed, Closing, Opened,
-                //    // Opening events on SplitView. So when doing open/closed operations,
-                //    // we have to do them immediately. Just one example: on RS2 when you
-                //    // close the pane, the PaneTitle will disappear *immediately* which
-                //    // looks janky. But on RS4, it'll have its visibility set after the
-                //    // closed event fires.
-                //    VisualStateManager.GoToState(this, m_isClosedCompact ? "ListSizeCompact" : "ListSizeFull", true /*useTransitions*/);
-                //}
 
                 UpdateTitleBarPadding();
                 UpdateBackAndCloseButtonsVisibility();
@@ -1820,7 +1806,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdatePaneButtonsWidths()
+        private void UpdatePaneButtonsWidths()
         {
             var templateSettings = GetTemplateSettings();
 
@@ -1854,13 +1840,13 @@ namespace Flow.Bar.Controls.NavigationView
             //}
         }
 
-        void OnBackButtonClicked(object sender, RoutedEventArgs args)
+        private void OnBackButtonClicked(object sender, RoutedEventArgs args)
         {
             var eventArgs = new NavigationViewBackRequestedEventArgs();
             BackRequested?.Invoke(this, eventArgs);
         }
 
-        bool IsOverlay()
+        private bool IsOverlay()
         {
             if (m_rootSplitView is { } splitView)
             {
@@ -1872,7 +1858,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        bool IsLightDismissible()
+        private bool IsLightDismissible()
         {
             if (m_rootSplitView is { } splitView)
             {
@@ -1884,7 +1870,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        bool ShouldShowBackButton()
+        private bool ShouldShowBackButton()
         {
             if (m_backButton != null && !ShouldPreserveNavigationViewRS3Behavior())
             {
@@ -1899,7 +1885,7 @@ namespace Flow.Bar.Controls.NavigationView
             return false;
         }
 
-        bool ShouldShowCloseButton()
+        private bool ShouldShowCloseButton()
         {
             if (m_backButton != null && !ShouldPreserveNavigationViewRS3Behavior() && m_closeButton != null)
             {
@@ -1922,7 +1908,7 @@ namespace Flow.Bar.Controls.NavigationView
             return false;
         }
 
-        bool ShouldShowBackOrCloseButton()
+        private bool ShouldShowBackOrCloseButton()
         {
             var visibility = IsBackButtonVisible;
             return (visibility == NavigationViewBackButtonVisible.Visible || (visibility == NavigationViewBackButtonVisible.Auto && !SharedHelpers.IsOnXbox()));
@@ -1930,7 +1916,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         // The automation name and tooltip for the pane toggle button changes depending on whether it is open or closed
         // put the logic here as it will be called in a couple places
-        void SetPaneToggleButtonAutomationName()
+        private void SetPaneToggleButtonAutomationName()
         {
             string navigationName;
             if (IsPaneOpen)
@@ -1945,14 +1931,16 @@ namespace Flow.Bar.Controls.NavigationView
             if (m_paneToggleButton is { } paneToggleButton)
             {
                 AutomationProperties.SetName(paneToggleButton, navigationName);
-                var toolTip = new ToolTip();
-                toolTip.Content = navigationName;
+                var toolTip = new ToolTip
+                {
+                    Content = navigationName
+                };
                 ToolTipService.SetToolTip(paneToggleButton, toolTip);
             }
         }
 
         // Updates the PaneTitleHolder.Visibility and PaneTitleTextBlock.Parent properties based on the PaneDisplayMode, PaneTitle and IsPaneToggleButtonVisible properties.
-        void UpdatePaneTitleFrameworkElementParents()
+        private void UpdatePaneTitleFrameworkElementParents()
         {
             if (m_paneTitleHolderFrameworkElement is { } paneTitleHolderFrameworkElement)
             {
@@ -1968,15 +1956,15 @@ namespace Flow.Bar.Controls.NavigationView
 
                 if (m_paneTitleFrameworkElement is { } paneTitleFrameworkElement)
                 {
-                    var first = SetPaneTitleFrameworkElementParent(m_paneToggleButton, paneTitleFrameworkElement, isTopNavigationView || !isPaneToggleButtonVisible);
-                    var second = SetPaneTitleFrameworkElementParent(m_paneTitlePresenter, paneTitleFrameworkElement, isTopNavigationView || isPaneToggleButtonVisible);
-                    var third = SetPaneTitleFrameworkElementParent(m_paneTitleOnTopPane, paneTitleFrameworkElement, !isTopNavigationView || isPaneToggleButtonVisible);
+                    var first = NavigationView.SetPaneTitleFrameworkElementParent(m_paneToggleButton, paneTitleFrameworkElement, isTopNavigationView || !isPaneToggleButtonVisible);
+                    var second = NavigationView.SetPaneTitleFrameworkElementParent(m_paneTitlePresenter, paneTitleFrameworkElement, isTopNavigationView || isPaneToggleButtonVisible);
+                    var third = NavigationView.SetPaneTitleFrameworkElementParent(m_paneTitleOnTopPane, paneTitleFrameworkElement, !isTopNavigationView || isPaneToggleButtonVisible);
                     (first ?? second ?? third)?.Invoke();
                 }
             }
         }
 
-        Action SetPaneTitleFrameworkElementParent(ContentControl parent, FrameworkElement paneTitle, bool shouldNotContainPaneTitle)
+        private static Action SetPaneTitleFrameworkElementParent(ContentControl parent, FrameworkElement paneTitle, bool shouldNotContainPaneTitle)
         {
             if (parent != null)
             {
@@ -1995,12 +1983,12 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        static readonly Point c_frame1point1 = new Point(0.9, 0.1);
-        static readonly Point c_frame1point2 = new Point(1.0, 0.2);
-        static readonly Point c_frame2point1 = new Point(0.1, 0.9);
-        static readonly Point c_frame2point2 = new Point(0.2, 1.0);
+        private static readonly Point c_frame1point1 = new(0.9, 0.1);
+        private static readonly Point c_frame1point2 = new(1.0, 0.2);
+        private static readonly Point c_frame2point1 = new(0.1, 0.9);
+        private static readonly Point c_frame2point2 = new(0.2, 1.0);
 
-        void AnimateSelectionChangedToItem(object selectedItem)
+        private void AnimateSelectionChangedToItem(object selectedItem)
         {
             if (selectedItem != null && !IsSelectionSuppressed(selectedItem))
             {
@@ -2010,7 +1998,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         // Please clear the field m_lastSelectedItemPendingAnimationInTopNav when calling this method to prevent garbage value and incorrect animation
         // when the layout is invalidated as it's called in OnLayoutUpdated.
-        void AnimateSelectionChanged(object nextItem)
+        private void AnimateSelectionChanged(object nextItem)
         {
             // If we are delaying animation due to item movement in top nav overflow, dont do anything
             if (m_lastSelectedItemPendingAnimationInTopNav != null)
@@ -2053,7 +2041,7 @@ namespace Flow.Bar.Controls.NavigationView
                     ResetElementAnimationProperties(nextIndicator, 1.0);
 
                     // get the item positions in the pane
-                    Point point = new Point(0, 0);
+                    Point point = new(0, 0);
                     double prevPos;
                     double nextPos;
 
@@ -2147,7 +2135,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void PlayIndicatorNonSameLevelAnimations(UIElement indicator, bool isOutgoing, bool fromTop, TimelineCollection animations)
+        private void PlayIndicatorNonSameLevelAnimations(UIElement indicator, bool isOutgoing, bool fromTop, TimelineCollection animations)
         {
             // Determine scaling of indicator (whether it is appearing or dissapearing)
             double beginScale = isOutgoing ? 1.0 : 0.0;
@@ -2167,15 +2155,17 @@ namespace Flow.Bar.Controls.NavigationView
             Size size = indicator.RenderSize;
             double dimension = IsTopNavigationView() ? size.Width : size.Height;
             double newCenter = fromTop ? 0.0 : dimension;
-            var indicatorCenterPoint = new Point();
-            indicatorCenterPoint.Y = newCenter;
+            var indicatorCenterPoint = new Point
+            {
+                Y = newCenter
+            };
 
             Storyboard.SetTarget(scaleAnim, indicator);
             Storyboard.SetTargetProperty(scaleAnim, s_scaleYPath);
             PrepareIndicatorForAnimation(indicator, indicatorCenterPoint);
         }
 
-        void PlayIndicatorNonSameLevelTopPrimaryAnimation(UIElement indicator, bool isOutgoing, TimelineCollection animations)
+        private void PlayIndicatorNonSameLevelTopPrimaryAnimation(UIElement indicator, bool isOutgoing, TimelineCollection animations)
         {
             // Determine scaling of indicator (whether it is appearing or dissapearing)
             double beginScale = isOutgoing ? 1.0 : 0.0;
@@ -2194,15 +2184,17 @@ namespace Flow.Bar.Controls.NavigationView
             // Determine where the indicator is animating from/to
             Size size = indicator.RenderSize;
             double newCenter = size.Width / 2;
-            var indicatorCenterPoint = new Point();
-            indicatorCenterPoint.Y = newCenter;
+            var indicatorCenterPoint = new Point
+            {
+                Y = newCenter
+            };
 
             Storyboard.SetTarget(scaleAnim, indicator);
             Storyboard.SetTargetProperty(scaleAnim, s_scaleXPath);
             PrepareIndicatorForAnimation(indicator, indicatorCenterPoint);
         }
 
-        void PlayIndicatorAnimations(UIElement indicator, double from, double to, Size beginSize, Size endSize, bool isOutgoing, TimelineCollection animations)
+        private void PlayIndicatorAnimations(UIElement indicator, double from, double to, Size beginSize, Size endSize, bool isOutgoing, TimelineCollection animations)
         {
             Size size = indicator.RenderSize;
             double dimension = IsTopNavigationView() ? size.Width : size.Height;
@@ -2289,7 +2281,7 @@ namespace Flow.Bar.Controls.NavigationView
             PrepareIndicatorForAnimation(indicator);
         }
 
-        void PrepareIndicatorForAnimation(UIElement indicator, Point? centerPoint = null)
+        private void PrepareIndicatorForAnimation(UIElement indicator, Point? centerPoint = null)
         {
             if (!(indicator.RenderTransform is TransformGroup transformGroup &&
                   transformGroup.Children.Count == 2 &&
@@ -2319,7 +2311,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnAnimationComplete(object sender, EventArgs args)
+        private void OnAnimationComplete(object sender, EventArgs args)
         {
             var indicator = m_prevIndicator;
             ResetElementAnimationProperties(indicator, 0.0);
@@ -2330,7 +2322,7 @@ namespace Flow.Bar.Controls.NavigationView
             m_nextIndicator = null;
         }
 
-        void ResetElementAnimationProperties(UIElement element, double desiredOpacity)
+        private static void ResetElementAnimationProperties(UIElement element, double desiredOpacity)
         {
             if (element != null)
             {
@@ -2354,29 +2346,20 @@ namespace Flow.Bar.Controls.NavigationView
                 }
 
                 element.BeginAnimation(OpacityProperty, null);
-
-                /*
-                if (Visual visual = ElementCompositionPreview.GetElementVisual(element))
-                {
-                    visual.Offset(float3(0.0f, 0.0f, 0.0f));
-                    visual.Scale(float3(1.0f, 1.0f, 1.0f));
-                    visual.Opacity(desiredOpacity);
-                }
-                */
             }
         }
 
-        NavigationViewItemBase NavigationViewItemBaseOrSettingsContentFromData(object data)
+        private NavigationViewItemBase NavigationViewItemBaseOrSettingsContentFromData(object data)
         {
             return GetContainerForData<NavigationViewItemBase>(data);
         }
 
-        NavigationViewItem NavigationViewItemOrSettingsContentFromData(object data)
+        private NavigationViewItem NavigationViewItemOrSettingsContentFromData(object data)
         {
             return GetContainerForData<NavigationViewItem>(data);
         }
 
-        bool IsSelectionSuppressed(object item)
+        private bool IsSelectionSuppressed(object item)
         {
             if (item != null)
             {
@@ -2389,19 +2372,19 @@ namespace Flow.Bar.Controls.NavigationView
             return false;
         }
 
-        bool ShouldPreserveNavigationViewRS4Behavior()
+        private bool ShouldPreserveNavigationViewRS4Behavior()
         {
             // Since RS5, we support topnav
             return m_topNavGrid == null;
         }
 
-        bool ShouldPreserveNavigationViewRS3Behavior()
+        private bool ShouldPreserveNavigationViewRS3Behavior()
         {
             // Since RS4, we support backbutton
             return m_backButton == null;
         }
 
-        UIElement FindSelectionIndicator(object item)
+        private UIElement FindSelectionIndicator(object item)
         {
             if (item != null)
             {
@@ -2423,7 +2406,7 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        void RaiseSelectionChangedEvent(object nextItem, NavigationRecommendedTransitionDirection recommendedDirection = NavigationRecommendedTransitionDirection.Default)
+        private void RaiseSelectionChangedEvent(object nextItem, NavigationRecommendedTransitionDirection recommendedDirection = NavigationRecommendedTransitionDirection.Default)
         {
             var eventArgs = new NavigationViewSelectionChangedEventArgs
             {
@@ -2439,7 +2422,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         // SelectedItem change can be invoked by API or user's action like clicking. if it's not from API, m_shouldRaiseInvokeItemInSelectionChange would be true
         // If nextItem is selectionsuppressed, we should undo the selection. We didn't undo it OnSelectionChange because we want change by API has the same undo logic.
-        void ChangeSelection(object prevItem, object nextItem)
+        private void ChangeSelection(object prevItem, object nextItem)
         {
             if (IsSelectionSuppressed(nextItem))
             {
@@ -2528,14 +2511,14 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateSelectionModelSelection(IndexPath ip)
+        private void UpdateSelectionModelSelection(IndexPath ip)
         {
             var prevIndexPath = m_selectionModel.SelectedIndex;
             m_selectionModel.SelectAt(ip);
             UpdateIsChildSelected(prevIndexPath, ip);
         }
 
-        void UpdateIsChildSelected(IndexPath prevIP, IndexPath nextIP)
+        private void UpdateIsChildSelected(IndexPath prevIP, IndexPath nextIP)
         {
             if (prevIP != null && prevIP.GetSize() > 0)
             {
@@ -2548,7 +2531,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateIsChildSelectedForIndexPath(IndexPath ip, bool isChildSelected)
+        private void UpdateIsChildSelectedForIndexPath(IndexPath ip, bool isChildSelected)
         {
             // Update the isChildSelected property for every container on the IndexPath (with the exception of the actual container pointed to by the indexpath)
             var container = GetContainerForIndex(ip.GetAt(1), ip.GetAt(0) == c_footerMenuBlockIndex /*inFooter*/);
@@ -2575,7 +2558,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void RaiseItemInvoked(object item,
+        private void RaiseItemInvoked(object item,
             NavigationViewItemBase container = null,
             NavigationRecommendedTransitionDirection recommendedDirection = NavigationRecommendedTransitionDirection.Default)
         {
@@ -2604,7 +2587,7 @@ namespace Flow.Bar.Controls.NavigationView
         }
 
         // forceSetDisplayMode: On first call to SetDisplayMode, force setting to initial values
-        void SetDisplayMode(NavigationViewDisplayMode displayMode, bool forceSetDisplayMode = false)
+        private void SetDisplayMode(NavigationViewDisplayMode displayMode, bool forceSetDisplayMode = false)
         {
             // Need to keep the VisualStateGroup "DisplayModeGroup" updated even if the actual
             // display mode is not changed. This is due to the fact that there can be a transition between
@@ -2631,7 +2614,7 @@ namespace Flow.Bar.Controls.NavigationView
         //    PaneDisplayMode.Left || (PaneDisplayMode.Auto && DisplayMode.Expanded) . Expanded
         //    PaneDisplayMode.LeftCompact || (PaneDisplayMode.Auto && DisplayMode.Compact) . Compact
         //    Map others to Minimal or MinimalWithBackButton 
-        NavigationViewVisualStateDisplayMode GetVisualStateDisplayMode(NavigationViewDisplayMode displayMode)
+        private NavigationViewVisualStateDisplayMode GetVisualStateDisplayMode(NavigationViewDisplayMode displayMode)
         {
             var paneDisplayMode = PaneDisplayMode;
 
@@ -2666,7 +2649,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateVisualStateForDisplayModeGroup(NavigationViewDisplayMode displayMode)
+        private void UpdateVisualStateForDisplayModeGroup(NavigationViewDisplayMode displayMode)
         {
             if (m_rootSplitView is { } splitView)
             {
@@ -2715,7 +2698,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnNavigationViewItemTapped(object sender, TappedRoutedEventArgs args)
+        private void OnNavigationViewItemTapped(object sender, TappedRoutedEventArgs args)
         {
             if (sender is NavigationViewItem nvi)
             {
@@ -2725,7 +2708,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnNavigationViewItemKeyDown(object sender, KeyEventArgs args)
+        private void OnNavigationViewItemKeyDown(object sender, KeyEventArgs args)
         {
             if (args.Key == Key.Enter ||
                 args.Key == Key.Space)
@@ -2742,7 +2725,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void HandleKeyEventForNavigationViewItem(NavigationViewItem nvi, KeyEventArgs args)
+        private void HandleKeyEventForNavigationViewItem(NavigationViewItem nvi, KeyEventArgs args)
         {
             var key = args.Key;
             switch (key)
@@ -2761,7 +2744,7 @@ namespace Flow.Bar.Controls.NavigationView
                     KeyboardFocusLastItemFromItem(nvi);
                     break;
                 case Key.Down:
-                    FocusNextDownItem(nvi, args);
+                    NavigationView.FocusNextDownItem(nvi, args);
                     break;
                 case Key.Up:
                     FocusNextUpItem(nvi, args);
@@ -2772,7 +2755,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void FocusNextUpItem(NavigationViewItem nvi, KeyEventArgs args)
+        private void FocusNextUpItem(NavigationViewItem nvi, KeyEventArgs args)
         {
             if (args.OriginalSource != nvi)
             {
@@ -2791,18 +2774,11 @@ namespace Flow.Bar.Controls.NavigationView
                 if (nextFocusableNVIImpl.Depth == nviImpl.Depth)
                 {
                     // If we not at the top of the list for our current depth and the item above us has children, check whether we should move focus onto a child
-                    if (DoesNavigationViewItemHaveChildren(nextFocusableNVI))
+                    if (NavigationView.DoesNavigationViewItemHaveChildren(nextFocusableNVI))
                     {
                         // Focus on last lowest level visible container
                         if (nextFocusableNVIImpl.GetRepeater() is { } childRepeater)
                         {
-                            //if (FocusManager.FindLastFocusableElement(childRepeater) is { } lastFocusableElement)
-                            //{
-                            //    if (lastFocusableElement is Control lastFocusableNVI)
-                            //    {
-                            //        args.Handled = lastFocusableNVI.Focus(/*FocusState.Keyboard*/);
-                            //    }
-                            //}
                             if (childRepeater.MoveFocus(new TraversalRequest(FocusNavigationDirection.Last)))
                             {
                                 args.Handled = true;
@@ -2811,7 +2787,6 @@ namespace Flow.Bar.Controls.NavigationView
                             {
                                 args.Handled = nextFocusableNVIImpl.Focus(/*FocusState.Keyboard*/);
                             }
-
                         }
                     }
                     else
@@ -2833,14 +2808,14 @@ namespace Flow.Bar.Controls.NavigationView
         }
 
         // If item has focusable children, move focus to first focusable child, otherise just defer to default XYKeyboardFocus behavior
-        void FocusNextDownItem(NavigationViewItem nvi, KeyEventArgs args)
+        private static void FocusNextDownItem(NavigationViewItem nvi, KeyEventArgs args)
         {
             if (args.OriginalSource != nvi)
             {
                 return;
             }
 
-            if (DoesNavigationViewItemHaveChildren(nvi))
+            if (NavigationView.DoesNavigationViewItemHaveChildren(nvi))
             {
                 var nviImpl = nvi;
                 if (nviImpl.GetRepeater() is { } childRepeater)
@@ -2857,12 +2832,12 @@ namespace Flow.Bar.Controls.NavigationView
         }
 
         // WPF
-        void FocusNextRightItem(NavigationViewItem nvi, KeyEventArgs args)
+        private static void FocusNextRightItem(NavigationViewItem nvi, KeyEventArgs args)
         {
             args.Handled = nvi.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
         }
 
-        void KeyboardFocusFirstItemFromItem(NavigationViewItemBase nvib)
+        private void KeyboardFocusFirstItemFromItem(NavigationViewItemBase nvib)
         {
             UIElement firstElement;
             {
@@ -2880,7 +2855,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void KeyboardFocusLastItemFromItem(NavigationViewItemBase nvib)
+        private void KeyboardFocusLastItemFromItem(NavigationViewItemBase nvib)
         {
             var parentIR = GetParentRootItemsRepeaterForContainer(nvib);
 
@@ -2897,12 +2872,12 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnRepeaterGettingFocus(object sender, GettingFocusEventArgs args)
+        private void OnRepeaterGettingFocus(object sender, GettingFocusEventArgs args)
         {
             // if focus change was invoked by tab key
             // and there is selected item in ItemsRepeater that gatting focus
             // we should put focus on selected item
-            if (m_TabKeyPrecedesFocusChange && args.InputDevice == FocusInputDeviceKind.Keyboard && m_selectionModel.SelectedIndex != null)
+            if (m_tabKeyPrecedesFocusChange && args.InputDevice == FocusInputDeviceKind.Keyboard && m_selectionModel.SelectedIndex != null)
             {
                 if (args.OldFocusedElement is { } oldFocusedElement)
                 {
@@ -2964,10 +2939,10 @@ namespace Flow.Bar.Controls.NavigationView
                 }
             }
 
-            m_TabKeyPrecedesFocusChange = false;
+            m_tabKeyPrecedesFocusChange = false;
         }
 
-        void OnNavigationViewItemOnGotFocus(object sender, RoutedEventArgs e)
+        private void OnNavigationViewItemOnGotFocus(object sender, RoutedEventArgs e)
         {
             if (sender is NavigationViewItem nvi)
             {
@@ -3000,7 +2975,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
-            m_TabKeyPrecedesFocusChange = false;
+            m_tabKeyPrecedesFocusChange = false;
             base.OnPreviewKeyDown(e);
         }
 
@@ -3010,14 +2985,14 @@ namespace Flow.Bar.Controls.NavigationView
             var key = eventArgs.Key;
 
             bool handled = false;
-            m_TabKeyPrecedesFocusChange = false;
+            m_tabKeyPrecedesFocusChange = false;
 
             switch (key)
             {
                 case Key.Tab:
                     // arrow keys navigation through ItemsRepeater don't get here
                     // so handle tab key to distinguish between tab focus and arrow focus navigation
-                    m_TabKeyPrecedesFocusChange = true;
+                    m_tabKeyPrecedesFocusChange = true;
                     break;
                 case Key.Left:
                     bool isAltPressed = Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
@@ -3035,7 +3010,7 @@ namespace Flow.Bar.Controls.NavigationView
             base.OnKeyDown(e);
         }
 
-        internal object MenuItemFromContainer(DependencyObject container)
+        internal static object MenuItemFromContainer(DependencyObject container)
         {
             if (container != null)
             {
@@ -3064,7 +3039,7 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        void OnTopNavDataSourceChanged(NotifyCollectionChangedEventArgs args)
+        private void OnTopNavDataSourceChanged(NotifyCollectionChangedEventArgs args)
         {
             CloseTopNavigationViewFlyout();
 
@@ -3107,28 +3082,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        /*
-        void OnAccessKeyInvoked(object sender, AccessKeyInvokedEventArgs args)
-        {
-            if (args.Handled)
-            {
-                return;
-            }
-
-            // For topnav, invoke Morebutton, otherwise togglebutton
-            var button = IsTopNavigationView() ? m_topNavOverflowButton : m_paneToggleButton;
-            if (button != null)
-            {
-                if (FrameworkElementAutomationPeer.FromElement(button) is ButtonAutomationPeer peer)
-                {
-                    peer.Invoke();
-                    args.Handled(true);
-                }
-            }
-        }
-        */
-
-        NavigationTransitionInfo CreateNavigationTransitionInfo(NavigationRecommendedTransitionDirection recommendedTransitionDirection)
+        private static NavigationTransitionInfo CreateNavigationTransitionInfo(NavigationRecommendedTransitionDirection recommendedTransitionDirection)
         {
             // In current implementation, if click is from overflow item, just recommend FromRight Slide animation.
             if (recommendedTransitionDirection == NavigationRecommendedTransitionDirection.FromOverflow)
@@ -3140,7 +3094,7 @@ namespace Flow.Bar.Controls.NavigationView
                 || recommendedTransitionDirection == NavigationRecommendedTransitionDirection.FromRight)
                 && SharedHelpers.IsRS5OrHigher())
             {
-                SlideNavigationTransitionInfo sliderNav = new SlideNavigationTransitionInfo();
+                SlideNavigationTransitionInfo sliderNav = new();
                 SlideNavigationTransitionEffect effect =
                     recommendedTransitionDirection == NavigationRecommendedTransitionDirection.FromRight ?
                     SlideNavigationTransitionEffect.FromRight :
@@ -3148,7 +3102,7 @@ namespace Flow.Bar.Controls.NavigationView
                 // PR 1895355: Bug 17724768: Remove Side-to-Side navigation transition velocity key
                 // https://microsoft.visualstudio.com/_git/os/commit/7d58531e69bc8ad1761cff938d8db25f6fb6a841
                 // We want to use Effect, but it's not in all os of rs5. as a workaround, we only apply effect to the os which is already remove velocity key.
-                if (sliderNav is ISlideNavigationTransitionInfo2 sliderNav2)
+                if (sliderNav is ISlideNavigationTransitionInfo2)
                 {
                     sliderNav.Effect = effect;
                 }
@@ -3156,12 +3110,12 @@ namespace Flow.Bar.Controls.NavigationView
             }
             else
             {
-                EntranceNavigationTransitionInfo defaultInfo = new EntranceNavigationTransitionInfo();
+                EntranceNavigationTransitionInfo defaultInfo = new();
                 return defaultInfo;
             }
         }
 
-        NavigationRecommendedTransitionDirection GetRecommendedTransitionDirection(DependencyObject prev, DependencyObject next)
+        private NavigationRecommendedTransitionDirection GetRecommendedTransitionDirection(DependencyObject prev, DependencyObject next)
         {
             var recommendedTransitionDirection = NavigationRecommendedTransitionDirection.Default;
             var ir = m_topNavRepeater;
@@ -3173,38 +3127,32 @@ namespace Flow.Bar.Controls.NavigationView
 
                 var compare = prevIndexPath.CompareTo(nextIndexPath);
 
-                switch (compare)
+                recommendedTransitionDirection = compare switch
                 {
-                    case -1:
-                        recommendedTransitionDirection = NavigationRecommendedTransitionDirection.FromRight;
-                        break;
-                    case 1:
-                        recommendedTransitionDirection = NavigationRecommendedTransitionDirection.FromLeft;
-                        break;
-                    default:
-                        recommendedTransitionDirection = NavigationRecommendedTransitionDirection.Default;
-                        break;
-                }
+                    -1 => NavigationRecommendedTransitionDirection.FromRight,
+                    1 => NavigationRecommendedTransitionDirection.FromLeft,
+                    _ => NavigationRecommendedTransitionDirection.Default,
+                };
             }
             return recommendedTransitionDirection;
         }
 
-        NavigationViewTemplateSettings GetTemplateSettings()
+        private NavigationViewTemplateSettings GetTemplateSettings()
         {
             return TemplateSettings;
         }
 
-        bool IsNavigationViewListSingleSelectionFollowsFocus()
+        private bool IsNavigationViewListSingleSelectionFollowsFocus()
         {
             return (SelectionFollowsFocus == NavigationViewSelectionFollowsFocus.Enabled);
         }
 
-        void UpdateSingleSelectionFollowsFocusTemplateSetting()
+        private void UpdateSingleSelectionFollowsFocusTemplateSetting()
         {
             GetTemplateSettings().SingleSelectionFollowsFocus = IsNavigationViewListSingleSelectionFollowsFocus();
         }
 
-        void OnMenuItemsSourceCollectionChanged(object sender, object args)
+        private void OnMenuItemsSourceCollectionChanged(object sender, object args)
         {
             if (!IsTopNavigationView())
             {
@@ -3216,7 +3164,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnSelectedItemPropertyChanged(DependencyPropertyChangedEventArgs args)
+        private void OnSelectedItemPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
 
             var newItem = args.NewValue;
@@ -3234,12 +3182,12 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void SetSelectedItemAndExpectItemInvokeWhenSelectionChangedIfNotInvokedFromAPI(object item)
+        private void SetSelectedItemAndExpectItemInvokeWhenSelectionChangedIfNotInvokedFromAPI(object item)
         {
             SelectedItem = item;
         }
 
-        void ChangeSelectStatusForItem(object item, bool selected)
+        private void ChangeSelectStatusForItem(object item, bool selected)
         {
             if (NavigationViewItemOrSettingsContentFromData(item) is { } container)
             {
@@ -3271,7 +3219,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UnselectPrevItem(object prevItem, object nextItem)
+        private void UnselectPrevItem(object prevItem, object nextItem)
         {
             if (prevItem != null && prevItem != nextItem)
             {
@@ -3291,7 +3239,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UndoSelectionAndRevertSelectionTo(object prevSelectedItem, object nextItem)
+        private void UndoSelectionAndRevertSelectionTo(object prevSelectedItem, object nextItem)
         {
             object selectedItem = null;
             if (prevSelectedItem != null)
@@ -3316,7 +3264,7 @@ namespace Flow.Bar.Controls.NavigationView
             SelectedItem = selectedItem;
         }
 
-        void CloseTopNavigationViewFlyout()
+        private void CloseTopNavigationViewFlyout()
         {
             if (m_topNavOverflowButton is { } button)
             {
@@ -3327,7 +3275,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdatePaneOverlayGroup()
+        private void UpdatePaneOverlayGroup()
         {
             var splitView = m_rootSplitView;
             if (splitView != null)
@@ -3343,7 +3291,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateVisualState(bool useTransitions = false)
+        private void UpdateVisualState(bool useTransitions = false)
         {
             if (m_appliedTemplate)
             {
@@ -3363,7 +3311,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateVisualStateForOverflowButton()
+        private void UpdateVisualStateForOverflowButton()
         {
             var state = (OverflowLabelMode == NavigationViewOverflowLabelMode.MoreLabel) ?
                 "OverflowButtonWithLabel" :
@@ -3371,13 +3319,13 @@ namespace Flow.Bar.Controls.NavigationView
             VisualStateManager.GoToState(this, state, false /* useTransitions*/);
         }
 
-        void UpdateLeftNavigationOnlyVisualState(bool useTransitions)
+        private void UpdateLeftNavigationOnlyVisualState(bool useTransitions)
         {
             bool isToggleButtonVisible = IsPaneToggleButtonVisible;
             VisualStateManager.GoToState(this, isToggleButtonVisible ? "TogglePaneButtonVisible" : "TogglePaneButtonCollapsed", false /*useTransitions*/);
         }
 
-        void InvalidateTopNavPrimaryLayout()
+        private void InvalidateTopNavPrimaryLayout()
         {
             if (m_appliedTemplate && IsTopNavigationView())
             {
@@ -3385,29 +3333,29 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        double MeasureTopNavigationViewDesiredWidth(Size availableSize)
+        private double MeasureTopNavigationViewDesiredWidth(Size availableSize)
         {
             return LayoutUtils.MeasureAndGetDesiredWidthFor(m_topNavGrid, availableSize);
         }
 
-        double MeasureTopNavMenuItemsHostDesiredWidth(Size availableSize)
+        private double MeasureTopNavMenuItemsHostDesiredWidth(Size availableSize)
         {
             return LayoutUtils.MeasureAndGetDesiredWidthFor(m_topNavRepeater, availableSize);
         }
 
-        double GetTopNavigationViewActualWidth()
+        private double GetTopNavigationViewActualWidth()
         {
             double width = LayoutUtils.GetActualWidthFor(m_topNavGrid);
             Debug.Assert(width < double.MaxValue);
             return width;
         }
 
-        bool HasTopNavigationViewItemNotInPrimaryList()
+        private bool HasTopNavigationViewItemNotInPrimaryList()
         {
             return m_topDataProvider.GetPrimaryListSize() != m_topDataProvider.Size();
         }
 
-        void ResetAndRearrangeTopNavItems(Size availableSize)
+        private void ResetAndRearrangeTopNavItems(Size availableSize)
         {
             if (HasTopNavigationViewItemNotInPrimaryList())
             {
@@ -3416,7 +3364,7 @@ namespace Flow.Bar.Controls.NavigationView
             ArrangeTopNavItems(availableSize);
         }
 
-        void HandleTopNavigationMeasureOverride(Size availableSize)
+        private void HandleTopNavigationMeasureOverride(Size availableSize)
         {
             // Determine if TopNav is in Overflow
             if (HasTopNavigationViewItemNotInPrimaryList())
@@ -3434,7 +3382,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void HandleTopNavigationMeasureOverrideNormal(Size availableSize)
+        private void HandleTopNavigationMeasureOverrideNormal(Size availableSize)
         {
             var desiredWidth = MeasureTopNavigationViewDesiredWidth(c_infSize);
             if (desiredWidth > availableSize.Width)
@@ -3443,7 +3391,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void HandleTopNavigationMeasureOverrideOverflow(Size availableSize)
+        private void HandleTopNavigationMeasureOverrideOverflow(Size availableSize)
         {
             var desiredWidth = MeasureTopNavigationViewDesiredWidth(c_infSize);
             if (desiredWidth > availableSize.Width)
@@ -3460,13 +3408,13 @@ namespace Flow.Bar.Controls.NavigationView
                 }
                 else
                 {
-                    var movableItems = FindMovableItemsRecoverToPrimaryList(availableSize.Width - desiredWidth, new List<int>()/*includeItems*/);
+                    var movableItems = FindMovableItemsRecoverToPrimaryList(availableSize.Width - desiredWidth, []/*includeItems*/);
                     m_topDataProvider.MoveItemsToPrimaryList(movableItems);
                 }
             }
         }
 
-        void ArrangeTopNavItems(Size availableSize)
+        private void ArrangeTopNavItems(Size availableSize)
         {
             SetOverflowButtonVisibility(Visibility.Collapsed);
             var desiredWidth = MeasureTopNavigationViewDesiredWidth(c_infSize);
@@ -3483,7 +3431,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void SetOverflowButtonVisibility(Visibility visibility)
+        private void SetOverflowButtonVisibility(Visibility visibility)
         {
             if (visibility != TemplateSettings.OverflowButtonVisibility)
             {
@@ -3491,7 +3439,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void SelectOverflowItem(object item, IndexPath ip)
+        private void SelectOverflowItem(object item, IndexPath ip)
         {
 
             object itemBeingMoved;
@@ -3536,13 +3484,13 @@ namespace Flow.Bar.Controls.NavigationView
 
                 // calculate items to be removed from primary because a overflow item is selected. 
                 // SelectedItem is assumed to be removed from primary first, then added it back if it should not be removed
-                var itemsToBeRemoved = FindMovableItemsToBeRemovedFromPrimaryList(widthAtLeastToBeRemoved, new List<int>() /*excludeItems*/);
+                var itemsToBeRemoved = FindMovableItemsToBeRemovedFromPrimaryList(widthAtLeastToBeRemoved, [] /*excludeItems*/);
 
                 // calculate the size to be removed
                 var toBeRemovedItemWidth = m_topDataProvider.CalculateWidthForItems(itemsToBeRemoved);
 
                 var widthAvailableToRecover = toBeRemovedItemWidth - widthAtLeastToBeRemoved;
-                var itemsToBeAdded = FindMovableItemsRecoverToPrimaryList(widthAvailableToRecover, new List<int> { selectedOverflowItemIndex }/*includeItems*/);
+                var itemsToBeAdded = FindMovableItemsRecoverToPrimaryList(widthAvailableToRecover, [selectedOverflowItemIndex]/*includeItems*/);
 
                 CollectionHelper.unique_push_back(itemsToBeAdded, selectedOverflowItemIndex);
 
@@ -3554,7 +3502,7 @@ namespace Flow.Bar.Controls.NavigationView
                     {
                         if (it == ip.GetAt(1))
                         {
-                            if (m_activeIndicator is { } indicator)
+                            if (m_activeIndicator is { })
                             {
                                 // If the previously selected item is being moved into overflow, hide its indicator
                                 // as we will no longer need to animate from its location.
@@ -3600,7 +3548,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        bool NeedRearrangeOfTopElementsAfterOverflowSelectionChanged(int selectedOriginalIndex)
+        private bool NeedRearrangeOfTopElementsAfterOverflowSelectionChanged(int selectedOriginalIndex)
         {
             bool needRearrange = false;
 
@@ -3650,7 +3598,7 @@ namespace Flow.Bar.Controls.NavigationView
             return needRearrange;
         }
 
-        void ShrinkTopNavigationSize(double desiredWidth, Size availableSize)
+        private void ShrinkTopNavigationSize(double desiredWidth, Size availableSize)
         {
             UpdateTopNavigationWidthCache();
 
@@ -3672,7 +3620,7 @@ namespace Flow.Bar.Controls.NavigationView
             var widthAtLeastToBeRemoved = desiredWidth - availableSize.Width;
             if (widthAtLeastToBeRemoved > 0)
             {
-                var itemToBeRemoved = FindMovableItemsToBeRemovedFromPrimaryList(widthAtLeastToBeRemoved, new List<int> { selectedItemIndex });
+                var itemToBeRemoved = FindMovableItemsToBeRemovedFromPrimaryList(widthAtLeastToBeRemoved, [selectedItemIndex]);
 
                 // At least one item is kept on primary list
                 KeepAtLeastOneItemInPrimaryList(itemToBeRemoved, false/*shouldKeepFirst*/);
@@ -3683,7 +3631,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        List<int> FindMovableItemsRecoverToPrimaryList(double availableWidth, List<int> includeItems)
+        private List<int> FindMovableItemsRecoverToPrimaryList(double availableWidth, List<int> includeItems)
         {
             List<int> toBeMoved = [];
 
@@ -3725,9 +3673,9 @@ namespace Flow.Bar.Controls.NavigationView
             return toBeMoved;
         }
 
-        List<int> FindMovableItemsToBeRemovedFromPrimaryList(double widthAtLeastToBeRemoved, List<int> excludeItems)
+        private List<int> FindMovableItemsToBeRemovedFromPrimaryList(double widthAtLeastToBeRemoved, List<int> excludeItems)
         {
-            List<int> toBeMoved = new List<int>();
+            List<int> toBeMoved = [];
 
             int i = m_topDataProvider.Size() - 1;
             while (i >= 0 && widthAtLeastToBeRemoved > 0)
@@ -3747,7 +3695,7 @@ namespace Flow.Bar.Controls.NavigationView
             return toBeMoved;
         }
 
-        List<int> FindMovableItemsBeyondAvailableWidth(double availableWidth)
+        private List<int> FindMovableItemsBeyondAvailableWidth(double availableWidth)
         {
             List<int> toBeMoved = [];
             if (m_topNavRepeater is { } ir)
@@ -3791,7 +3739,7 @@ namespace Flow.Bar.Controls.NavigationView
             return m_topDataProvider.ConvertPrimaryIndexToIndex(toBeMoved);
         }
 
-        void KeepAtLeastOneItemInPrimaryList(List<int> itemInPrimaryToBeRemoved, bool shouldKeepFirst)
+        private void KeepAtLeastOneItemInPrimaryList(List<int> itemInPrimaryToBeRemoved, bool shouldKeepFirst)
         {
             if (!itemInPrimaryToBeRemoved.Empty() && itemInPrimaryToBeRemoved.Count == m_topDataProvider.GetPrimaryListSize())
             {
@@ -3806,22 +3754,22 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        int GetSelectedItemIndex()
+        private int GetSelectedItemIndex()
         {
             return m_topDataProvider.IndexOf(SelectedItem);
         }
 
-        double GetPaneToggleButtonWidth()
+        private double GetPaneToggleButtonWidth()
         {
             return (double)(SharedHelpers.FindResource("PaneToggleButtonWidth", this, (double)c_paneToggleButtonWidth));
         }
 
-        double GetPaneToggleButtonHeight()
+        private double GetPaneToggleButtonHeight()
         {
             return (double)(SharedHelpers.FindResource("PaneToggleButtonHeight", this, (double)c_paneToggleButtonHeight));
         }
 
-        void UpdateTopNavigationWidthCache()
+        private void UpdateTopNavigationWidthCache()
         {
             int size = m_topDataProvider.GetPrimaryListSize();
             if (m_topNavRepeater is { } ir)
@@ -3845,23 +3793,23 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        bool IsTopNavigationView()
+        private bool IsTopNavigationView()
         {
             return PaneDisplayMode == NavigationViewPaneDisplayMode.Top;
         }
 
-        bool IsTopPrimaryListVisible()
+        private bool IsTopPrimaryListVisible()
         {
             return m_topNavRepeater != null && (TemplateSettings.TopPaneVisibility == Visibility.Visible);
         }
 
-        void CoerceToGreaterThanZero(ref double value)
+        private static void CoerceToGreaterThanZero(ref double value)
         {
             // Property coercion for OpenPaneLength, CompactPaneLength, CompactModeThresholdWidth, ExpandedModeThresholdWidth
             value = Math.Max(value, 0.0);
         }
 
-        void PropertyChanged(DependencyPropertyChangedEventArgs args)
+        private void PropertyChanged(DependencyPropertyChangedEventArgs args)
         {
             DependencyProperty property = args.Property;
 
@@ -3898,16 +3846,6 @@ namespace Flow.Bar.Controls.NavigationView
                     InvalidateTopNavPrimaryLayout();
                 }
 
-                /*
-                if (g_IsTelemetryProviderEnabled && IsBackButtonVisible == NavigationViewBackButtonVisible.Collapsed)
-                {
-                    //  Explicitly disabling BackUI on NavigationView
-                    TraceLoggingWrite(
-                        g_hTelemetryProvider,
-                        "NavigationView_DisableBackUI",
-                        TraceLoggingDescription("Developer explicitly disables the BackUI on NavigationView"));
-                }
-                */
                 // Enabling back button shifts grid instead of resizing, so let's update the layout.
                 if (m_backButton is { } backButton)
                 {
@@ -4008,19 +3946,19 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateNavigationViewItemsFactory()
+        private void UpdateNavigationViewItemsFactory()
         {
             object newItemTemplate = MenuItemTemplate;
             newItemTemplate ??= MenuItemTemplateSelector;
             m_navigationViewItemsFactory.UserElementFactory(newItemTemplate);
         }
 
-        void SyncItemTemplates()
+        private void SyncItemTemplates()
         {
             UpdateNavigationViewItemsFactory();
         }
 
-        void OnRepeaterIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void OnRepeaterIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if ((bool)e.NewValue)
             {
@@ -4035,7 +3973,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnRepeaterLoaded(object sender, RoutedEventArgs args)
+        private void OnRepeaterLoaded(object sender, RoutedEventArgs args)
         {
             if (SelectedItem is { } item)
             {
@@ -4053,7 +3991,7 @@ namespace Flow.Bar.Controls.NavigationView
         // If app is .net app, the lifetime of NavigationView maybe depends on garbage collection.
         // Unlike other revoker, TitleBar is in global space and we need to stop receiving changed event when it's unloaded.
         // So we do hook it in Loaded and Unhook it in Unloaded
-        void OnUnloaded(object sender, RoutedEventArgs args)
+        private void OnUnloaded(object sender, RoutedEventArgs args)
         {
             if (m_coreTitleBar is { } coreTitleBar)
             {
@@ -4062,7 +4000,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void OnLoaded(object sender, RoutedEventArgs args)
+        private void OnLoaded(object sender, RoutedEventArgs args)
         {
             if (m_coreTitleBar is { } coreTitleBar)
             {
@@ -4073,7 +4011,7 @@ namespace Flow.Bar.Controls.NavigationView
             UpdatePaneButtonsWidths();
         }
 
-        void OnIsPaneOpenChanged()
+        private void OnIsPaneOpenChanged()
         {
             var isPaneOpen = IsPaneOpen;
             if (isPaneOpen && m_wasForceClosed)
@@ -4106,13 +4044,13 @@ namespace Flow.Bar.Controls.NavigationView
             UpdatePaneButtonsWidths();
         }
 
-        void UpdatePaneToggleButtonVisibility()
+        private void UpdatePaneToggleButtonVisibility()
         {
             var visible = IsPaneToggleButtonVisible && !IsTopNavigationView();
             GetTemplateSettings().PaneToggleButtonVisibility = Util.VisibilityFromBool(visible);
         }
 
-        void UpdatePaneDisplayMode()
+        private void UpdatePaneDisplayMode()
         {
             if (!m_appliedTemplate)
             {
@@ -4141,11 +4079,11 @@ namespace Flow.Bar.Controls.NavigationView
             UpdateFooterRepeaterItemsSource(false /*sourceCollectionReset*/, false /*sourceCollectionChanged*/);
             if (SelectedItem is { })
             {
-                m_OrientationChangedPendingAnimation = true;
+                m_orientationChangedPendingAnimation = true;
             }
         }
 
-        void UpdatePaneDisplayMode(NavigationViewPaneDisplayMode oldDisplayMode, NavigationViewPaneDisplayMode newDisplayMode)
+        private void UpdatePaneDisplayMode(NavigationViewPaneDisplayMode oldDisplayMode, NavigationViewPaneDisplayMode newDisplayMode)
         {
             if (!m_appliedTemplate)
             {
@@ -4178,7 +4116,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdatePaneVisibility()
+        private void UpdatePaneVisibility()
         {
             var templateSettings = GetTemplateSettings();
             if (IsPaneVisible)
@@ -4205,7 +4143,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        static void SwapPaneHeaderContent(ContentControl newParentTrackRef, ContentControl oldParentTrackRef, string propertyPathName)
+        private static void SwapPaneHeaderContent(ContentControl newParentTrackRef, ContentControl oldParentTrackRef, string propertyPathName)
         {
             if (newParentTrackRef is { } newParent)
             {
@@ -4218,7 +4156,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateContentBindingsForPaneDisplayMode()
+        private void UpdateContentBindingsForPaneDisplayMode()
         {
             UIElement autoSuggestBoxContentControl;
             UIElement notControl;
@@ -4241,7 +4179,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateHeaderVisibility()
+        private void UpdateHeaderVisibility()
         {
             if (!m_appliedTemplate)
             {
@@ -4251,7 +4189,7 @@ namespace Flow.Bar.Controls.NavigationView
             UpdateHeaderVisibility(DisplayMode);
         }
 
-        void UpdateHeaderVisibility(NavigationViewDisplayMode displayMode)
+        private void UpdateHeaderVisibility(NavigationViewDisplayMode displayMode)
         {
             // Ignore AlwaysShowHeader property in case DisplayMode is Minimal and it's not Top NavigationView
             bool showHeader = AlwaysShowHeader || (!IsTopNavigationView() && displayMode == NavigationViewDisplayMode.Minimal);
@@ -4268,7 +4206,7 @@ namespace Flow.Bar.Controls.NavigationView
             VisualStateManager.GoToState(this, showHeader ? "HeaderVisible" : "HeaderCollapsed", false /*useTransitions*/);
         }
 
-        void UpdatePaneTabFocusNavigation()
+        private void UpdatePaneTabFocusNavigation()
         {
             if (!m_appliedTemplate)
             {
@@ -4296,7 +4234,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdatePaneToggleSize()
+        private void UpdatePaneToggleSize()
         {
             if (!ShouldPreserveNavigationViewRS3Behavior())
             {
@@ -4338,7 +4276,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateBackAndCloseButtonsVisibility()
+        private void UpdateBackAndCloseButtonsVisibility()
         {
             if (!m_appliedTemplate)
             {
@@ -4465,7 +4403,7 @@ namespace Flow.Bar.Controls.NavigationView
             UpdateTitleBarPadding();
         }
 
-        void UpdatePaneTitleMargins()
+        private void UpdatePaneTitleMargins()
         {
             if (ShouldPreserveNavigationViewRS4Behavior())
             {
@@ -4483,7 +4421,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void UpdateSelectionForMenuItems()
+        private void UpdateSelectionForMenuItems()
         {
             // Allow customer to set selection by NavigationViewItem.IsSelected.
             // If there are more than two items are set IsSelected=true, the first one is actually selected.
@@ -4509,7 +4447,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        bool UpdateSelectedItemFromMenuItems(IList menuItems, bool foundFirstSelected = false)
+        private bool UpdateSelectedItemFromMenuItems(IList menuItems, bool foundFirstSelected = false)
         {
             for (int i = 0; i < menuItems.Count; i++)
             {
@@ -4540,28 +4478,28 @@ namespace Flow.Bar.Controls.NavigationView
             return foundFirstSelected;
         }
 
-        void OnTitleBarMetricsChanged(object sender, object args)
+        private void OnTitleBarMetricsChanged(object sender, object args)
         {
             UpdateTitleBarPadding();
         }
 
-        void OnTitleBarIsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
+        private void OnTitleBarIsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
         {
             UpdateTitleBarPadding();
         }
 
-        void ClosePaneIfNeccessaryAfterItemIsClicked(NavigationViewItem selectedContainer)
+        private void ClosePaneIfNeccessaryAfterItemIsClicked(NavigationViewItem selectedContainer)
         {
             if (IsPaneOpen &&
                 DisplayMode != NavigationViewDisplayMode.Expanded &&
-                !DoesNavigationViewItemHaveChildren(selectedContainer) &&
+                !NavigationView.DoesNavigationViewItemHaveChildren(selectedContainer) &&
                 !m_shouldIgnoreNextSelectionChange)
             {
                 ClosePane();
             }
         }
 
-        bool NeedTopPaddingForRS5OrHigher(CoreApplicationViewTitleBar coreTitleBar)
+        private static bool NeedTopPaddingForRS5OrHigher(CoreApplicationViewTitleBar coreTitleBar)
         {
             // Starting on RS5, we will be using the following IsVisible API together with ExtendViewIntoTitleBar
             // to decide whether to try to add top padding or not.
@@ -4570,7 +4508,7 @@ namespace Flow.Bar.Controls.NavigationView
                 && !IsFullScreenOrTabletMode();
         }
 
-        void UpdateTitleBarPadding()
+        private void UpdateTitleBarPadding()
         {
             if (!m_appliedTemplate)
             {
@@ -4598,7 +4536,7 @@ namespace Flow.Bar.Controls.NavigationView
                     }
                     else
                     {
-                        needsTopPadding = NeedTopPaddingForRS5OrHigher(coreTitleBar);
+                        needsTopPadding = NavigationView.NeedTopPaddingForRS5OrHigher(coreTitleBar);
                     }
                 }
 
@@ -4686,7 +4624,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void RaiseDisplayModeChanged(NavigationViewDisplayMode displayMode)
+        private void RaiseDisplayModeChanged(NavigationViewDisplayMode displayMode)
         {
             SetValue(s_displayModePropertyKey, displayMode);
             var eventArgs = new NavigationViewDisplayModeChangedEventArgs
@@ -4696,16 +4634,16 @@ namespace Flow.Bar.Controls.NavigationView
             DisplayModeChanged?.Invoke(this, eventArgs);
         }
 
-        static bool IsFullScreenOrTabletMode()
+        private static bool IsFullScreenOrTabletMode()
         {
             return false;
         }
 
-        static void UpdatePaneShadow()
+        private static void UpdatePaneShadow()
         {
         }
 
-        T GetContainerForData<T>(object data) where T : class
+        private T GetContainerForData<T>(object data) where T : class
         {
             if (data == null)
             {
@@ -4743,14 +4681,14 @@ namespace Flow.Bar.Controls.NavigationView
             // TODO: Either fix or remove implementation for TopNav.
             // It may not be required due to top nav rarely having realized children in its default state.
             {
-                if (SearchEntireTreeForContainer(mainRepeater, data) is { } container)
+                if (NavigationView.SearchEntireTreeForContainer(mainRepeater, data) is { } container)
                 {
                     return container as T;
                 }
             }
 
             {
-                if (SearchEntireTreeForContainer(footerRepeater, data) is { } container)
+                if (NavigationView.SearchEntireTreeForContainer(footerRepeater, data) is { } container)
                 {
                     return container as T;
                 }
@@ -4759,7 +4697,7 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        UIElement SearchEntireTreeForContainer(ItemsRepeater rootRepeater, object data)
+        private static UIElement SearchEntireTreeForContainer(ItemsRepeater rootRepeater, object data)
         {
             // TODO: Temporary inefficient solution that results in unnecessary time complexity, fix.
             var index = GetIndexFromItem(rootRepeater, data);
@@ -4776,7 +4714,7 @@ namespace Flow.Bar.Controls.NavigationView
                     {
                         if (nvi.GetRepeater() is { } nviRepeater)
                         {
-                            if (SearchEntireTreeForContainer(nviRepeater, data) is { } foundElement)
+                            if (NavigationView.SearchEntireTreeForContainer(nviRepeater, data) is { } foundElement)
                             {
                                 return foundElement;
                             }
@@ -4787,7 +4725,7 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        IndexPath SearchEntireTreeForIndexPath(ItemsRepeater rootRepeater, object data, bool isFooterRepeater)
+        private IndexPath SearchEntireTreeForIndexPath(ItemsRepeater rootRepeater, object data, bool isFooterRepeater)
         {
             for (int i = 0; i < GetContainerCountInRepeater(rootRepeater); i++)
             {
@@ -4809,7 +4747,7 @@ namespace Flow.Bar.Controls.NavigationView
         // There are two possibilities here if the passed in item has children. Either the children of the passed in container have already been realized,
         // in which case we simply just iterate through the children containers, or they have not been realized yet and we have to iterate through the data
         // and manually realize each item.
-        IndexPath SearchEntireTreeForIndexPath(NavigationViewItem parentContainer, object data, IndexPath ip)
+        private IndexPath SearchEntireTreeForIndexPath(NavigationViewItem parentContainer, object data, IndexPath ip)
         {
             bool areChildrenRealized = false;
             if (parentContainer.GetRepeater() is { } childrenRepeater)
@@ -4844,7 +4782,7 @@ namespace Flow.Bar.Controls.NavigationView
             //If children are not realized, manually realize and search.
             if (!areChildrenRealized)
             {
-                if (GetChildren(parentContainer) is { } childrenData)
+                if (NavigationView.GetChildren(parentContainer) is { } childrenData)
                 {
                     // Get children data in an enumarable form
                     var newDataSource = childrenData as ItemsSourceView;
@@ -4868,24 +4806,10 @@ namespace Flow.Bar.Controls.NavigationView
                             {
                                 if (nvib is NavigationViewItem nvi)
                                 {
-                                    // Process x:bind
-                                    //if (CachedVisualTreeHelpers.GetDataTemplateComponent(nvi) is { } extension)
-                                    //{
-                                    //    // Clear out old data. 
-                                    //    extension.Recycle();
-                                    //    int nextPhase = VirtualizationInfo.PhaseReachedEnd;
-                                    //    // Run Phase 0
-                                    //    extension.ProcessBindings(childData, i, 0 /* currentPhase */, nextPhase);
-
-                                    //    // TODO: If nextPhase is not -1, ProcessBinding for all the phases
-                                    //}
-
                                     if (SearchEntireTreeForIndexPath(nvi, data, newIndexPath) is { } foundIndexPath)
                                     {
                                         return foundIndexPath;
                                     }
-
-                                    //TODO: Recycle container!
                                 }
                             }
                         }
@@ -4896,11 +4820,13 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        NavigationViewItemBase ResolveContainerForItem(object item, int index)
+        private NavigationViewItemBase ResolveContainerForItem(object item, int index)
         {
-            var args = new ElementFactoryGetArgs();
-            args.Data = item;
-            args.Index = index;
+            var args = new ElementFactoryGetArgs
+            {
+                Data = item,
+                Index = index
+            };
 
             if (m_navigationViewItemsFactory.GetElement(args) is { } container)
             {
@@ -4912,14 +4838,16 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        void RecycleContainer(UIElement container)
+        private void RecycleContainer(UIElement container)
         {
-            var args = new ElementFactoryRecycleArgs();
-            args.Element = container;
+            var args = new ElementFactoryRecycleArgs
+            {
+                Element = container
+            };
             m_navigationViewItemsFactory.RecycleElement(args);
         }
 
-        int GetContainerCountInRepeater(ItemsRepeater ir)
+        private static int GetContainerCountInRepeater(ItemsRepeater ir)
         {
             if (ir != null)
             {
@@ -4931,7 +4859,7 @@ namespace Flow.Bar.Controls.NavigationView
             return -1;
         }
 
-        bool DoesRepeaterHaveRealizedContainers(ItemsRepeater ir)
+        private static bool DoesRepeaterHaveRealizedContainers(ItemsRepeater ir)
         {
             if (ir != null)
             {
@@ -4943,7 +4871,7 @@ namespace Flow.Bar.Controls.NavigationView
             return false;
         }
 
-        int GetIndexFromItem(ItemsRepeater ir, object data)
+        private static int GetIndexFromItem(ItemsRepeater ir, object data)
         {
             if (ir != null)
             {
@@ -4955,7 +4883,7 @@ namespace Flow.Bar.Controls.NavigationView
             return -1;
         }
 
-        object GetItemFromIndex(ItemsRepeater ir, int index)
+        private static object GetItemFromIndex(ItemsRepeater ir, int index)
         {
             if (ir != null)
             {
@@ -4967,7 +4895,7 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        IndexPath GetIndexPathOfItem(object data)
+        private IndexPath GetIndexPathOfItem(object data)
         {
             if (data is NavigationViewItemBase nvib)
             {
@@ -5020,10 +4948,10 @@ namespace Flow.Bar.Controls.NavigationView
                 }
             }
 
-            return new IndexPath(new List<int>(0));
+            return new IndexPath([]);
         }
 
-        UIElement GetContainerForIndex(int index, bool inFooter)
+        private UIElement GetContainerForIndex(int index, bool inFooter)
         {
             if (IsTopNavigationView())
             {
@@ -5051,7 +4979,7 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        NavigationViewItemBase GetContainerForIndexPath(IndexPath ip, bool lastVisible = false)
+        private NavigationViewItemBase GetContainerForIndexPath(IndexPath ip, bool lastVisible = false)
         {
             if (ip != null && ip.GetSize() > 0)
             {
@@ -5073,13 +5001,13 @@ namespace Flow.Bar.Controls.NavigationView
                     // This will return null if requesting children containers of
                     // items in the primary list, or unrealized items in the overflow popup.
                     // However this should not happen.
-                    return GetContainerForIndexPath(container, ip, lastVisible);
+                    return NavigationView.GetContainerForIndexPath(container, ip, lastVisible);
                 }
             }
             return null;
         }
 
-        NavigationViewItemBase GetContainerForIndexPath(UIElement firstContainer, IndexPath ip, bool lastVisible)
+        private static NavigationViewItemBase GetContainerForIndexPath(UIElement firstContainer, IndexPath ip, bool lastVisible)
         {
             var container = firstContainer;
             if (ip.GetSize() > 2)
@@ -5113,12 +5041,11 @@ namespace Flow.Bar.Controls.NavigationView
             return container as NavigationViewItemBase;
         }
 
-        bool IsContainerTheSelectedItemInTheSelectionModel(NavigationViewItemBase nvib)
+        private bool IsContainerTheSelectedItemInTheSelectionModel(NavigationViewItemBase nvib)
         {
             if (m_selectionModel.SelectedItem is { } selectedItem)
             {
-                var selectedItemContainer = selectedItem as NavigationViewItemBase;
-                if (selectedItemContainer == null)
+                if (selectedItem is not NavigationViewItemBase selectedItemContainer)
                 {
                     selectedItemContainer = GetContainerForIndexPath(m_selectionModel.SelectedIndex);
                 }
@@ -5149,35 +5076,35 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        internal void Expand(NavigationViewItem item)
+        internal static void Expand(NavigationViewItem item)
         {
-            ChangeIsExpandedNavigationViewItem(item, true /*isExpanded*/);
+            NavigationView.ChangeIsExpandedNavigationViewItem(item, true /*isExpanded*/);
         }
 
-        internal void Collapse(NavigationViewItem item)
+        internal static void Collapse(NavigationViewItem item)
         {
-            ChangeIsExpandedNavigationViewItem(item, false /*isExpanded*/);
+            NavigationView.ChangeIsExpandedNavigationViewItem(item, false /*isExpanded*/);
         }
 
-        bool DoesNavigationViewItemHaveChildren(NavigationViewItem nvi)
+        private static bool DoesNavigationViewItemHaveChildren(NavigationViewItem nvi)
         {
             return nvi.MenuItems.Count > 0 || nvi.MenuItemsSource != null || nvi.HasUnrealizedChildren;
         }
 
-        void ToggleIsExpandedNavigationViewItem(NavigationViewItem nvi)
+        private static void ToggleIsExpandedNavigationViewItem(NavigationViewItem nvi)
         {
-            ChangeIsExpandedNavigationViewItem(nvi, !nvi.IsExpanded);
+            NavigationView.ChangeIsExpandedNavigationViewItem(nvi, !nvi.IsExpanded);
         }
 
-        void ChangeIsExpandedNavigationViewItem(NavigationViewItem nvi, bool isExpanded)
+        private static void ChangeIsExpandedNavigationViewItem(NavigationViewItem nvi, bool isExpanded)
         {
-            if (DoesNavigationViewItemHaveChildren(nvi))
+            if (NavigationView.DoesNavigationViewItemHaveChildren(nvi))
             {
                 nvi.IsExpanded = isExpanded;
             }
         }
 
-        NavigationViewItem FindLowestLevelContainerToDisplaySelectionIndicator()
+        private NavigationViewItem FindLowestLevelContainerToDisplaySelectionIndicator()
         {
             var indexIntoIndex = 1;
             var selectedIndex = m_selectionModel.SelectedIndex;
@@ -5210,7 +5137,7 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        void ShowHideChildrenItemsRepeater(NavigationViewItem nvi)
+        private void ShowHideChildrenItemsRepeater(NavigationViewItem nvi)
         {
             var nviImpl = nvi;
 
@@ -5244,7 +5171,7 @@ namespace Flow.Bar.Controls.NavigationView
             nviImpl.RotateExpandCollapseChevron(nvi.IsExpanded);
         }
 
-        object GetChildren(NavigationViewItem nvi)
+        private static object GetChildren(NavigationViewItem nvi)
         {
             if (nvi.MenuItems.Count > 0)
             {
@@ -5253,17 +5180,7 @@ namespace Flow.Bar.Controls.NavigationView
             return nvi.MenuItemsSource;
         }
 
-        ItemsRepeater GetChildRepeaterForIndexPath(IndexPath ip)
-        {
-            if (GetContainerForIndexPath(ip) is NavigationViewItem container)
-            {
-                return container.GetRepeater();
-            }
-            return null;
-        }
-
-
-        object GetChildrenForItemInIndexPath(IndexPath ip, bool forceRealize = false)
+        private object GetChildrenForItemInIndexPath(IndexPath ip, bool forceRealize = false)
         {
             if (ip != null && ip.GetSize() > 1)
             {
@@ -5275,7 +5192,7 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        object GetChildrenForItemInIndexPath(UIElement firstContainer, IndexPath ip, bool forceRealize = false)
+        private object GetChildrenForItemInIndexPath(UIElement firstContainer, IndexPath ip, bool forceRealize = false)
         {
             var container = firstContainer;
             bool shouldRecycleContainer = false;
@@ -5298,7 +5215,7 @@ namespace Flow.Bar.Controls.NavigationView
                         }
                         else if (forceRealize)
                         {
-                            if (GetChildren(nvi) is { } childrenData)
+                            if (NavigationView.GetChildren(nvi) is { } childrenData)
                             {
                                 if (shouldRecycleContainer)
                                 {
@@ -5320,18 +5237,6 @@ namespace Flow.Bar.Controls.NavigationView
                                     {
                                         if (nvib is NavigationViewItem nextContainer)
                                         {
-                                            // Process x:bind
-                                            //if (CachedVisualTreeHelpers.GetDataTemplateComponent(nextContainer) is { } extension)
-                                            //{
-                                            //    // Clear out old data. 
-                                            //    extension.Recycle();
-                                            //    int nextPhase = VirtualizationInfo.PhaseReachedEnd;
-                                            //    // Run Phase 0
-                                            //    extension.ProcessBindings(data, nextContainerIndex, 0 /* currentPhase */, nextPhase);
-
-                                            //    // TODO: If nextPhase is not -1, ProcessBinding for all the phases
-                                            //}
-
                                             container = nextContainer;
                                             shouldRecycleContainer = true;
                                             succeededGettingNextContainer = true;
@@ -5353,7 +5258,7 @@ namespace Flow.Bar.Controls.NavigationView
             {
                 if (container is NavigationViewItem nvi)
                 {
-                    var children = GetChildren(nvi);
+                    var children = NavigationView.GetChildren(nvi);
                     if (shouldRecycleContainer)
                     {
                         RecycleContainer(nvi);
@@ -5365,7 +5270,7 @@ namespace Flow.Bar.Controls.NavigationView
             return null;
         }
 
-        void CollapseTopLevelMenuItems(NavigationViewPaneDisplayMode oldDisplayMode)
+        private void CollapseTopLevelMenuItems(NavigationViewPaneDisplayMode oldDisplayMode)
         {
             // We want to make sure only top level items are visible when switching pane modes
             if (oldDisplayMode == NavigationViewPaneDisplayMode.Top)
@@ -5379,7 +5284,7 @@ namespace Flow.Bar.Controls.NavigationView
             }
         }
 
-        void CollapseMenuItemsInRepeater(ItemsRepeater ir)
+        private void CollapseMenuItemsInRepeater(ItemsRepeater ir)
         {
             for (int index = 0; index < GetContainerCountInRepeater(ir); index++)
             {
@@ -5387,27 +5292,31 @@ namespace Flow.Bar.Controls.NavigationView
                 {
                     if (element is NavigationViewItem nvi)
                     {
-                        ChangeIsExpandedNavigationViewItem(nvi, false /*isExpanded*/);
+                        NavigationView.ChangeIsExpandedNavigationViewItem(nvi, false /*isExpanded*/);
                     }
                 }
             }
         }
 
-        void RaiseExpandingEvent(NavigationViewItemBase container)
+        private void RaiseExpandingEvent(NavigationViewItemBase container)
         {
-            var eventArgs = new NavigationViewItemExpandingEventArgs(this);
-            eventArgs.ExpandingItemContainer = container;
+            var eventArgs = new NavigationViewItemExpandingEventArgs(this)
+            {
+                ExpandingItemContainer = container
+            };
             Expanding?.Invoke(this, eventArgs);
         }
 
-        void RaiseCollapsedEvent(NavigationViewItemBase container)
+        private void RaiseCollapsedEvent(NavigationViewItemBase container)
         {
-            var eventArgs = new NavigationViewItemCollapsedEventArgs(this);
-            eventArgs.CollapsedItemContainer = container;
+            var eventArgs = new NavigationViewItemCollapsedEventArgs(this)
+            {
+                CollapsedItemContainer = container
+            };
             Collapsed?.Invoke(this, eventArgs);
         }
 
-        bool IsTopLevelItem(NavigationViewItemBase nvib)
+        private bool IsTopLevelItem(NavigationViewItemBase nvib)
         {
             return IsRootItemsRepeater(GetParentItemsRepeaterForContainer(nvib));
         }
@@ -5429,131 +5338,131 @@ namespace Flow.Bar.Controls.NavigationView
         }
 #endif
 
-        bool m_InitialNonForcedModeUpdate = true;
+        private bool m_initialNonForcedModeUpdate = true;
 
-        NavigationViewItemsFactory m_navigationViewItemsFactory;
+        private readonly NavigationViewItemsFactory m_navigationViewItemsFactory;
 
         // Visual components
-        Button m_paneToggleButton;
-        SplitView m_rootSplitView;
-        RowDefinition m_itemsContainerRow;
-        FrameworkElement m_menuItemsScrollViewer;
-        FrameworkElement m_footerItemsScrollViewer;
-        UIElement m_paneContentGrid;
-        FrameworkElement m_paneTitleHolderFrameworkElement;
-        FrameworkElement m_paneTitleFrameworkElement;
-        FrameworkElement m_visualItemsSeparator;
-        Button m_paneSearchButton;
-        Button m_backButton;
-        Button m_closeButton;
-        ItemsRepeater m_leftNavRepeater;
-        ItemsRepeater m_topNavRepeater;
-        ItemsRepeater m_leftNavFooterMenuRepeater;
-        ItemsRepeater m_topNavFooterMenuRepeater;
-        Button m_topNavOverflowButton;
-        ItemsRepeater m_topNavRepeaterOverflowView;
-        Grid m_topNavGrid;
-        Border m_topNavContentOverlayAreaGrid;
+        private Button m_paneToggleButton;
+        private SplitView m_rootSplitView;
+        private RowDefinition m_itemsContainerRow;
+        private FrameworkElement m_menuItemsScrollViewer;
+        private FrameworkElement m_footerItemsScrollViewer;
+        private UIElement m_paneContentGrid;
+        private FrameworkElement m_paneTitleHolderFrameworkElement;
+        private FrameworkElement m_paneTitleFrameworkElement;
+        private FrameworkElement m_visualItemsSeparator;
+        private Button m_paneSearchButton;
+        private Button m_backButton;
+        private Button m_closeButton;
+        private ItemsRepeater m_leftNavRepeater;
+        private ItemsRepeater m_topNavRepeater;
+        private ItemsRepeater m_leftNavFooterMenuRepeater;
+        private ItemsRepeater m_topNavFooterMenuRepeater;
+        private Button m_topNavOverflowButton;
+        private ItemsRepeater m_topNavRepeaterOverflowView;
+        private Grid m_topNavGrid;
+        private Border m_topNavContentOverlayAreaGrid;
 
         // Indicator animations
-        UIElement m_prevIndicator;
-        UIElement m_nextIndicator;
-        UIElement m_activeIndicator;
-        object m_lastSelectedItemPendingAnimationInTopNav;
+        private UIElement m_prevIndicator;
+        private UIElement m_nextIndicator;
+        private UIElement m_activeIndicator;
+        private object m_lastSelectedItemPendingAnimationInTopNav;
 
-        FrameworkElement m_togglePaneTopPadding;
-        FrameworkElement m_contentPaneTopPadding;
-        FrameworkElement m_contentLeftPadding;
+        private FrameworkElement m_togglePaneTopPadding;
+        private FrameworkElement m_contentPaneTopPadding;
+        private FrameworkElement m_contentLeftPadding;
 
-        CoreApplicationViewTitleBar m_coreTitleBar;
+        private CoreApplicationViewTitleBar m_coreTitleBar;
 
-        ContentControl m_leftNavPaneAutoSuggestBoxPresenter;
-        ContentControl m_topNavPaneAutoSuggestBoxPresenter;
+        private ContentControl m_leftNavPaneAutoSuggestBoxPresenter;
+        private ContentControl m_topNavPaneAutoSuggestBoxPresenter;
 
-        ContentControl m_leftNavPaneHeaderContentBorder;
-        ContentControl m_leftNavPaneCustomContentBorder;
-        ContentControl m_leftNavFooterContentBorder;
+        private ContentControl m_leftNavPaneHeaderContentBorder;
+        private ContentControl m_leftNavPaneCustomContentBorder;
+        private ContentControl m_leftNavFooterContentBorder;
 
-        ContentControl m_paneHeaderOnTopPane;
-        ContentControl m_paneTitleOnTopPane;
-        ContentControl m_paneCustomContentOnTopPane;
-        ContentControl m_paneFooterOnTopPane;
-        ContentControl m_paneTitlePresenter;
+        private ContentControl m_paneHeaderOnTopPane;
+        private ContentControl m_paneTitleOnTopPane;
+        private ContentControl m_paneCustomContentOnTopPane;
+        private ContentControl m_paneFooterOnTopPane;
+        private ContentControl m_paneTitlePresenter;
 
-        ColumnDefinition m_paneHeaderCloseButtonColumn;
-        ColumnDefinition m_paneHeaderToggleButtonColumn;
-        RowDefinition m_paneHeaderContentBorderRow;
+        private ColumnDefinition m_paneHeaderCloseButtonColumn;
+        private ColumnDefinition m_paneHeaderToggleButtonColumn;
+        private RowDefinition m_paneHeaderContentBorderRow;
 
-        NavigationViewItem m_lastItemExpandedIntoFlyout;
+        private NavigationViewItem m_lastItemExpandedIntoFlyout;
 
         // Event Tokens
-        bool m_layoutUpdatedToken;
-        FrameworkElementSizeChangedRevoker m_itemsContainerSizeChangedRevoker;
+        private bool m_layoutUpdatedToken;
+        private FrameworkElementSizeChangedRevoker m_itemsContainerSizeChangedRevoker;
 
-        ItemsSourceView.CollectionChangedRevoker m_menuItemsCollectionChangedRevoker;
-        ItemsSourceView.CollectionChangedRevoker m_footerItemsCollectionChangedRevoker;
+        private ItemsSourceView.CollectionChangedRevoker m_menuItemsCollectionChangedRevoker;
+        private ItemsSourceView.CollectionChangedRevoker m_footerItemsCollectionChangedRevoker;
 
-        ItemsSourceView.CollectionChangedRevoker m_topNavOverflowItemsCollectionChangedRevoker;
+        private ItemsSourceView.CollectionChangedRevoker m_topNavOverflowItemsCollectionChangedRevoker;
 
-        bool m_wasForceClosed = false;
-        bool m_isClosedCompact = false;
-        bool m_blockNextClosingEvent = false;
-        bool m_initialListSizeStateSet = false;
+        private bool m_wasForceClosed = false;
+        private bool m_isClosedCompact = false;
+        private bool m_blockNextClosingEvent = false;
+        private bool m_initialListSizeStateSet = false;
 
-        TopNavigationViewDataProvider m_topDataProvider = new TopNavigationViewDataProvider();
+        private readonly TopNavigationViewDataProvider m_topDataProvider = new();
 
-        SelectionModel m_selectionModel = new SelectionModel();
-        List<object> m_selectionModelSource;
+        private readonly SelectionModel m_selectionModel = new();
+        private readonly List<object> m_selectionModelSource;
 
-        ItemsSourceView m_menuItemsSource = null;
-        ItemsSourceView m_footerItemsSource = null;
+        private ItemsSourceView m_menuItemsSource = null;
+        private ItemsSourceView m_footerItemsSource = null;
 
-        bool m_appliedTemplate = false;
+        private bool m_appliedTemplate = false;
 
         // flag is used to stop recursive call. eg:
         // Customer select an item from SelectedItem property->ChangeSelection update ListView->LIstView raise OnSelectChange(we want stop here)->change property do do animation again.
         // Customer clicked listview->listview raised OnSelectChange->SelectedItem property changed->ChangeSelection->Undo the selection by SelectedItem(prevItem) (we want it stop here)->ChangeSelection again ->...
-        bool m_shouldIgnoreNextSelectionChange = false;
+        private bool m_shouldIgnoreNextSelectionChange = false;
         // Used to disable raising selection change iff settings item gets restored because of displaymode change
-        bool m_shouldIgnoreNextSelectionChangeBecauseSettingsRestore = false;
+        private readonly bool m_shouldIgnoreNextSelectionChangeBecauseSettingsRestore = false;
         // A flag to track that the selectionchange is caused by selection a item in topnav overflow menu
-        bool m_selectionChangeFromOverflowMenu = false;
+        private bool m_selectionChangeFromOverflowMenu = false;
         // Flag indicating whether selection change should raise item invoked. This is needed to be able to raise ItemInvoked before SelectionChanged while SelectedItem should point to the clicked item
-        bool m_shouldRaiseItemInvokedAfterSelection = false;
+        private bool m_shouldRaiseItemInvokedAfterSelection = false;
 
-        TopNavigationViewLayoutState m_topNavigationMode = TopNavigationViewLayoutState.Uninitialized;
+        private TopNavigationViewLayoutState m_topNavigationMode = TopNavigationViewLayoutState.Uninitialized;
 
         // A threshold to stop recovery from overflow to normal happens immediately on resize.
-        float m_topNavigationRecoveryGracePeriodWidth = 5f;
+        private readonly float m_topNavigationRecoveryGracePeriodWidth = 5f;
 
         // There are three ways to change IsPaneOpen:
         // 1, customer call IsPaneOpen=true/false directly or nav.IsPaneOpen is binding with a variable and the value is changed.
         // 2, customer click ToggleButton or splitView.IsPaneOpen->nav.IsPaneOpen changed because of window resize
         // 3, customer changed PaneDisplayMode.
         // 2 and 3 are internal implementation and will call by ClosePane/OpenPane. the flag is to indicate 1 if it's false
-        bool m_isOpenPaneForInteraction = false;
+        private bool m_isOpenPaneForInteraction = false;
 
-        bool m_moveTopNavOverflowItemOnFlyoutClose = false;
+        private bool m_moveTopNavOverflowItemOnFlyoutClose = false;
 
-        bool m_shouldIgnoreUIASelectionRaiseAsExpandCollapseWillRaise = false;
+        private bool m_shouldIgnoreUIASelectionRaiseAsExpandCollapseWillRaise = false;
 
-        bool m_OrientationChangedPendingAnimation = false;
+        private bool m_orientationChangedPendingAnimation = false;
 
-        bool m_TabKeyPrecedesFocusChange = false;
+        private bool m_tabKeyPrecedesFocusChange = false;
 
-        GettingFocusHelper m_leftNavRepeaterGettingFocusHelper;
-        GettingFocusHelper m_topNavRepeaterGettingFocusHelper;
-        GettingFocusHelper m_leftNavFooterMenuRepeaterGettingFocusHelper;
-        GettingFocusHelper m_topNavFooterMenuRepeaterGettingFocusHelper;
+        private GettingFocusHelper m_leftNavRepeaterGettingFocusHelper;
+        private GettingFocusHelper m_topNavRepeaterGettingFocusHelper;
+        private GettingFocusHelper m_leftNavFooterMenuRepeaterGettingFocusHelper;
+        private GettingFocusHelper m_topNavFooterMenuRepeaterGettingFocusHelper;
 
-        readonly BitmapCache m_bitmapCache;
+        private readonly BitmapCache m_bitmapCache;
 
-        static readonly PropertyPath s_opacityPath = new PropertyPath(OpacityProperty);
-        static readonly PropertyPath s_centerXPath = new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.CenterX)");
-        static readonly PropertyPath s_centerYPath = new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.CenterY)");
-        static readonly PropertyPath s_scaleXPath = new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)");
-        static readonly PropertyPath s_scaleYPath = new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)");
-        static readonly PropertyPath s_translateXPath = new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.X)");
-        static readonly PropertyPath s_translateYPath = new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)");
+        private static readonly PropertyPath s_opacityPath = new(OpacityProperty);
+        private static readonly PropertyPath s_centerXPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.CenterX)");
+        private static readonly PropertyPath s_centerYPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.CenterY)");
+        private static readonly PropertyPath s_scaleXPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)");
+        private static readonly PropertyPath s_scaleYPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)");
+        private static readonly PropertyPath s_translateXPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.X)");
+        private static readonly PropertyPath s_translateYPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)");
     }
 }

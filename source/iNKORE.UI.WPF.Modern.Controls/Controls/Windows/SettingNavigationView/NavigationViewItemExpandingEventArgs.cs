@@ -25,7 +25,7 @@ public sealed class NavigationViewItemExpandingEventArgs : EventArgs
 
             if (m_navigationView is { } nv)
             {
-                m_expandingItem = nv.MenuItemFromContainer(ExpandingItemContainer);
+                m_expandingItem = NavigationView.MenuItemFromContainer(ExpandingItemContainer);
                 return m_expandingItem;
             }
 

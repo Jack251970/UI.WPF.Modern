@@ -25,7 +25,7 @@ public sealed class NavigationViewItemCollapsedEventArgs : EventArgs
 
             if (m_navigationView is { } nv)
             {
-                m_collapsedItem = nv.MenuItemFromContainer(CollapsedItemContainer);
+                m_collapsedItem = NavigationView.MenuItemFromContainer(CollapsedItemContainer);
                 return m_collapsedItem;
             }
 
