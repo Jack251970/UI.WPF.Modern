@@ -22,6 +22,7 @@
         <ResourceDictionary Source="/iNKORE.UI.WPF.Modern.Controls;component/Controls/Windows/MediaPlayerElement/MediaPlayerElement.xaml" />
         <ResourceDictionary Source="/iNKORE.UI.WPF.Modern.Controls;component/Controls/Windows/MediaPlayerElement/MediaTransportControls.xaml" />
         <ResourceDictionary Source="/iNKORE.UI.WPF.Modern.Controls;component/Controls/Windows/NavigationView/NavigationView.xaml" />
+        <ResourceDictionary Source="/iNKORE.UI.WPF.Modern.Controls;component/Controls/Windows/SettingNavigationView/NavigationView.xaml" />
         <ResourceDictionary Source="/iNKORE.UI.WPF.Modern.Controls;component/Controls/Windows/NumberBox/NumberBox.xaml" />
         <ResourceDictionary Source="/iNKORE.UI.WPF.Modern.Controls;component/Controls/Windows/ParallaxView/ParallaxView.xaml" />
         <ResourceDictionary Source="/iNKORE.UI.WPF.Modern.Controls;component/Controls/Windows/PersonPicture/PersonPicture.xaml" />
