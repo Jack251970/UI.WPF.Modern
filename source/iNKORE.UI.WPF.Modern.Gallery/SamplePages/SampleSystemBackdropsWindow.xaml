@@ -87,7 +87,7 @@
             AlwaysShowHeader="True"
             Canvas.ZIndex="0"
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
-            Header=" "
+            Header="General"
             IsFooterSeparatorVisible="{x:Null}"
             IsTabStop="False"
             IsTitleBarAutoPaddingEnabled="False"
@@ -105,6 +105,14 @@
                         BackgroundColorOpacity="1" />
                 </DataTemplate>
             </scrollviewer:NavigationView.HeaderTemplate>
+
+            <scrollviewer:NavigationView.MenuItems>
+                <scrollviewer:NavigationViewItem Content="General">
+                    <scrollviewer:NavigationViewItem.Icon>
+                        <ui:FontIcon Glyph="&#xE713;" />
+                    </scrollviewer:NavigationViewItem.Icon>
+                </scrollviewer:NavigationViewItem>
+            </scrollviewer:NavigationView.MenuItems>
 
             <ui:Frame
                 x:Name="rootFrame"
