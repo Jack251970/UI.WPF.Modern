@@ -6,7 +6,6 @@ using System.Windows;
 using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Helpers;
-using iNKORE.UI.WPF.Modern.Controls.Primitives;
 
 namespace Flow.Bar.Controls.NavigationView
 {
@@ -60,7 +59,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         #region CompactPaneLength
 
-        private static readonly DependencyPropertyKey CompactPaneLengthPropertyKey =
+        private static readonly DependencyPropertyKey s_compactPaneLengthPropertyKey =
             DependencyProperty.RegisterReadOnly(
                 nameof(CompactPaneLength),
                 typeof(double),
@@ -68,12 +67,12 @@ namespace Flow.Bar.Controls.NavigationView
                 new PropertyMetadata(48.0));
 
         public static readonly DependencyProperty CompactPaneLengthProperty =
-            CompactPaneLengthPropertyKey.DependencyProperty;
+            s_compactPaneLengthPropertyKey.DependencyProperty;
 
         public double CompactPaneLength
         {
             get => (double)GetValue(CompactPaneLengthProperty);
-            private set => SetValue(CompactPaneLengthPropertyKey, value);
+            private set => SetValue(s_compactPaneLengthPropertyKey, value);
         }
 
         #endregion
@@ -163,7 +162,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         #region MenuItems
 
-        private static readonly DependencyPropertyKey MenuItemsPropertyKey =
+        private static readonly DependencyPropertyKey s_menuItemsPropertyKey =
             DependencyProperty.RegisterReadOnly(
                 nameof(MenuItems),
                 typeof(IList),
@@ -171,12 +170,9 @@ namespace Flow.Bar.Controls.NavigationView
                 new PropertyMetadata(OnMenuItemsPropertyChanged));
 
         public static readonly DependencyProperty MenuItemsProperty =
-            MenuItemsPropertyKey.DependencyProperty;
+            s_menuItemsPropertyKey.DependencyProperty;
 
-        public IList MenuItems
-        {
-            get => (IList)GetValue(MenuItemsProperty);
-        }
+        public IList MenuItems => (IList)GetValue(MenuItemsProperty);
 
         private static void OnMenuItemsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {

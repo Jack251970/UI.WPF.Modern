@@ -3,37 +3,36 @@
 
 using System;
 
-namespace Flow.Bar.Controls.NavigationView
+namespace Flow.Bar.Controls.NavigationView;
+
+public sealed class NavigationViewItemExpandingEventArgs : EventArgs
 {
-    public sealed class NavigationViewItemExpandingEventArgs : EventArgs
+    internal NavigationViewItemExpandingEventArgs(NavigationView navigationView)
     {
-        internal NavigationViewItemExpandingEventArgs(NavigationView navigationView)
-        {
-            m_navigationView = navigationView;
-        }
-
-        public NavigationViewItemBase ExpandingItemContainer { get; internal set; }
-
-        public object ExpandingItem
-        {
-            get
-            {
-                if (m_expandingItem != null)
-                {
-                    return m_expandingItem;
-                }
-
-                if (m_navigationView is { } nv)
-                {
-                    m_expandingItem = nv.MenuItemFromContainer(ExpandingItemContainer);
-                    return m_expandingItem;
-                }
-
-                return null;
-            }
-        }
-
-        object m_expandingItem;
-        NavigationView m_navigationView;
+        m_navigationView = navigationView;
     }
+
+    public NavigationViewItemBase ExpandingItemContainer { get; internal set; }
+
+    public object ExpandingItem
+    {
+        get
+        {
+            if (m_expandingItem != null)
+            {
+                return m_expandingItem;
+            }
+
+            if (m_navigationView is { } nv)
+            {
+                m_expandingItem = nv.MenuItemFromContainer(ExpandingItemContainer);
+                return m_expandingItem;
+            }
+
+            return null;
+        }
+    }
+
+    object m_expandingItem;
+    readonly NavigationView m_navigationView;
 }

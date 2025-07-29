@@ -4,18 +4,16 @@
 using System;
 using iNKORE.UI.WPF.Modern.Media.Animation;
 
-namespace Flow.Bar.Controls.NavigationView
+namespace Flow.Bar.Controls.NavigationView;
+
+public sealed class NavigationViewSelectionChangedEventArgs : EventArgs
 {
-    public sealed class NavigationViewSelectionChangedEventArgs : EventArgs
+    internal NavigationViewSelectionChangedEventArgs()
     {
-        internal NavigationViewSelectionChangedEventArgs()
-        {
-        }
-
-        public object SelectedItem { get; internal set; }
-        public bool IsSettingsSelected { get; internal set; }
-
-        public NavigationViewItemBase SelectedItemContainer { get; internal set; }
-        public NavigationTransitionInfo RecommendedNavigationTransitionInfo { get; internal set; }
     }
+
+    public object SelectedItem { get; internal set; }
+
+    public NavigationViewItemBase SelectedItemContainer { get; internal set; }
+    public NavigationTransitionInfo RecommendedNavigationTransitionInfo { get; internal set; }
 }

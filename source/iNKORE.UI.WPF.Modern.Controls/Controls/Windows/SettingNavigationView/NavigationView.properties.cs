@@ -1,16 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System;
 using System.Collections;
-using System.Collections.ObjectModel;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Helpers;
-using iNKORE.UI.WPF.Modern.Controls.Primitives;
 
 namespace Flow.Bar.Controls.NavigationView
 {
@@ -106,17 +102,14 @@ namespace Flow.Bar.Controls.NavigationView
 
         #region FooterMenuItems
 
-        private static readonly DependencyProperty FooterMenuItemsProperty =
+        private static readonly DependencyProperty s_footerMenuItemsProperty =
             DependencyProperty.Register(
                 nameof(FooterMenuItems),
                 typeof(IList),
                 typeof(NavigationView),
                 new PropertyMetadata(OnFooterMenuItemsPropertyChanged));
 
-        public IList FooterMenuItems
-        {
-            get => (IList)GetValue(FooterMenuItemsProperty);
-        }
+        public IList FooterMenuItems => (IList)GetValue(s_footerMenuItemsProperty);
 
         private static void OnFooterMenuItemsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
@@ -220,44 +213,18 @@ namespace Flow.Bar.Controls.NavigationView
 
         #region DisplayMode
 
-        private static readonly DependencyPropertyKey DisplayModePropertyKey =
+        private static readonly DependencyPropertyKey s_displayModePropertyKey =
             DependencyProperty.RegisterReadOnly(
                 nameof(DisplayMode),
                 typeof(NavigationViewDisplayMode),
                 typeof(NavigationView),
                 new PropertyMetadata(NavigationViewDisplayMode.Minimal, OnDisplayModePropertyChanged));
 
-        public static readonly DependencyProperty DisplayModeProperty = DisplayModePropertyKey.DependencyProperty;
+        public static readonly DependencyProperty DisplayModeProperty = s_displayModePropertyKey.DependencyProperty;
 
-        public NavigationViewDisplayMode DisplayMode
-        {
-            get => (NavigationViewDisplayMode)GetValue(DisplayModeProperty);
-        }
+        public NavigationViewDisplayMode DisplayMode => (NavigationViewDisplayMode)GetValue(DisplayModeProperty);
 
         private static void OnDisplayModePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-        {
-            var owner = (NavigationView)sender;
-            owner.PropertyChanged(args);
-        }
-
-        #endregion
-
-        #region IsSettingsVisible
-
-        public static readonly DependencyProperty IsSettingsVisibleProperty =
-            DependencyProperty.Register(
-                nameof(IsSettingsVisible),
-                typeof(bool),
-                typeof(NavigationView),
-                new PropertyMetadata(false, OnIsSettingsVisiblePropertyChanged));
-
-        public bool IsSettingsVisible
-        {
-            get => (bool)GetValue(IsSettingsVisibleProperty);
-            set => SetValue(IsSettingsVisibleProperty, value);
-        }
-
-        private static void OnIsSettingsVisiblePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
             var owner = (NavigationView)sender;
             owner.PropertyChanged(args);
@@ -437,8 +404,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         public IList MenuItems
         {
-            get => (IList)GetValue(MenuItemsProperty);
-            set { SetValue(MenuItemsProperty, value); }
+            get => (IList)GetValue(MenuItemsProperty); set => SetValue(MenuItemsProperty, value);
         }
 
         private static void OnMenuItemsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
@@ -465,30 +431,6 @@ namespace Flow.Bar.Controls.NavigationView
         }
 
         private static void OnMenuItemsSourcePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-        {
-            var owner = (NavigationView)sender;
-            owner.PropertyChanged(args);
-        }
-
-        #endregion
-
-        #region SettingsItem
-
-        private static readonly DependencyPropertyKey SettingsItemPropertyKey =
-            DependencyProperty.RegisterReadOnly(
-                nameof(SettingsItem),
-                typeof(object),
-                typeof(NavigationView),
-                new PropertyMetadata(OnSettingsItemPropertyChanged));
-
-        public static readonly DependencyProperty SettingsItemProperty = SettingsItemPropertyKey.DependencyProperty;
-
-        public object SettingsItem
-        {
-            get => GetValue(SettingsItemProperty);
-        }
-
-        private static void OnSettingsItemPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
             var owner = (NavigationView)sender;
             owner.PropertyChanged(args);
@@ -806,7 +748,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         #region TemplateSettings
 
-        private static readonly DependencyPropertyKey TemplateSettingsPropertyKey =
+        private static readonly DependencyPropertyKey s_templateSettingsPropertyKey =
             DependencyProperty.RegisterReadOnly(
                 nameof(TemplateSettings),
                 typeof(NavigationViewTemplateSettings),
@@ -814,12 +756,12 @@ namespace Flow.Bar.Controls.NavigationView
                 null);
 
         public static readonly DependencyProperty TemplateSettingsProperty =
-            TemplateSettingsPropertyKey.DependencyProperty;
+            s_templateSettingsPropertyKey.DependencyProperty;
 
         public NavigationViewTemplateSettings TemplateSettings
         {
             get => (NavigationViewTemplateSettings)GetValue(TemplateSettingsProperty);
-            private set => SetValue(TemplateSettingsPropertyKey, value);
+            private set => SetValue(s_templateSettingsPropertyKey, value);
         }
 
         #endregion

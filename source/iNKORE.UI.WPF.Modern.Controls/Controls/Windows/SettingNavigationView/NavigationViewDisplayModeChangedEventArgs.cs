@@ -3,14 +3,13 @@
 
 using System;
 
-namespace Flow.Bar.Controls.NavigationView
-{
-    public sealed class NavigationViewDisplayModeChangedEventArgs : EventArgs
-    {
-        internal NavigationViewDisplayModeChangedEventArgs()
-        {
-        }
+namespace Flow.Bar.Controls.NavigationView;
 
-        public NavigationViewDisplayMode DisplayMode { get; internal set; }
+public sealed class NavigationViewDisplayModeChangedEventArgs : EventArgs
+{
+    internal NavigationViewDisplayModeChangedEventArgs()
+    {
     }
+
+    public NavigationViewDisplayMode DisplayMode { get; internal set; }
 }

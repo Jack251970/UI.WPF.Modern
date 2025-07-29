@@ -11,7 +11,7 @@ namespace Flow.Bar.Controls.NavigationView
 {
     public class NavigationViewItemSeparator : NavigationViewItemBase
     {
-        const string c_rootGrid = "NavigationViewItemSeparatorRootGrid";
+        const string CRootGrid = "NavigationViewItemSeparatorRootGrid";
 
         static NavigationViewItemSeparator()
         {
@@ -45,7 +45,7 @@ namespace Flow.Bar.Controls.NavigationView
             m_appliedTemplate = false;
             base.OnApplyTemplate();
 
-            if (GetTemplateChildT<Grid>(c_rootGrid, this) is { } rootGrid)
+            if (GetTemplateChildT<Grid>(CRootGrid, this) is { } rootGrid)
             {
                 m_rootGrid = rootGrid;
             }
@@ -84,7 +84,7 @@ namespace Flow.Bar.Controls.NavigationView
             if (m_rootGrid is { } rootGrid)
             {
                 var oldMargin = rootGrid.Margin;
-                var newLeftMargin = Depth * c_itemIndentation;
+                var newLeftMargin = Depth * CItemIndentation;
                 rootGrid.Margin = new Thickness(newLeftMargin, oldMargin.Top, oldMargin.Right, oldMargin.Bottom);
             }
         }

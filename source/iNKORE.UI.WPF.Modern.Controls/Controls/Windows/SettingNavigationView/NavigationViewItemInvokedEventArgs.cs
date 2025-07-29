@@ -4,18 +4,16 @@
 using System;
 using iNKORE.UI.WPF.Modern.Media.Animation;
 
-namespace Flow.Bar.Controls.NavigationView
+namespace Flow.Bar.Controls.NavigationView;
+
+public sealed class NavigationViewItemInvokedEventArgs : EventArgs
 {
-    public sealed class NavigationViewItemInvokedEventArgs : EventArgs
+    public NavigationViewItemInvokedEventArgs()
     {
-        public NavigationViewItemInvokedEventArgs()
-        {
-        }
-
-        public object InvokedItem { get; internal set; }
-        public bool IsSettingsInvoked { get; internal set; }
-
-        public NavigationViewItemBase InvokedItemContainer { get; internal set; }
-        public NavigationTransitionInfo RecommendedNavigationTransitionInfo { get; internal set; }
     }
+
+    public object InvokedItem { get; internal set; }
+
+    public NavigationViewItemBase InvokedItemContainer { get; internal set; }
+    public NavigationTransitionInfo RecommendedNavigationTransitionInfo { get; internal set; }
 }

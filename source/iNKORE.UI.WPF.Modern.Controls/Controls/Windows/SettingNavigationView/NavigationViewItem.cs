@@ -9,7 +9,6 @@ using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
-using iNKORE.UI.WPF.Modern.Automation.Peers;
 using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Primitives;
@@ -50,7 +49,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         public NavigationViewItem()
         {
-            SetValue(MenuItemsPropertyKey, new ObservableCollection<object>());
+            SetValue(s_menuItemsPropertyKey, new ObservableCollection<object>());
         }
 
         internal void UpdateVisualStateNoTransition()
@@ -211,7 +210,7 @@ namespace Flow.Bar.Controls.NavigationView
         {
             if (GetSplitView() is { } splitView)
             {
-                SetValue(CompactPaneLengthPropertyKey, splitView.CompactPaneLength);
+                SetValue(s_compactPaneLengthPropertyKey, splitView.CompactPaneLength);
 
                 // Only update when on left
                 if (GetPresenter() is { } presenter)
@@ -320,14 +319,6 @@ namespace Flow.Bar.Controls.NavigationView
         void OnHasUnrealizedChildrenPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
             UpdateVisualStateForChevron();
-        }
-
-        void ShowSelectionIndicator(bool visible)
-        {
-            if (GetSelectionIndicator() is { } selectionIndicator)
-            {
-                selectionIndicator.Opacity = visible ? 1.0 : 0.0;
-            }
         }
 
         void UpdateVisualStateForIconAndContent(bool showIcon, bool showContent)
@@ -677,7 +668,7 @@ namespace Flow.Bar.Controls.NavigationView
             // Update item indentation based on its depth
             if (m_navigationViewItemPresenter is { } presenter)
             {
-                var newLeftMargin = Depth * c_itemIndentation;
+                var newLeftMargin = Depth * CItemIndentation;
                 presenter.UpdateContentLeftIndentation(newLeftMargin);
             }
         }
@@ -737,8 +728,7 @@ namespace Flow.Bar.Controls.NavigationView
         protected override void OnGotFocus(RoutedEventArgs e)
         {
             base.OnGotFocus(e);
-            var originalSource = e.OriginalSource as Control;
-            if (originalSource != null)
+            if (e.OriginalSource is Control originalSource)
             {
                 // It's used to support bluebar have difference appearance between focused and focused+selection. 
                 // For example, we can move the SelectionIndicator 3px up when focused and selected to make sure focus rectange doesn't override SelectionIndicator. 

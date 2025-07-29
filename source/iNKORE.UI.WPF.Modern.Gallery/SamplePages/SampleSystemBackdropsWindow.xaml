@@ -89,7 +89,6 @@
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
             Header=" "
             IsFooterSeparatorVisible="{x:Null}"
-            IsSettingsVisible="True"
             IsTabStop="False"
             IsTitleBarAutoPaddingEnabled="False"
             Loaded="OnNavigationViewControlLoaded"

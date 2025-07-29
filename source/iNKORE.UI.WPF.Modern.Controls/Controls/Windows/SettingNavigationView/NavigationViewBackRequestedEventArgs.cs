@@ -3,12 +3,11 @@
 
 using System;
 
-namespace Flow.Bar.Controls.NavigationView
+namespace Flow.Bar.Controls.NavigationView;
+
+public sealed class NavigationViewBackRequestedEventArgs : EventArgs
 {
-    public sealed class NavigationViewBackRequestedEventArgs : EventArgs
+    internal NavigationViewBackRequestedEventArgs()
     {
-        internal NavigationViewBackRequestedEventArgs()
-        {
-        }
     }
 }

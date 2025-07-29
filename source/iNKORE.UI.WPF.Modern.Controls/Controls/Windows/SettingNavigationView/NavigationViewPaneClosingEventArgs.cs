@@ -4,34 +4,33 @@
 using System;
 using iNKORE.UI.WPF.Modern.Controls;
 
-namespace Flow.Bar.Controls.NavigationView
+namespace Flow.Bar.Controls.NavigationView;
+
+public sealed class NavigationViewPaneClosingEventArgs : EventArgs
 {
-    public sealed class NavigationViewPaneClosingEventArgs : EventArgs
+    internal NavigationViewPaneClosingEventArgs()
     {
-        internal NavigationViewPaneClosingEventArgs()
-        {
-        }
+    }
 
-        public bool Cancel
+    public bool Cancel
+    {
+        get => m_cancelled;
+        set
         {
-            get => m_cancelled;
-            set
+            m_cancelled = value;
+
+            if (m_splitViewClosingArgs is { } args)
             {
-                m_cancelled = value;
-
-                if (m_splitViewClosingArgs is { } args)
-                {
-                    args.Cancel = value;
-                }
+                args.Cancel = value;
             }
         }
-
-        internal void SplitViewClosingArgs(SplitViewPaneClosingEventArgs value)
-        {
-            m_splitViewClosingArgs = value;
-        }
-
-        SplitViewPaneClosingEventArgs m_splitViewClosingArgs;
-        bool m_cancelled;
     }
+
+    internal void SplitViewClosingArgs(SplitViewPaneClosingEventArgs value)
+    {
+        m_splitViewClosingArgs = value;
+    }
+
+    SplitViewPaneClosingEventArgs m_splitViewClosingArgs;
+    bool m_cancelled;
 }
