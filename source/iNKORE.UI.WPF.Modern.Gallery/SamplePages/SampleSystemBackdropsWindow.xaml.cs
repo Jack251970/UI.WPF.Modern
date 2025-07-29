@@ -54,7 +54,6 @@ public partial class SampleSystemBackdropsWindow : Window
         {
             AppTitleBar.Margin = new Thickness(sender.CompactPaneLength, currMargin.Top, currMargin.Right, currMargin.Bottom);
         }
-        AppTitleBar.Visibility = sender.PaneDisplayMode == NavigationViewPaneDisplayMode.Top ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)

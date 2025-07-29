@@ -131,10 +131,7 @@ public class NavigationViewItemPresenter : ContentControl, IControlProtected
             // We probably switched displaymode, so restore width now, otherwise the next time we will restore is when the CompactPaneLength changes
             if (navigationViewItem.GetNavigationView() is { } navigationView)
             {
-                if (navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.Top)
-                {
-                    UpdateCompactPaneLength(m_compactPaneLengthValue, true);
-                }
+                UpdateCompactPaneLength(m_compactPaneLengthValue, true);
             }
         }
 

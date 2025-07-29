@@ -21,7 +21,6 @@ namespace Flow.Bar.Controls.NavigationView
     {
         Auto = 0,
         Left = 1,
-        Top = 2,
         LeftCompact = 3,
         LeftMinimal = 4
     }
