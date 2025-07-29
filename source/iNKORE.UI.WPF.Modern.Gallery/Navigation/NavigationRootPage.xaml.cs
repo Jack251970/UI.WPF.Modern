@@ -40,6 +40,125 @@ namespace iNKORE.UI.WPF.Modern.Gallery
         public static NavigationRootPage Current;
         public static Frame RootFrame = null;
 
+        public PageHeader PageHeader
+        {
+            get
+            {
+                return VisualTree.FindDescendants<PageHeader>(NavigationViewControl).FirstOrDefault();
+            }
+        }
+
+        public NavigationView NavigationView => NavigationViewControl;
+
+        public void EnsureNavigationSelection(string id)
+        {
+            foreach (object rawGroup in this.NavigationView.MenuItems)
+            {
+                if (rawGroup is NavigationViewItem group)
+                {
+                    foreach (object rawItem in group.MenuItems)
+                    {
+                        if (rawItem is NavigationViewItem item)
+                        {
+                            if ((string)item.Tag == id)
+                            {
+                                group.IsExpanded = true;
+                                NavigationView.SelectedItem = item;
+                                item.IsSelected = true;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public Action NavigationViewLoaded { get; set; }
+
+        public static NavigationRootPage GetForElement(object obj)
+        {
+            UIElement element = (UIElement)obj;
+            Window window = WindowHelper.GetWindowForElement(element);
+            if (window != null)
+            {
+                return (NavigationRootPage)window.Content;
+            }
+            return null;
+        }
+
+        public static string GetAppTitleFromSystem => "iNKORE.UI.WPF.Modern";
+
+        public NavigationRootPage()
+        {
+            InitializeComponent();
+
+            Current = this;
+            RootFrame = rootFrame;
+        }
+
+        private void OnNavigationViewControlLoaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        object _lastItem = null;
+
+        private void OnNavigationViewSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+        }
+
+        private void OnRootFrameNavigated(object sender, NavigationEventArgs e)
+        {
+        }
+
+        private void OnControlsSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+        }
+
+        private void OnControlsSearchBoxQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+        }
+
+        private void NavigationViewControl_PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
+        {
+        }
+
+        private void NavigationViewControl_PaneOpening(NavigationView sender, object args)
+        {
+        }
+
+        private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
+        {
+            Thickness currMargin = AppTitleBar.Margin;
+            if (sender.DisplayMode == NavigationViewDisplayMode.Minimal)
+            {
+                AppTitleBar.Margin = new Thickness((sender.CompactPaneLength * 2), currMargin.Top, currMargin.Right, currMargin.Bottom);
+
+            }
+            else
+            {
+                AppTitleBar.Margin = new Thickness(sender.CompactPaneLength, currMargin.Top, currMargin.Right, currMargin.Bottom);
+            }
+            AppTitleBar.Visibility = sender.PaneDisplayMode == NavigationViewPaneDisplayMode.Top ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void rootFrame_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+
+        }
+
+        private void OnRootFrameNavigating(object sender, NavigatingCancelEventArgs e)
+        {
+        }
+
+        /*public static NavigationRootPage Current;
+        public static Frame RootFrame = null;
+
         public VirtualKey ArrowKey;
 
         private RootFrameNavigationHelper _navHelper;
@@ -575,6 +694,6 @@ namespace iNKORE.UI.WPF.Modern.Gallery
                     App.BrowseWeb(e.Uri.OriginalString);
                 }
             }
-        }
+        }*/
     }
 }

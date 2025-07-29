@@ -27,9 +27,11 @@ namespace iNKORE.UI.WPF.Modern.Gallery
 
         public MainWindow()
         {
+            var window = new iNKORE.UI.WPF.Modern.Gallery.SamplePages.SampleSystemBackdropsWindow();
+            window.Show();
             Current = this;
             InitializeComponent();
-            InitialzeApp();
+            Close();
         }
 
         private async void InitialzeApp()
@@ -47,6 +49,7 @@ namespace iNKORE.UI.WPF.Modern.Gallery
                 {
                     NavigationRootPage NavigationRootPage = new NavigationRootPage();
                     Content = NavigationRootPage;
+                    var content = Content;
                     BackdropHelper.Apply(this, BackdropType.Mica, true);
                 });
             }).Start();
