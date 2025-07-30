@@ -184,7 +184,17 @@ namespace iNKORE.UI.WPF.Modern.Controls.Primitives
                 throw new ArgumentNullException(nameof(placementTarget));
             }
 
-            ShowAtCore(placementTarget, false);
+            ShowAtCore(placementTarget, null, false);
+        }
+
+        public void ShowAt(FrameworkElement placementTarget, FlyoutShowOptions showOptions)
+        {
+            if (placementTarget is null)
+            {
+                throw new ArgumentNullException(nameof(placementTarget));
+            }
+
+            ShowAtCore(placementTarget, showOptions, false);
         }
 
         public void Hide()
@@ -202,10 +212,10 @@ namespace iNKORE.UI.WPF.Modern.Controls.Primitives
                 throw new ArgumentNullException(nameof(placementTarget));
             }
 
-            ShowAtCore(placementTarget, true);
+            ShowAtCore(placementTarget, null, true);
         }
 
-        internal virtual void ShowAtCore(FrameworkElement placementTarget, bool showAsContextFlyout)
+        internal virtual void ShowAtCore(FrameworkElement placementTarget, FlyoutShowOptions showOptions, bool showAsContextFlyout)
         {
             CancelAsyncShow();
 
@@ -219,11 +229,11 @@ namespace iNKORE.UI.WPF.Modern.Controls.Primitives
 
             if (m_closing)
             {
-                m_pendingShow = () => ShowAtCore(placementTarget, showAsContextFlyout);
+                m_pendingShow = () => ShowAtCore(placementTarget, showOptions, showAsContextFlyout);
                 return;
             }
 
-            PreparePopup(placementTarget, showAsContextFlyout);
+            PreparePopup(placementTarget, showOptions, showAsContextFlyout);
             Debug.Assert(m_popup.HasLocalValue(Popup.PlacementProperty));
             Debug.Assert(m_popup.HasLocalValue(Popup.PlacementTargetProperty));
 
@@ -304,7 +314,7 @@ namespace iNKORE.UI.WPF.Modern.Controls.Primitives
             }
         }
 
-        private void PreparePopup(FrameworkElement placementTarget, bool showAsContextFlyout)
+        private void PreparePopup(FrameworkElement placementTarget, FlyoutShowOptions showOptions, bool showAsContextFlyout)
         {
             EnsurePopup();
 
@@ -315,7 +325,7 @@ namespace iNKORE.UI.WPF.Modern.Controls.Primitives
 
             UpdatePopupAnimation();
 
-            if (showAsContextFlyout)
+            if (showAsContextFlyout) // Ignore showOptions since it is pop up context menu
             {
                 m_presenter.ClearValue(FrameworkElement.WidthProperty);
                 m_presenter.ClearValue(FrameworkElement.HeightProperty);
@@ -386,7 +396,7 @@ namespace iNKORE.UI.WPF.Modern.Controls.Primitives
                 m_presenter.ClearValue(FrameworkElement.HeightProperty);
                 m_popup.Placement = PlacementMode.Custom;
                 m_popup.PlacementTarget = placementTarget;
-                m_popup.PlacementRectangle = GetPlacementRectangle(placementTarget);
+                m_popup.PlacementRectangle = GetPlacementRectangle(showOptions, placementTarget);
             }
         }
 
@@ -399,13 +409,58 @@ namespace iNKORE.UI.WPF.Modern.Controls.Primitives
             }
         }
 
-        internal Rect GetPlacementRectangle(UIElement target)
+        internal Rect GetPlacementRectangle(FlyoutShowOptions showOptions, UIElement target)
         {
             Rect value = Rect.Empty;
 
             if (target != null)
             {
                 Size targetSize = target.RenderSize;
+
+                if (showOptions != null)
+                {
+                    // Get the position of the target relative the screen root
+                    //Point point = target.PointToScreen(position.Value);
+                    System.Diagnostics.Debug.WriteLine($"Position: {showOptions.Position.Value.X}, {showOptions.Position.Value.Y}");
+                    //System.Diagnostics.Debug.WriteLine($"Point: {point.X}, {point.Y}");
+
+                    var position = new Point(0, -Offset);
+                    var width = targetSize.Width;
+                    var height = targetSize.Height;
+                    switch (showOptions.Placement)
+                    {
+                        case FlyoutPlacementMode.Top:
+                        case FlyoutPlacementMode.Bottom:
+                        case FlyoutPlacementMode.TopEdgeAlignedLeft:
+                        case FlyoutPlacementMode.TopEdgeAlignedRight:
+                        case FlyoutPlacementMode.BottomEdgeAlignedLeft:
+                        case FlyoutPlacementMode.BottomEdgeAlignedRight:
+                            height += Offset * 2;
+                            break;
+                        case FlyoutPlacementMode.Left:
+                        case FlyoutPlacementMode.Right:
+                        case FlyoutPlacementMode.LeftEdgeAlignedTop:
+                        case FlyoutPlacementMode.LeftEdgeAlignedBottom:
+                        case FlyoutPlacementMode.RightEdgeAlignedTop:
+                        case FlyoutPlacementMode.RightEdgeAlignedBottom:
+                            position = new Point(-Offset, 0);
+                            width += Offset * 2;
+                            break;
+                    }
+
+                    if (showOptions.Position != null)
+                    {
+                        position = showOptions.Position.Value;
+                    }
+
+                    value = new Rect(
+                        position.X,
+                        position.Y,
+                        width,
+                        height);
+                    System.Diagnostics.Debug.WriteLine($"Calculated Rect: {value.X}, {value.Y}, {value.Width}, {value.Height}");
+                    return value;
+                }
 
                 switch (Placement)
                 {

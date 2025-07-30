@@ -58,15 +58,15 @@ namespace iNKORE.UI.WPF.Modern.Controls
             throw new InvalidOperationException();
         }
 
-        internal override void ShowAtCore(FrameworkElement placementTarget, bool showAsContextFlyout = false)
+        internal override void ShowAtCore(FrameworkElement placementTarget, FlyoutShowOptions showOptions, bool showAsContextFlyout = false)
         {
             if (showAsContextFlyout)
             {
-                Show(placementTarget, PlacementMode.MousePoint);
+                Show(placementTarget, showOptions, PlacementMode.MousePoint);
             }
             else
             {
-                Show(placementTarget);
+                Show(placementTarget, showOptions);
             }
         }
 
@@ -92,7 +92,7 @@ namespace iNKORE.UI.WPF.Modern.Controls
             m_presenter?.UpdatePopupAnimation();
         }
 
-        private void Show(FrameworkElement placementTarget, PlacementMode placement = PlacementMode.Custom)
+        private void Show(FrameworkElement placementTarget, FlyoutShowOptions showOptions, PlacementMode placement = PlacementMode.Custom)
         {
             if (m_presenter != null &&
                 m_presenter.IsOpen &&
@@ -115,7 +115,14 @@ namespace iNKORE.UI.WPF.Modern.Controls
 
             if (placement == PlacementMode.Custom)
             {
-                m_presenter.PlacementRectangle = GetPlacementRectangle(placementTarget);
+                m_presenter.PlacementRectangle = GetPlacementRectangle(showOptions, placementTarget);
+                if (showOptions.Position.HasValue)
+                {
+                    m_presenter.Placement = PlacementMode.AbsolutePoint;
+                    m_presenter.HorizontalOffset = showOptions.Position.Value.X;
+                    m_presenter.VerticalOffset = showOptions.Position.Value.Y;
+                    System.Diagnostics.Debug.WriteLine($"{m_presenter.HorizontalOffset}*{m_presenter.VerticalOffset}");
+                }
             }
             else
             {
