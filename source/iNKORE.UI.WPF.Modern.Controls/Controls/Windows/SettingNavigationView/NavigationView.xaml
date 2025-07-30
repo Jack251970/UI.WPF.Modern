@@ -29,7 +29,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="MUX_NavigationViewItemPresenterStyleWhenOnLeftPane" TargetType="local:NavigationViewItemPresenter">
+    <Style TargetType="local:NavigationViewItemPresenter">
         <Setter Property="Foreground" Value="{DynamicResource NavigationViewItemForeground}" />
         <Setter Property="Background" Value="{DynamicResource NavigationViewItemBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource NavigationViewItemBorderBrush}" />
@@ -825,29 +825,11 @@
                                 <controls:StackLayout Orientation="Vertical" />
                             </controls:ItemsRepeater.Layout>
                         </controls:ItemsRepeater>
-
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="ItemOnNavigationViewListPositionStates">
-                                <ui:VisualStateGroupListener.Listener>
-                                    <ui:VisualStateGroupListener x:Name="ItemOnNavigationViewListPositionStatesListener" />
-                                </ui:VisualStateGroupListener.Listener>
-                                <VisualState x:Name="OnLeftNavigation" />
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
                     </Grid>
-
-                    <ControlTemplate.Triggers>
-                        <!--  OnLeftNavigation  -->
-                        <Trigger SourceName="ItemOnNavigationViewListPositionStatesListener" Property="CurrentStateName" Value="OnLeftNavigation">
-                            <Setter TargetName="NavigationViewItemPresenter" Property="Style" Value="{StaticResource MUX_NavigationViewItemPresenterStyleWhenOnLeftPane}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-
-    <Style TargetType="local:NavigationViewItemPresenter" />
 
     <Style TargetType="local:NavigationViewItemHeader">
         <Setter Property="Foreground" Value="{DynamicResource NavigationViewItemHeaderForeground}" />

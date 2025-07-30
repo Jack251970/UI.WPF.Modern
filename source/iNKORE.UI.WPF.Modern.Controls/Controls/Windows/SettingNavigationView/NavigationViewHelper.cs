@@ -20,15 +20,9 @@ enum NavigationViewRepeaterPosition
     LeftFooter
 }
 
-class NavigationViewItemHelper
-{
-    internal const string c_OnLeftNavigationReveal = "OnLeftNavigationReveal";
-    internal const string c_OnLeftNavigation = "OnLeftNavigation";
-}
-
 // Since RS5, a lot of functions in NavigationViewItem is moved to NavigationViewItemPresenter. So they both share some common codes.
 // This class helps to initialize and maintain the status of SelectionIndicator and ToolTip
-class NavigationViewItemHelper<T> : NavigationViewItemHelper
+class NavigationViewItemHelper<T>
 {
     public NavigationViewItemHelper()
     {

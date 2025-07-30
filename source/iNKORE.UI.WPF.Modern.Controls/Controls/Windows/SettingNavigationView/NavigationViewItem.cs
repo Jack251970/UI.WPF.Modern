@@ -14,7 +14,6 @@ using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Primitives;
 using iNKORE.UI.WPF.Modern.Input;
 using static Flow.Bar.Controls.NavigationView.CppWinRTHelpers;
-using static Flow.Bar.Controls.NavigationView.NavigationViewItemHelper;
 using IControlProtected = Flow.Bar.Controls.NavigationView.CppWinRTHelpers.IControlProtected;
 using PointerRoutedEventArgs = System.Windows.Input.MouseEventArgs;
 
@@ -312,35 +311,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         }
     }
 
-    void UpdateVisualStateForNavigationViewPositionChange()
-    {
-        var position = Position;
-        var stateName = c_OnLeftNavigation;
-
-        bool handled = false;
-
-        switch (position)
-        {
-            case NavigationViewRepeaterPosition.LeftNav:
-            case NavigationViewRepeaterPosition.LeftFooter:
-                if (SharedHelpers.IsRS4OrHigher() && false /*Application.Current.FocusVisualKind == FocusVisualKind.Reveal*/)
-                {
-                    // OnLeftNavigationReveal is introduced in RS6. 
-                    // Will fallback to stateName for the customer who re-template rs5 NavigationViewItem
-                    if (VisualStateManager.GoToState(this, c_OnLeftNavigationReveal, false /*useTransitions*/))
-                    {
-                        handled = true;
-                    }
-                }
-                break;
-        }
-
-        if (!handled)
-        {
-            VisualStateManager.GoToState(this, stateName, false /*useTransitions*/);
-        }
-    }
-
     void UpdateVisualStateForKeyboardFocusedState()
     {
         var focusState = "KeyboardNormal";
@@ -446,8 +416,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
             return;
 
         UpdateVisualStateForPointer();
-
-        UpdateVisualStateForNavigationViewPositionChange();
 
         bool shouldShowIcon = ShouldShowIcon();
         bool shouldShowContent = ShouldShowContent();
