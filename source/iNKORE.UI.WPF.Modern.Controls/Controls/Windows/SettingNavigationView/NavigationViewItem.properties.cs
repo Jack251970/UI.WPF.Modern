@@ -4,7 +4,6 @@
 using System.Collections;
 using System.Windows;
 using iNKORE.UI.WPF.Modern.Common;
-using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Helpers;
 
 namespace Flow.Bar.Controls.NavigationView;
@@ -30,29 +29,6 @@ partial class NavigationViewItem
     {
         var owner = (NavigationViewItem)sender;
         owner.OnIconPropertyChanged(args);
-    }
-
-    #endregion
-
-    #region InfoBadge
-
-    public static readonly DependencyProperty InfoBadgeProperty =
-        DependencyProperty.Register(
-            nameof(InfoBadge),
-            typeof(InfoBadge),
-            typeof(NavigationViewItem),
-            new PropertyMetadata(OnInfoBadgePropertyChanged));
-
-    public InfoBadge InfoBadge
-    {
-        get => (InfoBadge)GetValue(InfoBadgeProperty);
-        set => SetValue(InfoBadgeProperty, value);
-    }
-
-    private static void OnInfoBadgePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (NavigationViewItem)sender;
-        owner.OnInfoBadgePropertyChanged(args);
     }
 
     #endregion

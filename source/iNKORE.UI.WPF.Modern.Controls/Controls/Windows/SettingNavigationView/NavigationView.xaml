@@ -141,13 +141,6 @@
                                         </ui:FontIcon.RenderTransform>
                                     </ui:FontIcon>
                                 </Grid>
-
-                                <ContentPresenter
-                                    x:Name="InfoBadgePresenter"
-                                    Grid.Column="2"
-                                    VerticalAlignment="Center"
-                                    Content="{TemplateBinding InfoBadge}" />
-
                             </Grid>
                         </Grid>
 
@@ -185,17 +178,6 @@
                                                     <GridLength>8</GridLength>
                                                 </DiscreteObjectKeyFrame.Value>
                                             </DiscreteObjectKeyFrame>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-
-                            <VisualStateGroup x:Name="InfoBadgeStates">
-                                <VisualState x:Name="InfoBadgeVisible" />
-                                <VisualState x:Name="InfoBadgeCollapsed">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="InfoBadgePresenter" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -263,11 +245,6 @@
                         <Trigger SourceName="PaneAndTopLevelItemStatesListener" Property="CurrentStateName" Value="ClosedCompactAndTopLevelItem">
                             <Setter TargetName="ContentPresenter" Property="Margin" Value="{DynamicResource NavigationViewCompactItemContentPresenterMargin}" />
                             <Setter TargetName="ContentGrid" Property="Margin" Value="0,0,0,0" />
-                            <Setter TargetName="InfoBadgePresenter" Property="Grid.Column" Value="0" />
-                            <Setter TargetName="InfoBadgePresenter" Property="Grid.ColumnSpan" Value="4" />
-                            <Setter TargetName="InfoBadgePresenter" Property="VerticalAlignment" Value="Top" />
-                            <Setter TargetName="InfoBadgePresenter" Property="HorizontalAlignment" Value="Right" />
-                            <Setter TargetName="InfoBadgePresenter" Property="Margin" Value="0,2,2,0" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -321,11 +298,6 @@
                                     ClipToBounds="False"
                                     Content="{TemplateBinding Icon}"
                                     Foreground="{TemplateBinding Foreground}" />
-                                <ContentPresenter
-                                    x:Name="InfoBadgePresenter"
-                                    Grid.Column="2"
-                                    VerticalAlignment="Center"
-                                    Content="{TemplateBinding InfoBadge}" />
                             </Grid>
                         </Grid>
                         <VisualStateManager.VisualStateGroups>
@@ -469,13 +441,6 @@
                                         </ui:FontIcon.RenderTransform>
                                     </ui:FontIcon>
                                 </Grid>
-                                <ContentPresenter
-                                    x:Name="InfoBadgePresenter"
-                                    Grid.Column="3"
-                                    Margin="-16,0,2,13"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Content="{TemplateBinding InfoBadge}" />
                             </Grid>
                             <Grid
                                 x:Name="SelectionIndicatorGrid"
@@ -518,16 +483,6 @@
                                 <VisualState x:Name="IconOnLeft" />
                                 <VisualState x:Name="IconOnly" />
                                 <VisualState x:Name="ContentOnly" />
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="InfoBadgeStates">
-                                <VisualState x:Name="InfoBadgeVisible" />
-                                <VisualState x:Name="InfoBadgeCollapsed">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="InfoBadgePresenter" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="ChevronStates">
                                 <VisualState x:Name="ChevronHidden" />
@@ -696,12 +651,6 @@
                                         </ui:FontIcon.RenderTransform>
                                     </ui:FontIcon>
                                 </Border>
-                                <ContentPresenter
-                                    x:Name="InfoBadgePresenter"
-                                    Grid.Column="2"
-                                    Margin="0,0,16,0"
-                                    VerticalAlignment="Center"
-                                    Content="{TemplateBinding InfoBadge}" />
                             </Grid>
                         </Grid>
 
@@ -731,16 +680,6 @@
                                 <VisualState x:Name="IconOnLeft" />
                                 <VisualState x:Name="IconOnly" />
                                 <VisualState x:Name="ContentOnly" />
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="InfoBadgeStates">
-                                <VisualState x:Name="InfoBadgeVisible" />
-                                <VisualState x:Name="InfoBadgeCollapsed">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="InfoBadgePresenter" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="ChevronStates">
                                 <VisualState x:Name="ChevronHidden" />
@@ -1375,7 +1314,6 @@
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Foreground="{TemplateBinding Foreground}"
                             Icon="{TemplateBinding Icon}"
-                            InfoBadge="{TemplateBinding InfoBadge}"
                             IsTabStop="false"
                             UseSystemFocusVisuals="{TemplateBinding UseSystemFocusVisuals}" />
                         <controls:ItemsRepeater

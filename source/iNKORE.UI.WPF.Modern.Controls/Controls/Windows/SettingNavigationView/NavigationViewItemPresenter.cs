@@ -62,23 +62,6 @@ public class NavigationViewItemPresenter : ContentControl, IControlProtected
 
     #endregion
 
-    #region InfoBadge
-
-    public static readonly DependencyProperty InfoBadgeProperty =
-        DependencyProperty.Register(
-            nameof(InfoBadge),
-            typeof(UIElement),
-            typeof(NavigationViewItemPresenter),
-            null);
-
-    public UIElement InfoBadge
-    {
-        get => (UIElement)GetValue(InfoBadgeProperty);
-        set => SetValue(InfoBadgeProperty, value);
-    }
-
-    #endregion
-
     #region UseSystemFocusVisuals
 
     public static readonly DependencyProperty UseSystemFocusVisualsProperty =

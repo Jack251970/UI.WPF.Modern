@@ -294,11 +294,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         UpdateVisualStateNoTransition();
     }
 
-    void OnInfoBadgePropertyChanged(DependencyPropertyChangedEventArgs args)
-    {
-        UpdateVisualStateForInfoBadge();
-    }
-
     void OnMenuItemsPropertyChanged(DependencyPropertyChangedEventArgs args)
     {
         UpdateRepeaterItemsSource();
@@ -321,15 +316,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         if (m_navigationViewItemPresenter is { } presenter)
         {
             var stateName = showIcon ? (showContent ? "IconOnLeft" : "IconOnly") : "ContentOnly";
-            VisualStateManager.GoToState(presenter, stateName, false /*useTransitions*/);
-        }
-    }
-
-    void UpdateVisualStateForInfoBadge()
-    {
-        if (m_navigationViewItemPresenter is { } presenter)
-        {
-            var stateName = ShouldShowInfoBadge() ?  "InfoBadgeVisible" : "InfoBadgeCollapsed";
             VisualStateManager.GoToState(presenter, stateName, false /*useTransitions*/);
         }
     }
@@ -512,11 +498,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
     bool ShouldShowIcon()
     {
         return Icon != null;
-    }
-
-    bool ShouldShowInfoBadge()
-    {
-        return InfoBadge != null;
     }
 
     bool ShouldEnableToolTip()
