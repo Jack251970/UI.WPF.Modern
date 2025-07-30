@@ -197,7 +197,7 @@ public partial class NavigationView
             nameof(OpenPaneLength),
             typeof(double),
             typeof(NavigationView),
-            new PropertyMetadata(320.0, OnOpenPaneLengthPropertyChanged, CoerceToGreaterThanZero));
+            new PropertyMetadata(300.0, OnOpenPaneLengthPropertyChanged, CoerceToGreaterThanZero));
 
     public double OpenPaneLength
     {
