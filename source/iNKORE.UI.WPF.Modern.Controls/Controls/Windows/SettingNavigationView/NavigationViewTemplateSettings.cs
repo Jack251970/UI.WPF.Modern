@@ -91,26 +91,6 @@ public class NavigationViewTemplateSettings : DependencyObject
 
     #endregion
 
-    #region SingleSelectionFollowsFocus
-
-    private static readonly DependencyPropertyKey s_singleSelectionFollowsFocusPropertyKey =
-        DependencyProperty.RegisterReadOnly(
-            nameof(SingleSelectionFollowsFocus),
-            typeof(bool),
-            typeof(NavigationViewTemplateSettings),
-            null);
-
-    public static readonly DependencyProperty SingleSelectionFollowsFocusProperty =
-        s_singleSelectionFollowsFocusPropertyKey.DependencyProperty;
-
-    public bool SingleSelectionFollowsFocus
-    {
-        get => (bool)GetValue(SingleSelectionFollowsFocusProperty);
-        internal set => SetValue(s_singleSelectionFollowsFocusPropertyKey, value);
-    }
-
-    #endregion
-
     #region OpenPaneWidth
 
     private static readonly DependencyPropertyKey s_openPaneWidthPropertyKey =

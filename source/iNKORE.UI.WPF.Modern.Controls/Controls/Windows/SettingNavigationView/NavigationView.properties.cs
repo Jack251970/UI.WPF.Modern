@@ -566,29 +566,6 @@ public partial class NavigationView
 
     #endregion
 
-    #region SelectionFollowsFocus
-
-    public static readonly DependencyProperty SelectionFollowsFocusProperty =
-        DependencyProperty.Register(
-            nameof(SelectionFollowsFocus),
-            typeof(NavigationViewSelectionFollowsFocus),
-            typeof(NavigationView),
-            new PropertyMetadata(NavigationViewSelectionFollowsFocus.Disabled, OnSelectionFollowsFocusPropertyChanged));
-
-    public NavigationViewSelectionFollowsFocus SelectionFollowsFocus
-    {
-        get => (NavigationViewSelectionFollowsFocus)GetValue(SelectionFollowsFocusProperty);
-        set => SetValue(SelectionFollowsFocusProperty, value);
-    }
-
-    private static void OnSelectionFollowsFocusPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (NavigationView)sender;
-        owner.PropertyChanged(args);
-    }
-
-    #endregion
-
     #region TemplateSettings
 
     private static readonly DependencyPropertyKey s_templateSettingsPropertyKey =

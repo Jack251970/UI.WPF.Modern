@@ -17,12 +17,6 @@ namespace Flow.Bar.Controls.NavigationView
         Auto = 2,
     }
 
-    public enum NavigationViewSelectionFollowsFocus
-    {
-        Disabled = 0,
-        Enabled = 1
-    }
-
     public enum NavigationViewShoulderNavigationEnabled
     {
         WhenSelectionFollowsFocus = 0,

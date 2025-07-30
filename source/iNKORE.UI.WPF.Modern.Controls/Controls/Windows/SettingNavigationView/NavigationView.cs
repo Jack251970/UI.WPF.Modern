@@ -382,7 +382,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         UpdateHeaderVisibility();
         UpdateTitleBarPadding();
         UpdatePaneTabFocusNavigation();
-        UpdateSingleSelectionFollowsFocusTemplateSetting();
         UpdatePaneVisibility();
         UpdatePaneTitleMargins();
         UpdatePaneLayout();
@@ -684,7 +683,6 @@ public partial class NavigationView : ContentControl, IControlProtected
                 // Register for item events
                 InputHelper.AddTappedHandler(nvi, OnNavigationViewItemTapped);
                 nvi.KeyDown += OnNavigationViewItemKeyDown;
-                nvi.GotFocus += OnNavigationViewItemOnGotFocus;
                 nvi.IsSelectedChanged += OnNavigationViewItemIsSelectedPropertyChanged;
             }
         }
@@ -723,7 +721,6 @@ public partial class NavigationView : ContentControl, IControlProtected
                 // Revoke all the events that we were listing to on the item
                 InputHelper.RemoveTappedHandler(nvi, OnNavigationViewItemTapped);
                 nvi.KeyDown -= OnNavigationViewItemKeyDown;
-                nvi.GotFocus -= OnNavigationViewItemOnGotFocus;
                 nvi.IsSelectedChanged -= OnNavigationViewItemIsSelectedPropertyChanged;
             }
         }
@@ -2041,24 +2038,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         m_tabKeyPrecedesFocusChange = false;
     }
 
-    private void OnNavigationViewItemOnGotFocus(object sender, RoutedEventArgs e)
-    {
-        if (sender is NavigationViewItem nvi)
-        {
-            // Achieve selection follows focus behavior
-            if (IsNavigationViewListSingleSelectionFollowsFocus())
-            {
-                // if nvi is already selected we don't need to invoke it again
-                // otherwise ItemInvoked fires twice when item was tapped
-                // or fired when window gets focus
-                if (!nvi.IsSelected)
-                {
-                    OnNavigationViewItemInvoked(nvi);
-                }
-            }
-        }
-    }
-
     protected override void OnPreviewKeyDown(KeyEventArgs e)
     {
         m_tabKeyPrecedesFocusChange = false;
@@ -2166,16 +2145,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private NavigationViewTemplateSettings GetTemplateSettings()
     {
         return TemplateSettings;
-    }
-
-    private bool IsNavigationViewListSingleSelectionFollowsFocus()
-    {
-        return (SelectionFollowsFocus == NavigationViewSelectionFollowsFocus.Enabled);
-    }
-
-    private void UpdateSingleSelectionFollowsFocusTemplateSetting()
-    {
-        GetTemplateSettings().SingleSelectionFollowsFocus = IsNavigationViewListSingleSelectionFollowsFocus();
     }
 
     private void OnMenuItemsSourceCollectionChanged(object sender, object args)
@@ -2396,10 +2365,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             {
                 UpdateVisualStateForOverflowButton();
             }
-        }
-        else if (property == SelectionFollowsFocusProperty)
-        {
-            UpdateSingleSelectionFollowsFocusTemplateSetting();
         }
         else if (property == CompactPaneLengthProperty)
         {
