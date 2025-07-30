@@ -663,8 +663,6 @@ public partial class NavigationView
     public event TypedEventHandler<NavigationView, NavigationViewPaneClosingEventArgs> PaneClosing;
     public event TypedEventHandler<NavigationView, object> PaneOpened;
     public event TypedEventHandler<NavigationView, object> PaneOpening;
-    public event TypedEventHandler<NavigationView, NavigationViewItemExpandingEventArgs> Expanding;
-    public event TypedEventHandler<NavigationView, NavigationViewItemCollapsedEventArgs> Collapsed;
 
     private static object CoerceToGreaterThanZero(DependencyObject d, object baseValue)
     {
