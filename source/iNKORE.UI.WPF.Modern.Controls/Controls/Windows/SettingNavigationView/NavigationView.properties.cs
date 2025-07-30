@@ -232,29 +232,6 @@ partial class NavigationView
 
     #endregion
 
-    #region IsPaneToggleButtonVisible
-
-    public static readonly DependencyProperty IsPaneToggleButtonVisibleProperty =
-        DependencyProperty.Register(
-            nameof(IsPaneToggleButtonVisible),
-            typeof(bool),
-            typeof(NavigationView),
-            new PropertyMetadata(true, OnIsPaneToggleButtonVisiblePropertyChanged));
-
-    public bool IsPaneToggleButtonVisible
-    {
-        get => (bool)GetValue(IsPaneToggleButtonVisibleProperty);
-        set => SetValue(IsPaneToggleButtonVisibleProperty, value);
-    }
-
-    private static void OnIsPaneToggleButtonVisiblePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (NavigationView)sender;
-        owner.PropertyChanged(args);
-    }
-
-    #endregion
-
     #region AlwaysShowHeader
 
     public static readonly DependencyProperty AlwaysShowHeaderProperty =

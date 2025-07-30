@@ -476,13 +476,10 @@ public partial class NavigationView : ContentControl, IControlProtected
         // Do initial setup
         UpdatePaneDisplayMode();
         UpdateHeaderVisibility();
-        UpdatePaneTitleFrameworkElementParents();
         UpdateTitleBarPadding();
         UpdatePaneTabFocusNavigation();
-        UpdateBackAndCloseButtonsVisibility();
         UpdateSingleSelectionFollowsFocusTemplateSetting();
         UpdatePaneVisibility();
-        UpdateVisualState();
         UpdatePaneTitleMargins();
         UpdatePaneLayout();
         UpdatePaneOverlayGroup();
@@ -950,7 +947,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         UpdateOpenPaneWidth(width);
         UpdateAdaptiveLayout(width);
         UpdateTitleBarPadding();
-        UpdateBackAndCloseButtonsVisibility();
         UpdatePaneLayout();
         UpdatePaneOverlayGroup();
         UpdatePaneButtonsWidths();
@@ -985,15 +981,21 @@ public partial class NavigationView : ContentControl, IControlProtected
         // instead of this:
         m_initialListSizeStateSet = false; // see UpdateIsClosedCompact()
 
-        NavigationViewDisplayMode displayMode = NavigationViewDisplayMode.Compact;
-
+        NavigationViewDisplayMode displayMode;
         if (width >= ExpandedModeThresholdWidth)
         {
             displayMode = NavigationViewDisplayMode.Expanded;
+            SetIsPaneToggleButtonVisiblity(false, forceSetDisplayMode);
         }
         else if (width < CompactModeThresholdWidth)
         {
             displayMode = NavigationViewDisplayMode.Minimal;
+            SetIsPaneToggleButtonVisiblity(true, forceSetDisplayMode);
+        }
+        else
+        {
+            displayMode = NavigationViewDisplayMode.Compact;
+            SetIsPaneToggleButtonVisiblity(true, forceSetDisplayMode);
         }
 
         if (!forceSetDisplayMode && m_initialNonForcedModeUpdate)
@@ -1023,6 +1025,24 @@ public partial class NavigationView : ContentControl, IControlProtected
         {
             m_initialListSizeStateSet = false;
             ClosePane();
+        }
+
+        if (displayMode == NavigationViewDisplayMode.Expanded
+            && (previousMode == NavigationViewDisplayMode.Compact ||
+                previousMode == NavigationViewDisplayMode.Minimal))
+        {
+            OpenPane();
+        }
+    }
+
+    private void SetIsPaneToggleButtonVisiblity(bool visible, bool forceSetDisplayMode = false)
+    {
+        UpdatePaneToggleButtonVisibility(visible);
+        if (forceSetDisplayMode)
+        {
+            UpdatePaneTitleFrameworkElementParents(visible);
+            UpdateBackAndCloseButtonsVisibility(visible);
+            UpdateVisualState(visible);
         }
     }
 
@@ -1174,7 +1194,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private void OnPaneTitleHolderSizeChanged(object sender, SizeChangedEventArgs args)
     {
-        UpdateBackAndCloseButtonsVisibility();
+
     }
 
     // Call this when you want an uncancellable open
@@ -1311,7 +1331,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             }
 
             UpdateTitleBarPadding();
-            UpdateBackAndCloseButtonsVisibility();
             UpdatePaneTitleMargins();
             UpdatePaneToggleSize();
         }
@@ -1435,12 +1454,10 @@ public partial class NavigationView : ContentControl, IControlProtected
     }
 
     // Updates the PaneTitleHolder.Visibility and PaneTitleTextBlock.Parent properties based on the PaneDisplayMode, PaneTitle and IsPaneToggleButtonVisible properties.
-    private void UpdatePaneTitleFrameworkElementParents()
+    private void UpdatePaneTitleFrameworkElementParents(bool isPaneToggleButtonVisible)
     {
         if (m_paneTitleHolderFrameworkElement is { } paneTitleHolderFrameworkElement)
         {
-            var isPaneToggleButtonVisible = IsPaneToggleButtonVisible;
-
             paneTitleHolderFrameworkElement.Visibility =
                 (isPaneToggleButtonVisible ||
                     PaneTitle.Length == 0) ?
@@ -2616,7 +2633,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private void UpdateVisualState(bool useTransitions = false)
+    private void UpdateVisualState(bool isToggleButtonVisible, bool useTransitions = false)
     {
         if (m_appliedTemplate)
         {
@@ -2625,7 +2642,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
             VisualStateManager.GoToState(this, "SettingsCollapsed", false /*useTransitions*/);
 
-            UpdateLeftNavigationOnlyVisualState(useTransitions);
+            UpdateLeftNavigationOnlyVisualState(isToggleButtonVisible, useTransitions);
         }
     }
 
@@ -2637,9 +2654,8 @@ public partial class NavigationView : ContentControl, IControlProtected
         VisualStateManager.GoToState(this, state, false /* useTransitions*/);
     }
 
-    private void UpdateLeftNavigationOnlyVisualState(bool useTransitions)
+    private void UpdateLeftNavigationOnlyVisualState(bool isToggleButtonVisible, bool useTransitions)
     {
-        bool isToggleButtonVisible = IsPaneToggleButtonVisible;
         VisualStateManager.GoToState(this, isToggleButtonVisible ? "TogglePaneButtonVisible" : "TogglePaneButtonCollapsed", false /*useTransitions*/);
     }
 
@@ -2683,13 +2699,10 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
         else if (property == PaneTitleProperty)
         {
-            UpdatePaneTitleFrameworkElementParents();
-            UpdateBackAndCloseButtonsVisibility();
             UpdatePaneToggleSize();
         }
         else if (property == IsBackButtonVisibleProperty)
         {
-            UpdateBackAndCloseButtonsVisibility();
             UpdateAdaptiveLayout(ActualWidth);
 
             // Enabling back button shifts grid instead of resizing, so let's update the layout.
@@ -2746,13 +2759,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         else if (property == SelectionFollowsFocusProperty)
         {
             UpdateSingleSelectionFollowsFocusTemplateSetting();
-        }
-        else if (property == IsPaneToggleButtonVisibleProperty)
-        {
-            UpdatePaneTitleFrameworkElementParents();
-            UpdateBackAndCloseButtonsVisibility();
-            UpdatePaneToggleButtonVisibility();
-            UpdateVisualState();
         }
         else if (property == CompactPaneLengthProperty)
         {
@@ -2865,15 +2871,13 @@ public partial class NavigationView : ContentControl, IControlProtected
 
         SetPaneToggleButtonAutomationName();
         UpdatePaneTabFocusNavigation();
-        UpdatePaneTitleFrameworkElementParents();
         UpdatePaneOverlayGroup();
 
         UpdatePaneButtonsWidths();
     }
 
-    private void UpdatePaneToggleButtonVisibility()
+    private void UpdatePaneToggleButtonVisibility(bool visible)
     {
-        var visible = IsPaneToggleButtonVisible;
         GetTemplateSettings().PaneToggleButtonVisibility = Util.VisibilityFromBool(visible);
     }
 
@@ -3007,7 +3011,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private void UpdateBackAndCloseButtonsVisibility()
+    private void UpdateBackAndCloseButtonsVisibility(bool isPaneToggleButtonVisible)
     {
         if (!m_appliedTemplate)
         {
@@ -3027,7 +3031,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
         GetTemplateSettings().BackButtonVisibility = backButtonVisibility;
 
-        if (m_paneToggleButton != null && IsPaneToggleButtonVisible)
+        if (m_paneToggleButton != null && isPaneToggleButtonVisible)
         {
             paneHeaderContentBorderRowMinHeight = GetPaneToggleButtonHeight();
             paneHeaderPaddingForToggleButton = GetPaneToggleButtonWidth();
