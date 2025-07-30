@@ -1,17 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
-using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls;
-using iNKORE.UI.WPF.Modern.Controls.Primitives;
 using static Flow.Bar.Controls.NavigationView.CppWinRTHelpers;
 using IControlProtected = Flow.Bar.Controls.NavigationView.CppWinRTHelpers.IControlProtected;
 using PointerRoutedEventArgs = System.Windows.Input.MouseEventArgs;
@@ -23,8 +18,6 @@ namespace Flow.Bar.Controls.NavigationView;
 public partial class NavigationViewItem : NavigationViewItemBase
 {
     private const string C_navigationViewItemPresenterName = "NavigationViewItemPresenter";
-    private const string C_repeater = "NavigationViewItemMenuItemsHost";
-    private const string C_rootGrid = "NVIRootGrid";
 
     // Visual States
     private const string C_pressedSelected = "PressedSelected";
@@ -43,11 +36,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
             new FrameworkPropertyMetadata(typeof(NavigationViewItem)));
     }
 
-    public NavigationViewItem()
-    {
-        SetValue(s_menuItemsPropertyKey, new ObservableCollection<object>());
-    }
-
     internal void UpdateVisualStateNoTransition()
     {
         UpdateVisualState(false /*useTransition*/);
@@ -56,7 +44,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
     private protected override void OnNavigationViewItemBaseDepthChanged()
     {
         UpdateItemIndentation();
-        PropagateDepthToChildren(Depth + 1);
     }
 
     private protected override void OnNavigationViewItemBaseIsSelectedChanged()
@@ -67,7 +54,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
     private protected override void OnNavigationViewItemBasePositionChanged()
     {
         UpdateVisualStateNoTransition();
-        ReparentRepeater();
     }
 
     public override void OnApplyTemplate()
@@ -83,16 +69,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         // Retrieve pointers to stable controls 
         IControlProtected controlProtected = this;
         m_helper.Init(controlProtected);
-
-        if (GetTemplateChildT<Grid>(C_rootGrid, controlProtected) is { } rootGrid)
-        {
-            m_rootGrid = rootGrid;
-
-            if (FlyoutBase.GetAttachedFlyout(rootGrid) is { } flyoutBase)
-            {
-                m_flyoutClosingRevoker = new FlyoutBaseClosingRevoker(flyoutBase, OnFlyoutClosing);
-            }
-        }
 
         HookInputEvents(controlProtected);
 
@@ -110,59 +86,10 @@ public partial class NavigationViewItem : NavigationViewItemBase
             UpdateIsClosedCompact();
         }
 
-        // Retrieve reference to NavigationView
-        if (GetNavigationView() is { } nvImpl)
-        {
-            if (GetTemplateChildT<ItemsRepeater>(C_repeater, controlProtected) is { } repeater)
-            {
-                m_repeater = repeater;
-
-                // Primary element setup happens in NavigationView
-                m_repeaterElementPreparedRevoker = new ItemsRepeaterElementPreparedRevoker(repeater, nvImpl.OnRepeaterElementPrepared);
-                m_repeaterElementClearingRevoker = new ItemsRepeaterElementClearingRevoker(repeater, nvImpl.OnRepeaterElementClearing);
-
-                repeater.ItemTemplate = nvImpl.GetNavigationViewItemsFactory();
-            }
-
-            UpdateRepeaterItemsSource();
-        }
-
         m_appliedTemplate = true;
 
         UpdateItemIndentation();
         UpdateVisualStateNoTransition();
-        ReparentRepeater();
-        // We dont want to update the repeater visibilty during OnApplyTemplate if NavigationView is in a mode when items are shown in a flyout
-        if (!ShouldRepeaterShowInFlyout())
-        {
-            ShowHideChildren();
-        }
-    }
-
-    void UpdateRepeaterItemsSource()
-    {
-        if (m_repeater is { } repeater)
-        {
-            object itemsSource;
-            {
-                object init()
-                {
-                    if (MenuItemsSource is { } menuItemsSource)
-                    {
-                        return menuItemsSource;
-                    }
-                    return MenuItems;
-                }
-                itemsSource = init();
-            }
-            m_itemsSourceViewCollectionChangedRevoker?.Revoke();
-            repeater.ItemsSource = itemsSource;
-            m_itemsSourceViewCollectionChangedRevoker = new ItemsSourceView.CollectionChangedRevoker(repeater.ItemsSourceView, OnItemsSourceViewChanged);
-        }
-    }
-
-    private void OnItemsSourceViewChanged(object sender, NotifyCollectionChangedEventArgs args)
-    {
     }
 
     internal UIElement GetSelectionIndicator()
@@ -185,7 +112,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
             args == SplitView.DisplayModeProperty)
         {
             UpdateIsClosedCompact();
-            ReparentRepeater();
         }
     }
 
@@ -259,36 +185,9 @@ public partial class NavigationViewItem : NavigationViewItemBase
         m_suggestedToolTipContent = newToolTipContent;
     }
 
-    void OnIsExpandedPropertyChanged(DependencyPropertyChangedEventArgs args)
-    {
-        if (FrameworkElementAutomationPeer.FromElement(this) is AutomationPeer peer)
-        {
-            var navViewItemPeer = (NavigationViewItemAutomationPeer)peer;
-            navViewItemPeer.RaiseExpandCollapseAutomationEvent(
-                IsExpanded ?
-                    ExpandCollapseState.Expanded :
-                    ExpandCollapseState.Collapsed
-            );
-        }
-    }
-
     void OnIconPropertyChanged(DependencyPropertyChangedEventArgs args)
     {
         UpdateVisualStateNoTransition();
-    }
-
-    void OnMenuItemsPropertyChanged(DependencyPropertyChangedEventArgs args)
-    {
-        UpdateRepeaterItemsSource();
-    }
-
-    void OnMenuItemsSourcePropertyChanged(DependencyPropertyChangedEventArgs args)
-    {
-        UpdateRepeaterItemsSource();
-    }
-
-    void OnHasUnrealizedChildrenPropertyChanged(DependencyPropertyChangedEventArgs args)
-    {
     }
 
     void UpdateVisualStateForIconAndContent(bool showIcon, bool showContent)
@@ -426,13 +325,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         UpdateVisualStateForKeyboardFocusedState();
     }
 
-    internal bool HasChildren()
-    {
-        return MenuItems.Count > 0
-            || (MenuItemsSource != null && m_repeater != null && m_repeater.ItemsSourceView.Count > 0)
-            || HasUnrealizedChildren;
-    }
-
     bool ShouldShowIcon()
     {
         return Icon != null;
@@ -477,87 +369,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         return presenter;
     }
 
-    internal ItemsRepeater GetRepeater() { return m_repeater; }
-
-    internal void ShowHideChildren()
-    {
-        if (m_repeater is { } repeater)
-        {
-            bool shouldShowChildren = IsExpanded;
-            var visibility = shouldShowChildren ? Visibility.Visible : Visibility.Collapsed;
-            repeater.Visibility = visibility;
-
-            if (ShouldRepeaterShowInFlyout())
-            {
-                if (shouldShowChildren)
-                {
-                    // Verify that repeater is parented correctly
-                    if (!m_isRepeaterParentedToFlyout)
-                    {
-                        ReparentRepeater();
-                    }
-
-                    // There seems to be a race condition happening which sometimes
-                    // prevents the opening of the flyout. Queue callback as a workaround.
-                    SharedHelpers.QueueCallbackForCompositionRendering(
-                        () =>
-                        {
-                            FlyoutBase.ShowAttachedFlyout(m_rootGrid);
-                        });
-                }
-                else
-                {
-                    if (FlyoutBase.GetAttachedFlyout(m_rootGrid) is { } flyout)
-                    {
-                        flyout.Hide();
-                    }
-                }
-            }
-        }
-    }
-
-    void ReparentRepeater()
-    {
-        if (HasChildren())
-        {
-            if (m_repeater is { } repeater)
-            {
-                if (ShouldRepeaterShowInFlyout() && !m_isRepeaterParentedToFlyout)
-                {
-                    // Reparent repeater to flyout
-                    // TODO: Replace removeatend with something more specific
-                    m_rootGrid.Children.Remove(repeater);
-                    m_flyoutContentGrid.Children.Add(repeater);
-                    m_isRepeaterParentedToFlyout = true;
-
-                    PropagateDepthToChildren(0);
-                }
-                else if (!ShouldRepeaterShowInFlyout() && m_isRepeaterParentedToFlyout)
-                {
-                    m_flyoutContentGrid.Children.Remove(repeater);
-                    m_rootGrid.Children.Add(repeater);
-                    m_isRepeaterParentedToFlyout = false;
-
-                    PropagateDepthToChildren(1);
-                }
-            }
-        }
-    }
-
-    internal bool ShouldRepeaterShowInFlyout()
-    {
-        return m_isClosedCompact && IsTopLevelItem;
-    }
-
-    internal bool IsRepeaterVisible()
-    {
-        if (m_repeater is { } repeater)
-        {
-            return repeater.Visibility == Visibility.Visible;
-        }
-        return false;
-    }
-
     void UpdateItemIndentation()
     {
         // Update item indentation based on its depth
@@ -566,29 +377,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
             var newLeftMargin = Depth * CItemIndentation;
             presenter.UpdateContentLeftIndentation(newLeftMargin);
         }
-    }
-
-    internal void PropagateDepthToChildren(int depth)
-    {
-        if (m_repeater is { } repeater)
-        {
-            var itemsCount = repeater.ItemsSourceView.Count;
-            for (int index = 0; index < itemsCount; index++)
-            {
-                if (repeater.TryGetElement(index) is { } element)
-                {
-                    if (element is NavigationViewItemBase nvib)
-                    {
-                        nvib.Depth = depth;
-                    }
-                }
-            }
-        }
-    }
-
-    void OnFlyoutClosing(object sender, FlyoutBaseClosingEventArgs args)
-    {
-        IsExpanded = false;
     }
 
     // IUIElement / IUIElementOverridesHelper
@@ -775,39 +563,23 @@ public partial class NavigationViewItem : NavigationViewItemBase
     {
         UnhookInputEvents();
 
-        m_flyoutClosingRevoker?.Revoke();
         m_splitViewIsPaneOpenChangedRevoker?.Revoke();
         m_splitViewDisplayModeChangedRevoker?.Revoke();
         m_splitViewCompactPaneLengthChangedRevoker?.Revoke();
-        m_repeaterElementPreparedRevoker?.Revoke();
-        m_repeaterElementClearingRevoker?.Revoke();
         IsEnabledChanged -= OnIsEnabledChanged;
-        m_itemsSourceViewCollectionChangedRevoker?.Revoke();
 
-        m_rootGrid = null;
         m_navigationViewItemPresenter = null;
         m_toolTip = null;
-        m_repeater = null;
-        m_flyoutContentGrid = null;
     }
 
     readonly SplitViewIsPaneOpenChangedRevoker m_splitViewIsPaneOpenChangedRevoker;
     readonly SplitViewDisplayModeChangedRevoker m_splitViewDisplayModeChangedRevoker;
     readonly SplitViewCompactPaneLengthChangedRevoker m_splitViewCompactPaneLengthChangedRevoker;
 
-    ItemsRepeaterElementPreparedRevoker m_repeaterElementPreparedRevoker;
-    ItemsRepeaterElementClearingRevoker m_repeaterElementClearingRevoker;
-    ItemsSourceView.CollectionChangedRevoker m_itemsSourceViewCollectionChangedRevoker;
-
-    FlyoutBaseClosingRevoker m_flyoutClosingRevoker;
-
     ToolTip m_toolTip;
     readonly NavigationViewItemHelper<NavigationViewItem> m_helper = new();
     NavigationViewItemPresenter m_navigationViewItemPresenter;
     object m_suggestedToolTipContent;
-    ItemsRepeater m_repeater;
-    Grid m_flyoutContentGrid;
-    Grid m_rootGrid;
 
     bool m_isClosedCompact = false;
 
@@ -818,6 +590,4 @@ public partial class NavigationViewItem : NavigationViewItemBase
     bool m_isMouseCaptured = false;
     bool m_isPressed = false;
     bool m_isPointerOver = false;
-
-    bool m_isRepeaterParentedToFlyout = false;
 }

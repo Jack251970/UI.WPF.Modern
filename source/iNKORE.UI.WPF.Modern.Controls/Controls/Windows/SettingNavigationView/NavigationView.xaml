@@ -50,7 +50,6 @@
                         <Grid x:Name="PresenterContentRootGrid">
                             <!--  Wrap SelectionIndicator in a grid so that its offset is 0,0 - this enables the offset animation.  -->
                             <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
-
                                 <Rectangle
                                     x:Name="SelectionIndicator"
                                     Width="{DynamicResource NavigationViewSelectionIndicatorWidth}"
@@ -709,11 +708,6 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:NavigationViewItem">
                     <Grid x:Name="NVIRootGrid">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
                         <local:NavigationViewItemPresenter
                             x:Name="NavigationViewItemPresenter"
                             Padding="{TemplateBinding Padding}"
@@ -733,14 +727,6 @@
                             Icon="{TemplateBinding Icon}"
                             IsTabStop="false"
                             UseSystemFocusVisuals="{TemplateBinding UseSystemFocusVisuals}" />
-                        <controls:ItemsRepeater
-                            x:Name="NavigationViewItemMenuItemsHost"
-                            Grid.Row="1"
-                            Visibility="Collapsed">
-                            <controls:ItemsRepeater.Layout>
-                                <controls:StackLayout Orientation="Vertical" />
-                            </controls:ItemsRepeater.Layout>
-                        </controls:ItemsRepeater>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

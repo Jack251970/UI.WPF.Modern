@@ -196,13 +196,10 @@ public partial class NavigationView : ContentControl, IControlProtected
         {
             e.Children = e.Source;
         }
-        else if (e.Source is NavigationViewItem nvi)
+        else if (e.Source is NavigationViewItem)
         {
-            e.Children = NavigationView.GetChildren(nvi);
-        }
-        else if (GetChildrenForItemInIndexPath(e.SourceIndex, true /*forceRealize*/) is { } children)
-        {
-            e.Children = children;
+            // no children
+            e.Children = null;
         }
     }
 
@@ -240,37 +237,18 @@ public partial class NavigationView : ContentControl, IControlProtected
     // We only need to close the flyout if the selected item is a leaf node
     private void CloseFlyoutIfRequired(NavigationViewItem selectedItem)
     {
-        var selectedIndex = m_selectionModel.SelectedIndex;
-        bool isInModeWithFlyout;
+        bool init()
         {
-            bool init()
+            if (m_rootSplitView is { } splitView)
             {
-                if (m_rootSplitView is { } splitView)
-                {
-                    // Check if the pane is closed and if the splitview is in either compact mode.
-                    var splitViewDisplayMode = splitView.DisplayMode;
-                    return !splitView.IsPaneOpen && (splitViewDisplayMode == SplitViewDisplayMode.CompactOverlay || splitViewDisplayMode == SplitViewDisplayMode.CompactInline);
-                }
-                return false;
+                // Check if the pane is closed and if the splitview is in either compact mode.
+                var splitViewDisplayMode = splitView.DisplayMode;
+                return !splitView.IsPaneOpen && (splitViewDisplayMode == SplitViewDisplayMode.CompactOverlay || splitViewDisplayMode == SplitViewDisplayMode.CompactInline);
             }
-            isInModeWithFlyout = init();
+            return false;
         }
 
-        if (isInModeWithFlyout && selectedIndex != null && !NavigationView.DoesNavigationViewItemHaveChildren(selectedItem))
-        {
-            // Item selected is a leaf node, find top level parent and close flyout
-            if (GetContainerForIndex(selectedIndex.GetAt(1), selectedIndex.GetAt(0) == c_footerMenuBlockIndex /* inFooter */) is { } rootItem)
-            {
-                if (rootItem is NavigationViewItem nvi)
-                {
-                    var nviImpl = nvi;
-                    if (nviImpl.ShouldRepeaterShowInFlyout())
-                    {
-                        nvi.IsExpanded = false;
-                    }
-                }
-            }
-        }
+        init();
     }
 
     public override void OnApplyTemplate()
@@ -608,29 +586,6 @@ public partial class NavigationView : ContentControl, IControlProtected
                     m_selectionModel.DeselectAt(indexPath);
                 }
             }
-
-            if (isSelectedInContainer)
-            {
-                nvi.IsChildSelected = false;
-            }
-        }
-    }
-
-    private void OnNavigationViewItemExpandedPropertyChanged(DependencyObject sender, DependencyProperty args)
-    {
-        if (sender is NavigationViewItem nvi)
-        {
-            if (nvi.IsExpanded)
-            {
-                RaiseExpandingEvent(nvi);
-            }
-
-            ShowHideChildrenItemsRepeater(nvi);
-
-            if (!nvi.IsExpanded)
-            {
-                RaiseCollapsedEvent(nvi);
-            }
         }
     }
 
@@ -672,16 +627,12 @@ public partial class NavigationView : ContentControl, IControlProtected
         m_shouldRaiseItemInvokedAfterSelection = true;
 
         var selectedItem = SelectedItem;
-        bool updateSelection = m_selectionModel != null && nvi.SelectsOnInvoked;
+        bool updateSelection = m_selectionModel != null;
         if (updateSelection)
         {
             var ip = GetIndexPathForContainer(nvi);
 
             // Determine if we will update collapse/expand which will happen iff the item has children
-            if (NavigationView.DoesNavigationViewItemHaveChildren(nvi))
-            {
-                m_shouldIgnoreUIASelectionRaiseAsExpandCollapseWillRaise = true;
-            }
             UpdateSelectionModelSelection(ip);
         }
 
@@ -691,7 +642,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             RaiseItemInvokedForNavigationViewItem(nvi);
         }
 
-        ToggleIsExpandedNavigationViewItem(nvi);
         ClosePaneIfNeccessaryAfterItemIsClicked(nvi);
 
         if (updateSelection)
@@ -727,7 +677,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         return parentIR;
     }
 
-    static internal ItemsRepeater GetParentItemsRepeaterForContainer(NavigationViewItemBase nvib)
+    internal static ItemsRepeater GetParentItemsRepeaterForContainer(NavigationViewItemBase nvib)
     {
         if (VisualTreeHelper.GetParent(nvib) is { } parent)
         {
@@ -825,7 +775,7 @@ public partial class NavigationView : ContentControl, IControlProtected
             if (GetParentNavigationViewItemForContainer(nvib) is { } parentNVI)
             {
                 var parentNVIImpl = parentNVI;
-                var itemDepth = parentNVIImpl.ShouldRepeaterShowInFlyout() ? 0 : parentNVIImpl.Depth + 1;
+                var itemDepth = parentNVIImpl.Depth + 1;
                 nvibImpl.Depth = itemDepth;
             }
             else
@@ -848,14 +798,12 @@ public partial class NavigationView : ContentControl, IControlProtected
                     }
                     childDepth = init();
                 }
-                nvi.PropagateDepthToChildren(childDepth);
 
                 // Register for item events
                 InputHelper.AddTappedHandler(nvi, OnNavigationViewItemTapped);
                 nvi.KeyDown += OnNavigationViewItemKeyDown;
                 nvi.GotFocus += OnNavigationViewItemOnGotFocus;
                 nvi.IsSelectedChanged += OnNavigationViewItemIsSelectedPropertyChanged;
-                nvi.IsExpandedChanged += OnNavigationViewItemExpandedPropertyChanged;
             }
         }
     }
@@ -895,7 +843,6 @@ public partial class NavigationView : ContentControl, IControlProtected
                 nvi.KeyDown -= OnNavigationViewItemKeyDown;
                 nvi.GotFocus -= OnNavigationViewItemOnGotFocus;
                 nvi.IsSelectedChanged -= OnNavigationViewItemIsSelectedPropertyChanged;
-                nvi.IsExpandedChanged -= OnNavigationViewItemExpandedPropertyChanged;
             }
         }
     }
@@ -1197,7 +1144,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     // Call this when you want an uncancellable close
     private void ClosePane()
     {
-        CollapseMenuItemsInRepeater(m_leftNavRepeater);
         try
         {
             m_isOpenPaneForInteraction = true;
@@ -1481,7 +1427,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private void AnimateSelectionChangedToItem(object selectedItem)
     {
-        if (selectedItem != null && !IsSelectionSuppressed(selectedItem))
+        if (selectedItem != null)
         {
             AnimateSelectionChanged(selectedItem);
         }
@@ -1820,19 +1766,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         return GetContainerForData<NavigationViewItem>(data);
     }
 
-    private bool IsSelectionSuppressed(object item)
-    {
-        if (item != null)
-        {
-            if (NavigationViewItemOrSettingsContentFromData(item) is { } nvi)
-            {
-                return !nvi.SelectsOnInvoked;
-            }
-        }
-
-        return false;
-    }
-
     private bool ShouldPreserveNavigationViewRS3Behavior()
     {
         // Since RS4, we support backbutton
@@ -1879,126 +1812,75 @@ public partial class NavigationView : ContentControl, IControlProtected
     // If nextItem is selectionsuppressed, we should undo the selection. We didn't undo it OnSelectionChange because we want change by API has the same undo logic.
     private void ChangeSelection(object prevItem, object nextItem)
     {
-        if (IsSelectionSuppressed(nextItem))
+        // Other transition other than default only apply to topnav
+        // when clicking overflow on topnav, transition is from bottom
+        // otherwise if prevItem is on left side of nextActualItem, transition is from left
+        //           if prevItem is on right side of nextActualItem, transition is from right
+        // click on Settings item is considered Default
+        NavigationRecommendedTransitionDirection recommendedDirection;
         {
-            // This should not be a common codepath. Only happens if customer passes a 'selectionsuppressed' item via API.
-            UndoSelectionAndRevertSelectionTo(prevItem, nextItem);
-            RaiseItemInvoked(nextItem);
+            static NavigationRecommendedTransitionDirection init()
+            {
+                return NavigationRecommendedTransitionDirection.Default;
+            }
+            recommendedDirection = init();
         }
-        else
+
+        // Bug 17850504, Customer may use NavigationViewItem.IsSelected in ItemInvoke or SelectionChanged Event.
+        // To keep the logic the same as RS4, ItemInvoke is before unselect the old item
+        // And SelectionChanged is after we selected the new item.
+        var selectedItem = SelectedItem;
+        if (m_shouldRaiseItemInvokedAfterSelection)
         {
-            // Other transition other than default only apply to topnav
-            // when clicking overflow on topnav, transition is from bottom
-            // otherwise if prevItem is on left side of nextActualItem, transition is from left
-            //           if prevItem is on right side of nextActualItem, transition is from right
-            // click on Settings item is considered Default
-            NavigationRecommendedTransitionDirection recommendedDirection;
-            {
-                static NavigationRecommendedTransitionDirection init()
-                {
-                    return NavigationRecommendedTransitionDirection.Default;
-                }
-                recommendedDirection = init();
-            }
+            // If selection changed inside ItemInvoked, the flag does not get said to false and the event get's raised again,so we need to set it to false now!
+            m_shouldRaiseItemInvokedAfterSelection = false;
+            RaiseItemInvoked(nextItem, NavigationViewItemOrSettingsContentFromData(nextItem), recommendedDirection);
+        }
+        // Selection was modified inside ItemInvoked, skip everything here!
+        if (selectedItem != SelectedItem)
+        {
+            return;
+        }
+        UnselectPrevItem(prevItem, nextItem);
+        ChangeSelectStatusForItem(nextItem, true /*selected*/);
 
-            // Bug 17850504, Customer may use NavigationViewItem.IsSelected in ItemInvoke or SelectionChanged Event.
-            // To keep the logic the same as RS4, ItemInvoke is before unselect the old item
-            // And SelectionChanged is after we selected the new item.
-            var selectedItem = SelectedItem;
-            if (m_shouldRaiseItemInvokedAfterSelection)
+        try
+        {
+            // Selection changed and we need to notify UIA
+            // HOWEVER expand collapse can also trigger if an item can expand/collapse
+            // There are multiple cases when selection changes:
+            // - Through click on item with no children -> No expand/collapse change
+            // - Through click on item with children -> Expand/collapse change
+            // - Through API with item without children -> No expand/collapse change
+            // - Through API with item with children -> No expand/collapse change
+            if (!m_shouldIgnoreUIASelectionRaiseAsExpandCollapseWillRaise)
             {
-                // If selection changed inside ItemInvoked, the flag does not get said to false and the event get's raised again,so we need to set it to false now!
-                m_shouldRaiseItemInvokedAfterSelection = false;
-                RaiseItemInvoked(nextItem, NavigationViewItemOrSettingsContentFromData(nextItem), recommendedDirection);
-            }
-            // Selection was modified inside ItemInvoked, skip everything here!
-            if (selectedItem != SelectedItem)
-            {
-                return;
-            }
-            UnselectPrevItem(prevItem, nextItem);
-            ChangeSelectStatusForItem(nextItem, true /*selected*/);
-
-            try
-            {
-                // Selection changed and we need to notify UIA
-                // HOWEVER expand collapse can also trigger if an item can expand/collapse
-                // There are multiple cases when selection changes:
-                // - Through click on item with no children -> No expand/collapse change
-                // - Through click on item with children -> Expand/collapse change
-                // - Through API with item without children -> No expand/collapse change
-                // - Through API with item with children -> No expand/collapse change
-                if (!m_shouldIgnoreUIASelectionRaiseAsExpandCollapseWillRaise)
+                if (FrameworkElementAutomationPeer.FromElement(this) is AutomationPeer peer)
                 {
-                    if (FrameworkElementAutomationPeer.FromElement(this) is AutomationPeer peer)
-                    {
-                        var navViewItemPeer = (NavigationViewAutomationPeer)peer;
-                        navViewItemPeer.RaiseSelectionChangedEvent(
-                            prevItem, nextItem
-                        );
-                    }
+                    var navViewItemPeer = (NavigationViewAutomationPeer)peer;
+                    navViewItemPeer.RaiseSelectionChangedEvent(
+                        prevItem, nextItem
+                    );
                 }
             }
-            finally
-            {
-                m_shouldIgnoreUIASelectionRaiseAsExpandCollapseWillRaise = false;
-            }
+        }
+        finally
+        {
+            m_shouldIgnoreUIASelectionRaiseAsExpandCollapseWillRaise = false;
+        }
 
-            RaiseSelectionChangedEvent(nextItem, recommendedDirection);
-            AnimateSelectionChanged(nextItem);
+        RaiseSelectionChangedEvent(nextItem, recommendedDirection);
+        AnimateSelectionChanged(nextItem);
 
-            if (NavigationViewItemOrSettingsContentFromData(nextItem) is { } nvi)
-            {
-                ClosePaneIfNeccessaryAfterItemIsClicked(nvi);
-            }
+        if (NavigationViewItemOrSettingsContentFromData(nextItem) is { } nvi)
+        {
+            ClosePaneIfNeccessaryAfterItemIsClicked(nvi);
         }
     }
 
     private void UpdateSelectionModelSelection(IndexPath ip)
     {
-        var prevIndexPath = m_selectionModel.SelectedIndex;
         m_selectionModel.SelectAt(ip);
-        UpdateIsChildSelected(prevIndexPath, ip);
-    }
-
-    private void UpdateIsChildSelected(IndexPath prevIP, IndexPath nextIP)
-    {
-        if (prevIP != null && prevIP.GetSize() > 0)
-        {
-            UpdateIsChildSelectedForIndexPath(prevIP, false /*isChildSelected*/);
-        }
-
-        if (nextIP != null && nextIP.GetSize() > 0)
-        {
-            UpdateIsChildSelectedForIndexPath(nextIP, true /*isChildSelected*/);
-        }
-    }
-
-    private void UpdateIsChildSelectedForIndexPath(IndexPath ip, bool isChildSelected)
-    {
-        // Update the isChildSelected property for every container on the IndexPath (with the exception of the actual container pointed to by the indexpath)
-        var container = GetContainerForIndex(ip.GetAt(1), ip.GetAt(0) == c_footerMenuBlockIndex /*inFooter*/);
-        // first index is fo mainmenu or footer
-        // second is index of item in mainmenu or footer
-        // next in menuitem children 
-        var index = 2;
-        while (container != null)
-        {
-            if (container is NavigationViewItem nvi)
-            {
-                nvi.IsChildSelected = isChildSelected;
-                if (nvi.GetRepeater() is { } nextIR)
-                {
-                    if (index < ip.GetSize() - 1)
-                    {
-                        container = nextIR.TryGetElement(ip.GetAt(index));
-                        index++;
-                        continue;
-                    }
-                }
-            }
-            container = null;
-        }
     }
 
     private void RaiseItemInvoked(object item,
@@ -2193,28 +2075,11 @@ public partial class NavigationView : ContentControl, IControlProtected
 
         if (nextFocusableElement is NavigationViewItem nextFocusableNVI)
         {
-
             var nextFocusableNVIImpl = nextFocusableNVI;
 
             if (nextFocusableNVIImpl.Depth == nviImpl.Depth)
             {
                 // If we not at the top of the list for our current depth and the item above us has children, check whether we should move focus onto a child
-                if (NavigationView.DoesNavigationViewItemHaveChildren(nextFocusableNVI))
-                {
-                    // Focus on last lowest level visible container
-                    if (nextFocusableNVIImpl.GetRepeater() is { } childRepeater)
-                    {
-                        if (childRepeater.MoveFocus(new TraversalRequest(FocusNavigationDirection.Last)))
-                        {
-                            args.Handled = true;
-                        }
-                        else
-                        {
-                            args.Handled = nextFocusableNVIImpl.Focus(/*FocusState.Keyboard*/);
-                        }
-                    }
-                }
-                else
                 {
                     // Traversing up a list where XYKeyboardFocus will result in correct behavior
                     shouldHandleFocus = false;
@@ -2238,15 +2103,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         if (args.OriginalSource != nvi)
         {
             return;
-        }
-
-        if (NavigationView.DoesNavigationViewItemHaveChildren(nvi))
-        {
-            var nviImpl = nvi;
-            if (nviImpl.GetRepeater() is { } childRepeater)
-            {
-                args.Handled = childRepeater.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-            }
         }
 
         // WPF
@@ -2373,7 +2229,7 @@ public partial class NavigationView : ContentControl, IControlProtected
                 // if nvi is already selected we don't need to invoke it again
                 // otherwise ItemInvoked fires twice when item was tapped
                 // or fired when window gets focus
-                if (nvi.SelectsOnInvoked && !nvi.IsSelected)
+                if (!nvi.IsSelected)
                 {
                     OnNavigationViewItemInvoked(nvi);
                 }
@@ -2580,16 +2436,9 @@ public partial class NavigationView : ContentControl, IControlProtected
         object selectedItem = null;
         if (prevSelectedItem != null)
         {
-            if (IsSelectionSuppressed(prevSelectedItem))
-            {
-                AnimateSelectionChanged(null);
-            }
-            else
-            {
-                ChangeSelectStatusForItem(prevSelectedItem, true /*selected*/);
-                AnimateSelectionChangedToItem(prevSelectedItem);
-                selectedItem = prevSelectedItem;
-            }
+            ChangeSelectStatusForItem(prevSelectedItem, true /*selected*/);
+            AnimateSelectionChangedToItem(prevSelectedItem);
+            selectedItem = prevSelectedItem;
         }
         else
         {
@@ -2793,13 +2642,11 @@ public partial class NavigationView : ContentControl, IControlProtected
     {
         if (SelectedItem is { } item)
         {
-            if (!IsSelectionSuppressed(item))
+            if (NavigationViewItemOrSettingsContentFromData(item) is { } navViewItem)
             {
-                if (NavigationViewItemOrSettingsContentFromData(item) is { } navViewItem)
-                {
-                    navViewItem.IsSelected = true;
-                }
+                navViewItem.IsSelected = true;
             }
+
             AnimateSelectionChanged(item);
         }
     }
@@ -3200,7 +3047,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     {
         if (IsPaneOpen &&
             DisplayMode != NavigationViewDisplayMode.Expanded &&
-            !NavigationView.DoesNavigationViewItemHaveChildren(selectedContainer) &&
             !m_shouldIgnoreNextSelectionChange)
         {
             ClosePane();
@@ -3407,117 +3253,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             return rootRepeater.TryGetElement(index);
         }
 
-        for (int i = 0; i < GetContainerCountInRepeater(rootRepeater); i++)
-        {
-            if (rootRepeater.TryGetElement(i) is { } container)
-            {
-                if (container is NavigationViewItem nvi)
-                {
-                    if (nvi.GetRepeater() is { } nviRepeater)
-                    {
-                        if (NavigationView.SearchEntireTreeForContainer(nviRepeater, data) is { } foundElement)
-                        {
-                            return foundElement;
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    private IndexPath SearchEntireTreeForIndexPath(ItemsRepeater rootRepeater, object data, bool isFooterRepeater)
-    {
-        for (int i = 0; i < GetContainerCountInRepeater(rootRepeater); i++)
-        {
-            if (rootRepeater.TryGetElement(i) is { } container)
-            {
-                if (container is NavigationViewItem nvi)
-                {
-                    var ip = new IndexPath([isFooterRepeater ? c_footerMenuBlockIndex : c_mainMenuBlockIndex, i]);
-                    if (SearchEntireTreeForIndexPath(nvi, data, ip) is { } indexPath)
-                    {
-                        return indexPath;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    // There are two possibilities here if the passed in item has children. Either the children of the passed in container have already been realized,
-    // in which case we simply just iterate through the children containers, or they have not been realized yet and we have to iterate through the data
-    // and manually realize each item.
-    private IndexPath SearchEntireTreeForIndexPath(NavigationViewItem parentContainer, object data, IndexPath ip)
-    {
-        bool areChildrenRealized = false;
-        if (parentContainer.GetRepeater() is { } childrenRepeater)
-        {
-            if (DoesRepeaterHaveRealizedContainers(childrenRepeater))
-            {
-                areChildrenRealized = true;
-                for (int i = 0; i < GetContainerCountInRepeater(childrenRepeater); i++)
-                {
-                    if (childrenRepeater.TryGetElement(i) is { } container)
-                    {
-                        if (container is NavigationViewItem nvi)
-                        {
-                            var newIndexPath = ip.CloneWithChildIndex(i);
-                            if (nvi.Content == data)
-                            {
-                                return newIndexPath;
-                            }
-                            else
-                            {
-                                if (SearchEntireTreeForIndexPath(nvi, data, newIndexPath) is { } foundIndexPath)
-                                {
-                                    return foundIndexPath;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        //If children are not realized, manually realize and search.
-        if (!areChildrenRealized)
-        {
-            if (NavigationView.GetChildren(parentContainer) is { } childrenData)
-            {
-                // Get children data in an enumarable form
-                var newDataSource = childrenData as ItemsSourceView;
-                if (childrenData != null && newDataSource == null)
-                {
-                    newDataSource = new InspectingDataSource(childrenData);
-                }
-
-                for (int i = 0; i < newDataSource.Count; i++)
-                {
-                    var newIndexPath = ip.CloneWithChildIndex(i);
-                    var childData = newDataSource.GetAt(i);
-                    if (childData == data)
-                    {
-                        return newIndexPath;
-                    }
-                    else
-                    {
-                        // Resolve databinding for item and search through that item's children
-                        if (ResolveContainerForItem(childData, i) is { } nvib)
-                        {
-                            if (nvib is NavigationViewItem nvi)
-                            {
-                                if (SearchEntireTreeForIndexPath(nvi, data, newIndexPath) is { } foundIndexPath)
-                                {
-                                    return foundIndexPath;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         return null;
     }
 
@@ -3602,24 +3337,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         {
             return GetIndexPathForContainer(nvib);
         }
-
-        // In the databinding scenario, we need to conduct a search where we go through every item,
-        // realizing it if necessary.
-        {
-            if (SearchEntireTreeForIndexPath(m_leftNavRepeater, data, false /*isFooterRepeater*/) is { } ip)
-            {
-                return ip;
-            }
-        }
-
-        // If item was not located in primary list, search through footer
-        {
-            if (SearchEntireTreeForIndexPath(m_leftNavFooterMenuRepeater, data, true /*isFooterRepeater*/) is { } ip)
-            {
-                return ip;
-            }
-        }
-
         return new IndexPath([]);
     }
 
@@ -3643,10 +3360,7 @@ public partial class NavigationView : ContentControl, IControlProtected
                 {
                     if (container is NavigationViewItem nvi)
                     {
-                        if (!nvi.IsExpanded)
-                        {
-                            return nvi;
-                        }
+                        return nvi;
                     }
                 }
 
@@ -3671,18 +3385,9 @@ public partial class NavigationView : ContentControl, IControlProtected
                 bool succeededGettingNextContainer = false;
                 if (container is NavigationViewItem nvi)
                 {
-                    if (lastVisible && nvi.IsExpanded == false)
+                    if (lastVisible)
                     {
                         return nvi;
-                    }
-
-                    if (nvi.GetRepeater() is { } nviRepeater)
-                    {
-                        if (nviRepeater.TryGetElement(ip.GetAt(i)) is { } nextContainer)
-                        {
-                            container = nextContainer;
-                            succeededGettingNextContainer = true;
-                        }
                     }
                 }
                 // If any of the above checks failed, it means something went wrong and we have an index for a non-existent repeater.
@@ -3728,230 +3433,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             }
         }
         return null;
-    }
-
-    internal static void Expand(NavigationViewItem item)
-    {
-        NavigationView.ChangeIsExpandedNavigationViewItem(item, true /*isExpanded*/);
-    }
-
-    internal static void Collapse(NavigationViewItem item)
-    {
-        NavigationView.ChangeIsExpandedNavigationViewItem(item, false /*isExpanded*/);
-    }
-
-    private static bool DoesNavigationViewItemHaveChildren(NavigationViewItem nvi)
-    {
-        return nvi.MenuItems.Count > 0 || nvi.MenuItemsSource != null || nvi.HasUnrealizedChildren;
-    }
-
-    private static void ToggleIsExpandedNavigationViewItem(NavigationViewItem nvi)
-    {
-        NavigationView.ChangeIsExpandedNavigationViewItem(nvi, !nvi.IsExpanded);
-    }
-
-    private static void ChangeIsExpandedNavigationViewItem(NavigationViewItem nvi, bool isExpanded)
-    {
-        if (NavigationView.DoesNavigationViewItemHaveChildren(nvi))
-        {
-            nvi.IsExpanded = isExpanded;
-        }
-    }
-
-    private NavigationViewItem FindLowestLevelContainerToDisplaySelectionIndicator()
-    {
-        var indexIntoIndex = 1;
-        var selectedIndex = m_selectionModel.SelectedIndex;
-        if (selectedIndex != null && selectedIndex.GetSize() > 1)
-        {
-            if (GetContainerForIndex(selectedIndex.GetAt(indexIntoIndex), selectedIndex.GetAt(0) == c_footerMenuBlockIndex /* inFooter */) is { } container)
-            {
-                if (container is NavigationViewItem nvi)
-                {
-                    var nviImpl = nvi;
-                    var isRepeaterVisible = nviImpl.IsRepeaterVisible();
-                    while (nvi != null && isRepeaterVisible && !nvi.IsSelected && nvi.IsChildSelected)
-                    {
-                        indexIntoIndex++;
-                        isRepeaterVisible = false;
-                        if (nviImpl.GetRepeater() is { } repeater)
-                        {
-                            if (repeater.TryGetElement(selectedIndex.GetAt(indexIntoIndex)) is { } childContainer)
-                            {
-                                nvi = childContainer as NavigationViewItem;
-                                nviImpl = nvi;
-                                isRepeaterVisible = nviImpl.IsRepeaterVisible();
-                            }
-                        }
-                    }
-                    return nvi;
-                }
-            }
-        }
-        return null;
-    }
-
-    private void ShowHideChildrenItemsRepeater(NavigationViewItem nvi)
-    {
-        var nviImpl = nvi;
-
-        nviImpl.ShowHideChildren();
-
-        if (nviImpl.ShouldRepeaterShowInFlyout())
-        {
-            if (nvi.IsExpanded)
-            {
-                m_lastItemExpandedIntoFlyout = nvi;
-            }
-            else
-            {
-                m_lastItemExpandedIntoFlyout = null;
-            }
-        }
-
-        // If SelectedItem is being hidden/shown, animate SelectionIndicator
-        if (!nvi.IsSelected && nvi.IsChildSelected)
-        {
-            if (!nviImpl.IsRepeaterVisible() && nvi.IsChildSelected)
-            {
-                AnimateSelectionChanged(nvi);
-            }
-            else
-            {
-                AnimateSelectionChanged(FindLowestLevelContainerToDisplaySelectionIndicator());
-            }
-        }
-    }
-
-    private static object GetChildren(NavigationViewItem nvi)
-    {
-        if (nvi.MenuItems.Count > 0)
-        {
-            return nvi.MenuItems;
-        }
-        return nvi.MenuItemsSource;
-    }
-
-    private object GetChildrenForItemInIndexPath(IndexPath ip, bool forceRealize = false)
-    {
-        if (ip != null && ip.GetSize() > 1)
-        {
-            if (GetContainerForIndex(ip.GetAt(1), ip.GetAt(0) == c_footerMenuBlockIndex /*inFooter*/) is { } container)
-            {
-                return GetChildrenForItemInIndexPath(container, ip, forceRealize);
-            }
-        }
-        return null;
-    }
-
-    private object GetChildrenForItemInIndexPath(UIElement firstContainer, IndexPath ip, bool forceRealize = false)
-    {
-        var container = firstContainer;
-        bool shouldRecycleContainer = false;
-        if (ip.GetSize() > 2)
-        {
-            for (int i = 2; i < ip.GetSize(); i++)
-            {
-                bool succeededGettingNextContainer = false;
-                if (container is NavigationViewItem nvi)
-                {
-                    var nextContainerIndex = ip.GetAt(i);
-                    var nviRepeater = nvi.GetRepeater();
-                    if (nviRepeater != null && DoesRepeaterHaveRealizedContainers(nviRepeater))
-                    {
-                        if (nviRepeater.TryGetElement(nextContainerIndex) is { } nextContainer)
-                        {
-                            container = nextContainer;
-                            succeededGettingNextContainer = true;
-                        }
-                    }
-                    else if (forceRealize)
-                    {
-                        if (NavigationView.GetChildren(nvi) is { } childrenData)
-                        {
-                            if (shouldRecycleContainer)
-                            {
-                                RecycleContainer(nvi);
-                                shouldRecycleContainer = false;
-                            }
-
-                            // Get children data in an enumarable form
-                            var newDataSource = childrenData as ItemsSourceView;
-                            if (childrenData != null && newDataSource == null)
-                            {
-                                newDataSource = new InspectingDataSource(childrenData);
-                            }
-
-                            if (newDataSource.GetAt(nextContainerIndex) is { } data)
-                            {
-                                // Resolve databinding for item and search through that item's children
-                                if (ResolveContainerForItem(data, nextContainerIndex) is { } nvib)
-                                {
-                                    if (nvib is NavigationViewItem nextContainer)
-                                    {
-                                        container = nextContainer;
-                                        shouldRecycleContainer = true;
-                                        succeededGettingNextContainer = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                }
-                // If any of the above checks failed, it means something went wrong and we have an index for a non-existent repeater.
-                if (!succeededGettingNextContainer)
-                {
-                    return null;
-                }
-            }
-        }
-
-        {
-            if (container is NavigationViewItem nvi)
-            {
-                var children = NavigationView.GetChildren(nvi);
-                if (shouldRecycleContainer)
-                {
-                    RecycleContainer(nvi);
-                }
-                return children;
-            }
-        }
-
-        return null;
-    }
-
-    private static void CollapseMenuItemsInRepeater(ItemsRepeater ir)
-    {
-        for (int index = 0; index < GetContainerCountInRepeater(ir); index++)
-        {
-            if (ir.TryGetElement(index) is { } element)
-            {
-                if (element is NavigationViewItem nvi)
-                {
-                    NavigationView.ChangeIsExpandedNavigationViewItem(nvi, false /*isExpanded*/);
-                }
-            }
-        }
-    }
-
-    private void RaiseExpandingEvent(NavigationViewItemBase container)
-    {
-        var eventArgs = new NavigationViewItemExpandingEventArgs(this)
-        {
-            ExpandingItemContainer = container
-        };
-        Expanding?.Invoke(this, eventArgs);
-    }
-
-    private void RaiseCollapsedEvent(NavigationViewItemBase container)
-    {
-        var eventArgs = new NavigationViewItemCollapsedEventArgs(this)
-        {
-            CollapsedItemContainer = container
-        };
-        Collapsed?.Invoke(this, eventArgs);
     }
 
     private bool IsTopLevelItem(NavigationViewItemBase nvib)
@@ -4014,8 +3495,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private ColumnDefinition m_paneHeaderCloseButtonColumn;
     private ColumnDefinition m_paneHeaderToggleButtonColumn;
     private RowDefinition m_paneHeaderContentBorderRow;
-
-    private NavigationViewItem m_lastItemExpandedIntoFlyout;
 
     // Event Tokens
     private bool m_layoutUpdatedToken;

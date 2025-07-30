@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 
@@ -10,8 +9,7 @@ namespace Flow.Bar.Controls.NavigationView;
 public class NavigationViewItemAutomationPeer(NavigationViewItem owner) :
     FrameworkElementAutomationPeer(owner),
     IInvokeProvider,
-    ISelectionItemProvider,
-    IExpandCollapseProvider
+    ISelectionItemProvider
 {
     protected override string GetNameCore()
     {
@@ -36,9 +34,7 @@ public class NavigationViewItemAutomationPeer(NavigationViewItem owner) :
 
     public override object GetPattern(PatternInterface pattern)
     {
-        if (pattern == PatternInterface.SelectionItem ||
-            // Only provide expand collapse pattern if we have children!
-            (pattern == PatternInterface.ExpandCollapse && HasChildren()))
+        if (pattern == PatternInterface.SelectionItem)
         {
             return this;
         }
@@ -82,7 +78,6 @@ public class NavigationViewItemAutomationPeer(NavigationViewItem owner) :
                 if (parent.GetChildren() is { } children)
                 {
                     int index = 0;
-                    bool itemFound = false;
 
                     foreach (var child in children)
                     {
@@ -99,10 +94,6 @@ public class NavigationViewItemAutomationPeer(NavigationViewItem owner) :
                                         if (automationOutput == AutomationOutput.Position)
                                         {
                                             break;
-                                        }
-                                        else
-                                        {
-                                            itemFound = true;
                                         }
                                     }
                                 }
@@ -138,61 +129,6 @@ public class NavigationViewItemAutomationPeer(NavigationViewItem owner) :
             {
                 navView.OnNavigationViewItemInvoked(navigationViewItem);
             }
-        }
-    }
-
-    ExpandCollapseState IExpandCollapseProvider.ExpandCollapseState
-    {
-        get
-        {
-            var state = ExpandCollapseState.LeafNode;
-            if (Owner is NavigationViewItem navigationViewItem)
-            {
-                state = navigationViewItem.IsExpanded ?
-                    ExpandCollapseState.Expanded :
-                    ExpandCollapseState.Collapsed;
-            }
-
-            return state;
-        }
-    }
-
-    void IExpandCollapseProvider.Collapse()
-    {
-        if (GetParentNavigationView() is { })
-        {
-            if (Owner is NavigationViewItem navigationViewItem)
-            {
-                NavigationView.Collapse(navigationViewItem);
-                RaiseExpandCollapseAutomationEvent(ExpandCollapseState.Collapsed);
-            }
-        }
-    }
-
-    void IExpandCollapseProvider.Expand()
-    {
-        if (GetParentNavigationView() is { })
-        {
-            if (Owner is NavigationViewItem navigationViewItem)
-            {
-                NavigationView.Expand(navigationViewItem);
-                RaiseExpandCollapseAutomationEvent(ExpandCollapseState.Expanded);
-            }
-        }
-    }
-
-    internal void RaiseExpandCollapseAutomationEvent(ExpandCollapseState newState)
-    {
-        if (AutomationPeer.ListenerExists(AutomationEvents.PropertyChanged))
-        {
-            ExpandCollapseState oldState = (newState == ExpandCollapseState.Expanded) ?
-                ExpandCollapseState.Collapsed :
-                ExpandCollapseState.Expanded;
-
-            // box_value(oldState) doesn't work here, use ReferenceWithABIRuntimeClassName to make Narrator can unbox it.
-            RaisePropertyChangedEvent(ExpandCollapsePatternIdentifiers.ExpandCollapseStateProperty,
-                oldState,
-                newState);
         }
     }
 
@@ -258,16 +194,7 @@ public class NavigationViewItemAutomationPeer(NavigationViewItem owner) :
         }
     }
 
-    bool HasChildren()
-    {
-        if (Owner is NavigationViewItem navigationViewItem)
-        {
-            return navigationViewItem.HasChildren();
-        }
-        return false;
-    }
-
-    enum AutomationOutput
+    internal enum AutomationOutput
     {
         Position,
         Size,
