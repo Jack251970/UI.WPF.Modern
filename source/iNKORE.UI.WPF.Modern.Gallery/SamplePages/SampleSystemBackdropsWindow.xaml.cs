@@ -44,16 +44,7 @@ public partial class SampleSystemBackdropsWindow : Window
 
     private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
     {
-        Thickness currMargin = AppTitleBar.Margin;
-        if (sender.DisplayMode == NavigationViewDisplayMode.Minimal)
-        {
-            AppTitleBar.Margin = new Thickness((sender.CompactPaneLength * 2), currMargin.Top, currMargin.Right, currMargin.Bottom);
-
-        }
-        else
-        {
-            AppTitleBar.Margin = new Thickness(sender.CompactPaneLength, currMargin.Top, currMargin.Right, currMargin.Bottom);
-        }
+        
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
