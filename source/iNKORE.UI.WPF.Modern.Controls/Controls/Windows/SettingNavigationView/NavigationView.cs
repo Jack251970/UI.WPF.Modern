@@ -1540,7 +1540,7 @@ public partial class NavigationView : ContentControl, IControlProtected
     {
         bool pendingPaneClosingCancel = false;
 
-        //if (SharedHelpers.IsRS3OrHigher())
+        if (SharedHelpers.IsRS3OrHigher())
         {
             var eventArgs = new NavigationViewPaneClosingEventArgs();
             PaneClosing?.Invoke(this, eventArgs);
