@@ -1682,19 +1682,6 @@ namespace Flow.Bar.Controls.NavigationView
 
             templateSettings.PaneToggleButtonWidth = newButtonWidths;
             templateSettings.SmallerPaneToggleButtonWidth = Math.Max(0, newButtonWidths-8);
-
-            //if (m_backButton is { } backButton)
-            //{
-            //    backButton.Width = newButtonWidths;
-            //}
-            //if (m_paneToggleButton is { } paneToggleButton)
-            //{
-            //    paneToggleButton.MinWidth = newButtonWidths;
-            //    if (paneToggleButton.GetTemplateChild<ColumnDefinition>(c_paneToggleButtonIconGridColumnName) is { } paneToggleButtonIconColumn)
-            //    {
-            //        paneToggleButtonIconColumn.Width = new GridLength(newButtonWidths);
-            //    }
-            //}
         }
 
         private void OnBackButtonClicked(object sender, RoutedEventArgs args)
