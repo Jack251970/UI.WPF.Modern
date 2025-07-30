@@ -1316,11 +1316,11 @@ namespace Flow.Bar.Controls.NavigationView
             var paneDisplayMode = PaneDisplayMode;
             if (paneDisplayMode == NavigationViewPaneDisplayMode.Auto)
             {
-                if (width >= ExpandedModeThresholdWidth)
+                if (width >= ExpandedMinimalModeThresholdWidth)
                 {
                     displayMode = NavigationViewDisplayMode.Expanded;
                 }
-                else if (width < CompactModeThresholdWidth)
+                else
                 {
                     displayMode = NavigationViewDisplayMode.Minimal;
                 }
@@ -3586,7 +3586,7 @@ namespace Flow.Bar.Controls.NavigationView
 
         private static void CoerceToGreaterThanZero(ref double value)
         {
-            // Property coercion for OpenPaneLength, CompactPaneLength, CompactModeThresholdWidth, ExpandedModeThresholdWidth
+            // Property coercion for OpenPaneLength, CompactPaneLength, ExpandedMinimalModeThresholdWidth
             value = Math.Max(value, 0.0);
         }
 
@@ -3599,8 +3599,7 @@ namespace Flow.Bar.Controls.NavigationView
                 OnIsPaneOpenChanged();
                 UpdateVisualStateForDisplayModeGroup(DisplayMode);
             }
-            else if (property == CompactModeThresholdWidthProperty ||
-                property == ExpandedModeThresholdWidthProperty)
+            else if (property == ExpandedMinimalModeThresholdWidthProperty)
             {
                 UpdateAdaptiveLayout(ActualWidth);
             }

@@ -38,6 +38,7 @@
             Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
             VerticalAlignment="Top"
             Background="Transparent"
+            Canvas.ZIndex="1"
             IsHitTestVisible="True">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -95,7 +96,7 @@
             PaneClosing="NavigationViewControl_PaneClosing"
             PaneDisplayMode="Auto"
             PaneOpening="NavigationViewControl_PaneOpening"
-            PaneTitle="Gallery App"
+            PaneTitle=""
             SelectionChanged="OnNavigationViewSelectionChanged">
             <scrollviewer:NavigationView.HeaderTemplate>
                 <DataTemplate>
