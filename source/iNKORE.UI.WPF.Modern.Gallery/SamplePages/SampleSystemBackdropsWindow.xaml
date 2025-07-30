@@ -132,12 +132,17 @@
 
             <scrollviewer:NavigationView.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Header, ElementName=NavigationViewControl, Mode=OneWay}" />
+                    <TextBlock
+                        Margin="24,0,0,24"
+                        FontSize="28"
+                        FontWeight="SemiBold"
+                        Text="{Binding Header, ElementName=NavigationViewControl, Mode=OneWay}" />
                 </DataTemplate>
             </scrollviewer:NavigationView.HeaderTemplate>
 
             <ui:Frame
                 x:Name="rootFrame"
+                Margin="24,0,0,0"
                 Navigated="OnRootFrameNavigated"
                 Navigating="OnRootFrameNavigating" />
         </scrollviewer:NavigationView>
