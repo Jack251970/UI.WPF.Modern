@@ -21,22 +21,19 @@ namespace Flow.Bar.Controls.NavigationView;
 
 public partial class NavigationViewItem : NavigationViewItemBase
 {
-    const string c_navigationViewItemPresenterName = "NavigationViewItemPresenter";
-    const string c_repeater = "NavigationViewItemMenuItemsHost";
-    const string c_rootGrid = "NVIRootGrid";
+    private const string C_navigationViewItemPresenterName = "NavigationViewItemPresenter";
+    private const string C_repeater = "NavigationViewItemMenuItemsHost";
+    private const string C_rootGrid = "NVIRootGrid";
 
     // Visual States
-    const string c_pressedSelected = "PressedSelected";
-    const string c_pointerOverSelected = "PointerOverSelected";
-    const string c_selected = "Selected";
-    const string c_pressed = "Pressed";
-    const string c_pointerOver = "PointerOver";
-    const string c_disabled = "Disabled";
-    const string c_enabled = "Enabled";
-    const string c_normal = "Normal";
-    const string c_chevronHidden = "ChevronHidden";
-    const string c_chevronVisibleOpen = "ChevronVisibleOpen";
-    const string c_chevronVisibleClosed = "ChevronVisibleClosed";
+    private const string C_pressedSelected = "PressedSelected";
+    private const string C_pointerOverSelected = "PointerOverSelected";
+    private const string C_selected = "Selected";
+    private const string C_pressed = "Pressed";
+    private const string C_pointerOver = "PointerOver";
+    private const string C_disabled = "Disabled";
+    private const string C_enabled = "Enabled";
+    private const string C_normal = "Normal";
 
     static NavigationViewItem()
     {
@@ -86,7 +83,7 @@ public partial class NavigationViewItem : NavigationViewItemBase
         IControlProtected controlProtected = this;
         m_helper.Init(controlProtected);
 
-        if (GetTemplateChildT<Grid>(c_rootGrid, controlProtected) is { } rootGrid)
+        if (GetTemplateChildT<Grid>(C_rootGrid, controlProtected) is { } rootGrid)
         {
             m_rootGrid = rootGrid;
 
@@ -115,7 +112,7 @@ public partial class NavigationViewItem : NavigationViewItemBase
         // Retrieve reference to NavigationView
         if (GetNavigationView() is { } nvImpl)
         {
-            if (GetTemplateChildT<ItemsRepeater>(c_repeater, controlProtected) is { } repeater)
+            if (GetTemplateChildT<ItemsRepeater>(C_repeater, controlProtected) is { } repeater)
             {
                 m_repeater = repeater;
 
@@ -165,7 +162,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
 
     private void OnItemsSourceViewChanged(object sender, NotifyCollectionChangedEventArgs args)
     {
-        UpdateVisualStateForChevron();
     }
 
     internal UIElement GetSelectionIndicator()
@@ -215,11 +211,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
                 && (splitView.DisplayMode == SplitViewDisplayMode.CompactOverlay || splitView.DisplayMode == SplitViewDisplayMode.CompactInline);
 
             UpdateVisualState(true /*useTransitions*/);
-
-            if (GetPresenter() is { } presenter)
-            {
-                presenter.UpdateClosedCompactVisualState(IsTopLevelItem, m_isClosedCompact);
-            }
         }
     }
 
@@ -288,18 +279,15 @@ public partial class NavigationViewItem : NavigationViewItemBase
     void OnMenuItemsPropertyChanged(DependencyPropertyChangedEventArgs args)
     {
         UpdateRepeaterItemsSource();
-        UpdateVisualStateForChevron();
     }
 
     void OnMenuItemsSourcePropertyChanged(DependencyPropertyChangedEventArgs args)
     {
         UpdateRepeaterItemsSource();
-        UpdateVisualStateForChevron();
     }
 
     void OnHasUnrealizedChildrenPropertyChanged(DependencyPropertyChangedEventArgs args)
     {
-        UpdateVisualStateForChevron();
     }
 
     void UpdateVisualStateForIconAndContent(bool showIcon, bool showContent)
@@ -350,48 +338,48 @@ public partial class NavigationViewItem : NavigationViewItemBase
     void UpdateVisualStateForPointer()
     {
         // DisabledStates and CommonStates
-        var enabledStateValue = c_enabled;
+        var enabledStateValue = C_enabled;
         bool isSelected = IsSelected;
-        var selectedStateValue = c_normal;
+        var selectedStateValue = C_normal;
         if (IsEnabled)
         {
             if (isSelected)
             {
                 if (m_isPressed)
                 {
-                    selectedStateValue = c_pressedSelected;
+                    selectedStateValue = C_pressedSelected;
                 }
                 else if (m_isPointerOver)
                 {
-                    selectedStateValue = c_pointerOverSelected;
+                    selectedStateValue = C_pointerOverSelected;
                 }
                 else
                 {
-                    selectedStateValue = c_selected;
+                    selectedStateValue = C_selected;
                 }
             }
             else if (m_isPointerOver)
             {
                 if (m_isPressed)
                 {
-                    selectedStateValue = c_pressed;
+                    selectedStateValue = C_pressed;
                 }
                 else
                 {
-                    selectedStateValue = c_pointerOver;
+                    selectedStateValue = C_pointerOver;
                 }
             }
             else if (m_isPressed)
             {
-                selectedStateValue = c_pressed;
+                selectedStateValue = C_pressed;
             }
         }
         else
         {
-            enabledStateValue = c_disabled;
+            enabledStateValue = C_disabled;
             if (isSelected)
             {
-                selectedStateValue = c_selected;
+                selectedStateValue = C_selected;
             }
         }
 
@@ -435,17 +423,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
 
         // visual state for focus state. top navigation use it to provide different visual for selected and selected+focused
         UpdateVisualStateForKeyboardFocusedState();
-
-        UpdateVisualStateForChevron();
-    }
-
-    void UpdateVisualStateForChevron()
-    {
-        if (m_navigationViewItemPresenter is { } presenter)
-        {
-            var chevronState = HasChildren() && !(m_isClosedCompact && ShouldRepeaterShowInFlyout()) ? (IsExpanded ? c_chevronVisibleOpen : c_chevronVisibleClosed) : c_chevronHidden;
-            VisualStateManager.GoToState(presenter, chevronState, true);
-        }
     }
 
     internal bool HasChildren()
@@ -608,12 +585,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         }
     }
 
-    internal void OnExpandCollapseChevronTapped(object sender, TappedRoutedEventArgs args)
-    {
-        IsExpanded = !IsExpanded;
-        args.Handled = true;
-    }
-
     void OnFlyoutClosing(object sender, FlyoutBaseClosingEventArgs args)
     {
         IsExpanded = false;
@@ -741,14 +712,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         UpdateVisualState(true);
     }
 
-    internal void RotateExpandCollapseChevron(bool isExpanded)
-    {
-        if (GetPresenter() is { } presenter)
-        {
-            presenter.RotateExpandCollapseChevron(isExpanded);
-        }
-    }
-
     void ProcessPointerCanceled(PointerRoutedEventArgs args)
     {
         m_isPressed = false;
@@ -773,7 +736,7 @@ public partial class NavigationViewItem : NavigationViewItemBase
             presenter = init();
             UIElement init()
             {
-                if (GetTemplateChildT<NavigationViewItemPresenter>(c_navigationViewItemPresenterName, controlProtected) is { } presenter)
+                if (GetTemplateChildT<NavigationViewItemPresenter>(C_navigationViewItemPresenterName, controlProtected) is { } presenter)
                 {
                     m_navigationViewItemPresenter = presenter;
                     return presenter;

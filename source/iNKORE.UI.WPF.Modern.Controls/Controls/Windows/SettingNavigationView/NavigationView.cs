@@ -3821,8 +3821,6 @@ public partial class NavigationView : ContentControl, IControlProtected
                 AnimateSelectionChanged(FindLowestLevelContainerToDisplaySelectionIndicator());
             }
         }
-
-        nviImpl.RotateExpandCollapseChevron(nvi.IsExpanded);
     }
 
     private static object GetChildren(NavigationViewItem nvi)
