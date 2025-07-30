@@ -1364,7 +1364,8 @@ namespace Flow.Bar.Controls.NavigationView
             }
 
             if (previousMode == NavigationViewDisplayMode.Expanded
-                && displayMode == NavigationViewDisplayMode.Compact)
+                && (displayMode == NavigationViewDisplayMode.Compact ||
+                    displayMode == NavigationViewDisplayMode.Minimal))
             {
                 m_initialListSizeStateSet = false;
                 ClosePane();
