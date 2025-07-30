@@ -5,8 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
@@ -73,10 +71,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private const string c_menuItemsScrollViewer = "MenuItemsScrollViewer";
     private const string c_footerItemsScrollViewer = "FooterItemsScrollViewer";
 
-    private const string c_paneHeaderOnTopPane = "PaneHeaderOnTopPane";
-    private const string c_paneTitleOnTopPane = "PaneTitleOnTopPane";
-    private const string c_paneCustomContentOnTopPane = "PaneCustomContentOnTopPane";
-    private const string c_paneFooterOnTopPane = "PaneFooterOnTopPane";
     private const string c_paneHeaderCloseButtonColumn = "PaneHeaderCloseButtonColumn";
     private const string c_paneHeaderToggleButtonColumn = "PaneHeaderToggleButtonColumn";
     private const string c_paneHeaderContentBorderRow = "PaneHeaderContentBorderRow";
@@ -90,10 +84,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private const int c_mainMenuBlockIndex = 0;
     private const int c_footerMenuBlockIndex = 1;
-
-    private const int s_itemNotFound = -1;
-
-    private static readonly Size c_infSize = new(double.PositiveInfinity, double.PositiveInfinity);
 
     internal static readonly ControlStrings ResourceAccessor = new(typeof(NavigationView), ModernControlCategory.Windows);
 
@@ -119,9 +109,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             m_paneSearchButton.Click -= OnPaneSearchButtonClick;
             m_paneSearchButton = null;
         }
-
-        m_paneHeaderOnTopPane = null;
-        m_paneTitleOnTopPane = null;
 
         m_itemsContainerSizeChangedRevoker?.Revoke();
 
@@ -314,10 +301,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         m_leftNavPaneHeaderContentBorder = GetTemplateChild(c_leftNavPaneHeaderContentBorder) as ContentControl;
         m_leftNavPaneCustomContentBorder = GetTemplateChild(c_leftNavPaneCustomContentBorder) as ContentControl;
         m_leftNavFooterContentBorder = GetTemplateChild(c_leftNavFooterContentBorder) as ContentControl;
-        m_paneHeaderOnTopPane = GetTemplateChild(c_paneHeaderOnTopPane) as ContentControl;
-        m_paneTitleOnTopPane = GetTemplateChild(c_paneTitleOnTopPane) as ContentControl;
-        m_paneCustomContentOnTopPane = GetTemplateChild(c_paneCustomContentOnTopPane) as ContentControl;
-        m_paneFooterOnTopPane = GetTemplateChild(c_paneFooterOnTopPane) as ContentControl;
 
         // Get a pointer to the root SplitView
         if (GetTemplateChild(c_rootSplitViewName) is SplitView splitView)
@@ -977,18 +960,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         LayoutUpdated -= OnLayoutUpdated;
         m_layoutUpdatedToken = false;
 
-        // In topnav, when an item in overflow menu is clicked, the animation is delayed because that item is not move to primary list yet.
-        // And it depends on LayoutUpdated to re-play the animation. m_lastSelectedItemPendingAnimationInTopNav is the last selected overflow item.
-        if (m_lastSelectedItemPendingAnimationInTopNav is { } lastSelectedItemInTopNav)
-        {
-            m_lastSelectedItemPendingAnimationInTopNav = null;
-            // WPF: Wait for layout
-            Dispatcher.BeginInvoke(() =>
-            {
-                AnimateSelectionChanged(lastSelectedItemInTopNav);
-            }, DispatcherPriority.Send);
-        }
-
         if (m_orientationChangedPendingAnimation)
         {
             m_orientationChangedPendingAnimation = false;
@@ -1502,8 +1473,7 @@ public partial class NavigationView : ContentControl, IControlProtected
             {
                 var first = NavigationView.SetPaneTitleFrameworkElementParent(m_paneToggleButton, paneTitleFrameworkElement, !isPaneToggleButtonVisible);
                 var second = NavigationView.SetPaneTitleFrameworkElementParent(m_paneTitlePresenter, paneTitleFrameworkElement, isPaneToggleButtonVisible);
-                var third = NavigationView.SetPaneTitleFrameworkElementParent(m_paneTitleOnTopPane, paneTitleFrameworkElement, true);
-                (first ?? second ?? third)?.Invoke();
+                (first ?? second)?.Invoke();
             }
         }
     }
@@ -1544,12 +1514,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     // when the layout is invalidated as it's called in OnLayoutUpdated.
     private void AnimateSelectionChanged(object nextItem)
     {
-        // If we are delaying animation due to item movement in top nav overflow, dont do anything
-        if (m_lastSelectedItemPendingAnimationInTopNav != null)
-        {
-            return;
-        }
-
         UIElement prevIndicator = m_activeIndicator;
         UIElement nextIndicator = FindSelectionIndicator(nextItem);
 
@@ -2965,10 +2929,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
         UpdateAdaptiveLayout(ActualWidth, true /*forceSetDisplayMode*/);
 
-        SwapPaneHeaderContent(m_leftNavPaneHeaderContentBorder, m_paneHeaderOnTopPane, "PaneHeader");
-        SwapPaneHeaderContent(m_leftNavPaneCustomContentBorder, m_paneCustomContentOnTopPane, "PaneCustomContent");
-        SwapPaneHeaderContent(m_leftNavFooterContentBorder, m_paneFooterOnTopPane, "PaneFooter");
-
         UpdateContentBindingsForPaneDisplayMode();
         UpdateRepeaterItemsSource(false /*forceSelectionModelUpdate*/);
         UpdateFooterRepeaterItemsSource(false /*sourceCollectionReset*/, false /*sourceCollectionChanged*/);
@@ -4112,7 +4072,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private UIElement m_prevIndicator;
     private UIElement m_nextIndicator;
     private UIElement m_activeIndicator;
-    private object m_lastSelectedItemPendingAnimationInTopNav;
 
     private FrameworkElement m_togglePaneTopPadding;
     private FrameworkElement m_contentPaneTopPadding;
@@ -4121,15 +4080,9 @@ public partial class NavigationView : ContentControl, IControlProtected
     private CoreApplicationViewTitleBar m_coreTitleBar;
 
     private ContentControl m_leftNavPaneAutoSuggestBoxPresenter;
-
     private ContentControl m_leftNavPaneHeaderContentBorder;
     private ContentControl m_leftNavPaneCustomContentBorder;
     private ContentControl m_leftNavFooterContentBorder;
-
-    private ContentControl m_paneHeaderOnTopPane;
-    private ContentControl m_paneTitleOnTopPane;
-    private ContentControl m_paneCustomContentOnTopPane;
-    private ContentControl m_paneFooterOnTopPane;
     private ContentControl m_paneTitlePresenter;
 
     private ColumnDefinition m_paneHeaderCloseButtonColumn;
@@ -4162,12 +4115,8 @@ public partial class NavigationView : ContentControl, IControlProtected
     // Customer select an item from SelectedItem property->ChangeSelection update ListView->LIstView raise OnSelectChange(we want stop here)->change property do do animation again.
     // Customer clicked listview->listview raised OnSelectChange->SelectedItem property changed->ChangeSelection->Undo the selection by SelectedItem(prevItem) (we want it stop here)->ChangeSelection again ->...
     private bool m_shouldIgnoreNextSelectionChange = false;
-    // A flag to track that the selectionchange is caused by selection a item in topnav overflow menu
-    private bool m_selectionChangeFromOverflowMenu = false;
     // Flag indicating whether selection change should raise item invoked. This is needed to be able to raise ItemInvoked before SelectionChanged while SelectedItem should point to the clicked item
     private bool m_shouldRaiseItemInvokedAfterSelection = false;
-
-    private readonly TopNavigationViewLayoutState m_topNavigationMode = TopNavigationViewLayoutState.Uninitialized;
 
     // There are three ways to change IsPaneOpen:
     // 1, customer call IsPaneOpen=true/false directly or nav.IsPaneOpen is binding with a variable and the value is changed.
