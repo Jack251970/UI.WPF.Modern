@@ -1313,36 +1313,10 @@ public partial class NavigationView : ContentControl, IControlProtected
         // instead of this:
         m_initialListSizeStateSet = false; // see UpdateIsClosedCompact()
 
-        NavigationViewDisplayMode displayMode = NavigationViewDisplayMode.Compact;
-
-        var paneDisplayMode = PaneDisplayMode;
-        if (paneDisplayMode == NavigationViewPaneDisplayMode.Auto)
-        {
-            if (width >= ExpandedMinimalModeThresholdWidth)
-            {
-                displayMode = NavigationViewDisplayMode.Expanded;
-            }
-            else
-            {
-                displayMode = NavigationViewDisplayMode.Minimal;
-            }
-        }
-        else if (paneDisplayMode == NavigationViewPaneDisplayMode.Left)
-        {
-            displayMode = NavigationViewDisplayMode.Expanded;
-        }
-        else if (paneDisplayMode == NavigationViewPaneDisplayMode.LeftCompact)
-        {
-            displayMode = NavigationViewDisplayMode.Compact;
-        }
-        else if (paneDisplayMode == NavigationViewPaneDisplayMode.LeftMinimal)
-        {
-            displayMode = NavigationViewDisplayMode.Minimal;
-        }
-        else
-        {
-            Environment.FailFast(null);
-        }
+        NavigationViewDisplayMode displayMode =
+            width >= ExpandedMinimalModeThresholdWidth ?
+            NavigationViewDisplayMode.Expanded :
+            NavigationViewDisplayMode.Minimal;
 
         if (!forceSetDisplayMode && m_initialNonForcedModeUpdate)
         {
@@ -1740,10 +1714,7 @@ public partial class NavigationView : ContentControl, IControlProtected
                 return false;
             }
 
-            var paneDisplayMode = PaneDisplayMode;
-
-            if (paneDisplayMode != NavigationViewPaneDisplayMode.LeftMinimal &&
-                (paneDisplayMode != NavigationViewPaneDisplayMode.Auto || DisplayMode != NavigationViewDisplayMode.Minimal))
+            if (DisplayMode != NavigationViewDisplayMode.Minimal)
             {
                 return false;
             }
@@ -1794,8 +1765,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
             paneTitleHolderFrameworkElement.Visibility =
                 (isPaneToggleButtonVisible ||
-                    PaneTitle.Length == 0 ||
-                    (PaneDisplayMode == NavigationViewPaneDisplayMode.LeftMinimal && !IsPaneOpen)) ?
+                    PaneTitle.Length == 0) ?
                 Visibility.Collapsed : Visibility.Visible;
 
             if (m_paneTitleFrameworkElement is { } paneTitleFrameworkElement)
@@ -2424,16 +2394,12 @@ public partial class NavigationView : ContentControl, IControlProtected
     //    Map others to Minimal or MinimalWithBackButton 
     private NavigationViewVisualStateDisplayMode GetVisualStateDisplayMode(NavigationViewDisplayMode displayMode)
     {
-        var paneDisplayMode = PaneDisplayMode;
-
-        if (paneDisplayMode == NavigationViewPaneDisplayMode.Left ||
-            (paneDisplayMode == NavigationViewPaneDisplayMode.Auto && displayMode == NavigationViewDisplayMode.Expanded))
+        if (displayMode == NavigationViewDisplayMode.Expanded)
         {
             return NavigationViewVisualStateDisplayMode.Expanded;
         }
 
-        if (paneDisplayMode == NavigationViewPaneDisplayMode.LeftCompact ||
-            (paneDisplayMode == NavigationViewPaneDisplayMode.Auto && displayMode == NavigationViewDisplayMode.Compact))
+        if (displayMode == NavigationViewDisplayMode.Compact)
         {
             return NavigationViewVisualStateDisplayMode.Compact;
         }
@@ -3576,20 +3542,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         else if (property == s_footerMenuItemsProperty)
         {
             UpdateFooterRepeaterItemsSource(true /*sourceCollectionReset*/, true /*sourceCollectionChanged*/);
-        }
-        else if (property == PaneDisplayModeProperty)
-        {
-            // m_wasForceClosed is set to true because ToggleButton is clicked and Pane is closed.
-            // When PaneDisplayMode is changed, reset the force flag to make the Pane can be opened automatically again.
-            m_wasForceClosed = false;
-
-            CollapseTopLevelMenuItems((NavigationViewPaneDisplayMode)args.OldValue);
-            UpdatePaneToggleButtonVisibility();
-            UpdatePaneDisplayMode((NavigationViewPaneDisplayMode)args.OldValue, (NavigationViewPaneDisplayMode)args.NewValue);
-            UpdatePaneTitleFrameworkElementParents();
-            UpdatePaneVisibility();
-            UpdateVisualState();
-            UpdatePaneButtonsWidths();
         }
         else if (property == IsPaneVisibleProperty)
         {

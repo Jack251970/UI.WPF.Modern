@@ -603,29 +603,6 @@ namespace Flow.Bar.Controls.NavigationView
 
         #endregion
 
-        #region PaneDisplayMode
-
-        public static readonly DependencyProperty PaneDisplayModeProperty =
-            DependencyProperty.Register(
-                nameof(PaneDisplayMode),
-                typeof(NavigationViewPaneDisplayMode),
-                typeof(NavigationView),
-                new PropertyMetadata(NavigationViewPaneDisplayMode.Auto, OnPaneDisplayModePropertyChanged));
-
-        public NavigationViewPaneDisplayMode PaneDisplayMode
-        {
-            get => (NavigationViewPaneDisplayMode)GetValue(PaneDisplayModeProperty);
-            set => SetValue(PaneDisplayModeProperty, value);
-        }
-
-        private static void OnPaneDisplayModePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-        {
-            var owner = (NavigationView)sender;
-            owner.PropertyChanged(args);
-        }
-
-        #endregion
-
         #region PaneHeader
 
         public static readonly DependencyProperty PaneHeaderProperty =

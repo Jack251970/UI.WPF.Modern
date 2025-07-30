@@ -17,14 +17,6 @@ namespace Flow.Bar.Controls.NavigationView
         Auto = 2,
     }
 
-    public enum NavigationViewPaneDisplayMode
-    {
-        Auto = 0,
-        Left = 1,
-        LeftCompact = 3,
-        LeftMinimal = 4
-    }
-
     public enum NavigationViewSelectionFollowsFocus
     {
         Disabled = 0,
