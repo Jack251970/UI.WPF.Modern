@@ -370,7 +370,7 @@
                                     HorizontalAlignment="Left"
                                     BorderBrush="{DynamicResource NavigationViewItemSeparatorForeground}"
                                     Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.LeftPaneVisibility}">
-                                    <Grid x:Name="PaneContentGrid">
+                                    <Grid x:Name="PaneContentGrid" Margin="12,0,0,0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="0" />
@@ -491,19 +491,12 @@
                                                 </ui:ScrollViewerEx>
                                             </controls:ItemsRepeaterScrollHost>
                                         </Grid>
-
                                     </Grid>
                                 </Border>
                             </controls:SplitView.Pane>
 
                             <controls:SplitView.Content>
-                                <ikw:ClippedContent
-                                    x:Name="ContentBorder"
-                                    Margin="{DynamicResource NavigationViewContentMargin}"
-                                    Background="{DynamicResource NavigationViewContentBackground}"
-                                    BorderBrush="{DynamicResource NavigationViewContentGridBorderBrush}"
-                                    BorderThickness="{DynamicResource NavigationViewContentGridBorderThickness}"
-                                    CornerRadius="{DynamicResource NavigationViewContentGridCornerRadius}">
+                                <ikw:ClippedContent x:Name="ContentBorder" Margin="{DynamicResource NavigationViewContentMargin}">
                                     <Grid x:Name="ContentGrid">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
