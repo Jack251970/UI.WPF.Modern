@@ -10,7 +10,7 @@ using iNKORE.UI.WPF.Modern.Controls.Helpers;
 
 namespace Flow.Bar.Controls.NavigationView;
 
-partial class NavigationView
+public partial class NavigationView
 {
     #region CornerRadius
 

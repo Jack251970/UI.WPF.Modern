@@ -7,7 +7,7 @@ using iNKORE.UI.WPF.Modern.Controls.Helpers;
 
 namespace Flow.Bar.Controls.NavigationView;
 
-partial class NavigationViewItem
+public partial class NavigationViewItem
 {
     #region Icon
 
