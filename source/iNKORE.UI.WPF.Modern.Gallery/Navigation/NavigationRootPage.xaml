@@ -99,8 +99,39 @@
             PaneClosing="NavigationViewControl_PaneClosing"
             PaneDisplayMode="Auto"
             PaneOpening="NavigationViewControl_PaneOpening"
-            PaneTitle="Gallery App"
+            PaneTitle=""
             SelectionChanged="OnNavigationViewSelectionChanged">
+
+            <ui:NavigationView.PaneHeader>
+                <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="12">
+                    <Image
+                        Width="20"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Source="/Assets/WpfLibrary_Minimal_64w.png" />
+                    <TextBlock
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Style="{DynamicResource CaptionTextBlockStyle}"
+                        Text="{x:Static local:NavigationRootPage.GetAppTitleFromSystem}"
+                        TextWrapping="NoWrap" />
+                </ikw:SimpleStackPanel>
+            </ui:NavigationView.PaneHeader>
+
+            <ui:NavigationView.PaneCustomContent>
+                <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="12">
+                    <Image
+                        Width="20"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Source="/Assets/WpfLibrary_Minimal_64w.png" />
+                    <TextBlock
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Style="{DynamicResource CaptionTextBlockStyle}"
+                        Text="{x:Static local:NavigationRootPage.GetAppTitleFromSystem}"
+                        TextWrapping="NoWrap" />
+                </ikw:SimpleStackPanel>
+            </ui:NavigationView.PaneCustomContent>
+
             <ui:NavigationView.HeaderTemplate>
                 <DataTemplate>
                     <controls:PageHeader
