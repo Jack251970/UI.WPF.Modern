@@ -27,7 +27,7 @@ namespace iNKORE.UI.WPF.Modern.Gallery
 
         public MainWindow()
         {
-            var window = new iNKORE.UI.WPF.Modern.Gallery.SamplePages.SampleSystemBackdropsWindow();
+            var window = new SamplePages.SampleSystemBackdropsWindow();
             window.Show();
             Current = this;
             InitializeComponent();

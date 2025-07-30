@@ -92,7 +92,7 @@
             ExpandedModeThresholdWidth="800"
             Header=" "
             IsFooterSeparatorVisible="{x:Null}"
-            IsSettingsVisible="True"
+            IsSettingsVisible="False"
             IsTabStop="False"
             IsTitleBarAutoPaddingEnabled="False"
             Loaded="OnNavigationViewControlLoaded"
