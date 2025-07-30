@@ -114,6 +114,11 @@
                         <ui:FontIcon Glyph="&#xE713;" />
                     </scrollviewer:NavigationViewItem.Icon>
                 </scrollviewer:NavigationViewItem>
+                <scrollviewer:NavigationViewItem Content="About">
+                    <scrollviewer:NavigationViewItem.Icon>
+                        <ui:FontIcon Glyph="&#xE946;" />
+                    </scrollviewer:NavigationViewItem.Icon>
+                </scrollviewer:NavigationViewItem>
             </scrollviewer:NavigationView.MenuItems>
 
             <ui:Frame
