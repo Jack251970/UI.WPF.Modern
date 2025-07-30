@@ -12,12 +12,13 @@ using System.Windows.Input;
 using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Primitives;
-using iNKORE.UI.WPF.Modern.Input;
 using static Flow.Bar.Controls.NavigationView.CppWinRTHelpers;
 using IControlProtected = Flow.Bar.Controls.NavigationView.CppWinRTHelpers.IControlProtected;
 using PointerRoutedEventArgs = System.Windows.Input.MouseEventArgs;
 
 namespace Flow.Bar.Controls.NavigationView;
+
+#pragma warning disable IDE0060 // Remove unused parameter
 
 public partial class NavigationViewItem : NavigationViewItemBase
 {
@@ -790,9 +791,9 @@ public partial class NavigationViewItem : NavigationViewItemBase
         m_flyoutContentGrid = null;
     }
 
-    SplitViewIsPaneOpenChangedRevoker m_splitViewIsPaneOpenChangedRevoker;
-    SplitViewDisplayModeChangedRevoker m_splitViewDisplayModeChangedRevoker;
-    SplitViewCompactPaneLengthChangedRevoker m_splitViewCompactPaneLengthChangedRevoker;
+    readonly SplitViewIsPaneOpenChangedRevoker m_splitViewIsPaneOpenChangedRevoker;
+    readonly SplitViewDisplayModeChangedRevoker m_splitViewDisplayModeChangedRevoker;
+    readonly SplitViewCompactPaneLengthChangedRevoker m_splitViewCompactPaneLengthChangedRevoker;
 
     ItemsRepeaterElementPreparedRevoker m_repeaterElementPreparedRevoker;
     ItemsRepeaterElementClearingRevoker m_repeaterElementClearingRevoker;
@@ -801,7 +802,7 @@ public partial class NavigationViewItem : NavigationViewItemBase
     FlyoutBaseClosingRevoker m_flyoutClosingRevoker;
 
     ToolTip m_toolTip;
-    NavigationViewItemHelper<NavigationViewItem> m_helper = new NavigationViewItemHelper<NavigationViewItem>();
+    readonly NavigationViewItemHelper<NavigationViewItem> m_helper = new();
     NavigationViewItemPresenter m_navigationViewItemPresenter;
     object m_suggestedToolTipContent;
     ItemsRepeater m_repeater;
