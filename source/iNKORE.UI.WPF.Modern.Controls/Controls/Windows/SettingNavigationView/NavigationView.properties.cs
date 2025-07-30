@@ -77,71 +77,6 @@ public partial class NavigationView
 
     #endregion
 
-    #region FooterMenuItems
-
-    private static readonly DependencyProperty s_footerMenuItemsProperty =
-        DependencyProperty.Register(
-            nameof(FooterMenuItems),
-            typeof(IList),
-            typeof(NavigationView),
-            new PropertyMetadata(OnFooterMenuItemsPropertyChanged));
-
-    public IList FooterMenuItems => (IList)GetValue(s_footerMenuItemsProperty);
-
-    private static void OnFooterMenuItemsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (NavigationView)sender;
-        owner.PropertyChanged(args);
-    }
-
-    #endregion
-
-    #region FooterMenuItemsSource
-
-    public static readonly DependencyProperty FooterMenuItemsSourceProperty =
-        DependencyProperty.Register(
-            nameof(FooterMenuItemsSource),
-            typeof(object),
-            typeof(NavigationView),
-            new PropertyMetadata(OnFooterMenuItemsSourcePropertyChanged));
-
-    public object FooterMenuItemsSource
-    {
-        get => GetValue(FooterMenuItemsSourceProperty);
-        set => SetValue(FooterMenuItemsSourceProperty, value);
-    }
-
-    private static void OnFooterMenuItemsSourcePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (NavigationView)sender;
-        owner.PropertyChanged(args);
-    }
-
-    #endregion
-
-    #region PaneFooter
-
-    public static readonly DependencyProperty PaneFooterProperty =
-        DependencyProperty.Register(
-            nameof(PaneFooter),
-            typeof(UIElement),
-            typeof(NavigationView),
-            new PropertyMetadata(OnPaneFooterPropertyChanged));
-
-    public UIElement PaneFooter
-    {
-        get => (UIElement)GetValue(PaneFooterProperty);
-        set => SetValue(PaneFooterProperty, value);
-    }
-
-    private static void OnPaneFooterPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (NavigationView)sender;
-        owner.PropertyChanged(args);
-    }
-
-    #endregion
-
     #region Header
 
     public static readonly DependencyProperty HeaderProperty =
@@ -297,29 +232,6 @@ public partial class NavigationView
     {
         var owner = (NavigationView)sender;
         owner.PropertyChanged(args);
-    }
-
-    #endregion
-
-    #region IsFooterSeparatorVisible
-
-    public static readonly DependencyProperty IsFooterSeparatorVisibleProperty =
-        DependencyProperty.Register(
-            nameof(IsFooterSeparatorVisible),
-            typeof(bool?),
-            typeof(NavigationView),
-            new PropertyMetadata(null, OnIsFooterSeparatorVisiblePropertyChanged));
-
-    private static void OnIsFooterSeparatorVisiblePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (NavigationView)sender;
-        owner.PropertyChanged(args);
-    }
-
-    public bool? IsFooterSeparatorVisible
-    {
-        get => GetValue(IsFooterSeparatorVisibleProperty) as bool?;
-        set => SetValue(IsFooterSeparatorVisibleProperty, value);
     }
 
     #endregion

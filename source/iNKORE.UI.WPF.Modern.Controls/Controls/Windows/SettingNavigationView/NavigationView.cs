@@ -44,7 +44,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private const string c_paneTitleFrameworkElement = "PaneTitleTextBlock";
     private const string c_rootSplitViewName = "RootSplitView";
     private const string c_menuItemsHost = "MenuItemsHost";
-    private const string c_footerMenuItemsHost = "FooterMenuItemsHost";
     private const string c_paneContentGridName = "PaneContentGrid";
     private const string c_rootGridName = "RootGrid";
     private const string c_contentGridName = "ContentGrid";
@@ -60,13 +59,9 @@ public partial class NavigationView : ContentControl, IControlProtected
     // DisplayMode Left specific items
     const string c_leftNavPaneAutoSuggestBoxPresenter = "PaneAutoSuggestBoxPresenter";
 
-    private const string c_leftNavFooterContentBorder = "FooterContentBorder";
-
     private const string c_itemsContainer = "ItemsContainerGrid";
     private const string c_itemsContainerRow = "ItemsContainerRow";
-    private const string c_visualItemsSeparator = "VisualItemsSeparator";
     private const string c_menuItemsScrollViewer = "MenuItemsScrollViewer";
-    private const string c_footerItemsScrollViewer = "FooterItemsScrollViewer";
 
     private const string c_paneHeaderCloseButtonColumn = "PaneHeaderCloseButtonColumn";
     private const string c_paneHeaderToggleButtonColumn = "PaneHeaderToggleButtonColumn";
@@ -80,9 +75,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private const int c_backButtonRowDefinition = 1;
 
     private const int c_mainMenuBlockIndex = 0;
-    private const int c_footerMenuBlockIndex = 1;
-
-    internal static readonly ControlStrings ResourceAccessor = new(typeof(NavigationView), ModernControlCategory.Windows);
 
     protected override AutomationPeer OnCreateAutomationPeer()
     {
@@ -131,16 +123,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             m_leftNavRepeater = null;
         }
 
-        if (m_leftNavFooterMenuRepeater != null)
-        {
-            m_leftNavFooterMenuRepeater.ElementPrepared -= OnRepeaterElementPrepared;
-            m_leftNavFooterMenuRepeater.ElementClearing -= OnRepeaterElementClearing;
-            m_leftNavFooterMenuRepeater.IsVisibleChanged -= OnRepeaterIsVisibleChanged;
-            m_leftNavFooterMenuRepeaterGettingFocusHelper?.Dispose();
-            m_leftNavFooterMenuRepeater = null;
-        }
-
-        m_footerItemsCollectionChangedRevoker?.Revoke();
         m_menuItemsCollectionChangedRevoker?.Revoke();
 
         if (isFromDestructor)
@@ -165,9 +147,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         var items = new ObservableCollection<object>();
         SetValue(MenuItemsProperty, items);
 
-        var footerItems = new ObservableCollection<object>();
-        SetValue(s_footerMenuItemsProperty, footerItems);
-
         var weakThis = new WeakReference<NavigationView>(this);
 
         Unloaded += OnUnloaded;
@@ -191,7 +170,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private void OnSelectionModelChildrenRequested(SelectionModel selectionModel, SelectionModelChildrenRequestedEventArgs e)
     {
-        // this is main menu or footer
+        // this is main menu
         if (e.SourceIndex.GetSize() == 1)
         {
             e.Children = e.Source;
@@ -201,14 +180,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             // no children
             e.Children = null;
         }
-    }
-
-    private void OnFooterItemsSourceCollectionChanged(object sender, object e)
-    {
-        UpdateFooterRepeaterItemsSource(false /*sourceCollectionReset*/, true /*sourceCollectionChanged*/);
-
-        // Pane footer items changed. This means we might need to reevaluate the pane layout.
-        UpdatePaneLayout();
     }
 
     private void OnSelectionModelSelectionChanged(SelectionModel selectionModel, SelectionModelSelectionChangedEventArgs e)
@@ -273,8 +244,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             WindowChrome.SetIsHitTestVisibleInChrome(paneToggleButton, true);
         }
 
-        m_leftNavFooterContentBorder = GetTemplateChild(c_leftNavFooterContentBorder) as ContentControl;
-
         // Get a pointer to the root SplitView
         if (GetTemplateChild(c_rootSplitViewName) is SplitView splitView)
         {
@@ -315,30 +284,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             m_leftNavRepeaterGettingFocusHelper.GettingFocus += OnRepeaterGettingFocus;
 
             leftNavRepeater.ItemTemplate = m_navigationViewItemsFactory;
-        }
-
-        // Change code to NOT do this if we're in top nav mode, to prevent it from being realized:
-        if (GetTemplateChildT<ItemsRepeater>(c_footerMenuItemsHost, controlProtected) is { } leftFooterMenuNavRepeater)
-        {
-            m_leftNavFooterMenuRepeater = leftFooterMenuNavRepeater;
-
-            // API is currently in preview, so setting this via code.
-            // Disabling virtualization for now because of https://github.com/microsoft/microsoft-ui-xaml/issues/2095
-            if (leftFooterMenuNavRepeater.Layout is StackLayout stackLayout)
-            {
-                var stackLayoutImpl = stackLayout;
-                stackLayoutImpl.DisableVirtualization = true;
-            }
-
-            leftFooterMenuNavRepeater.ElementPrepared += OnRepeaterElementPrepared;
-            leftFooterMenuNavRepeater.ElementClearing += OnRepeaterElementClearing;
-
-            leftFooterMenuNavRepeater.IsVisibleChanged += OnRepeaterIsVisibleChanged;
-
-            m_leftNavFooterMenuRepeaterGettingFocusHelper = new GettingFocusHelper(leftFooterMenuNavRepeater);
-            m_leftNavFooterMenuRepeaterGettingFocusHelper.GettingFocus += OnRepeaterGettingFocus;
-
-            leftFooterMenuNavRepeater.ItemTemplate = m_navigationViewItemsFactory;
         }
 
         m_leftNavPaneAutoSuggestBoxPresenter = GetTemplateChild(c_leftNavPaneAutoSuggestBoxPresenter) as ContentControl;
@@ -405,8 +350,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
         m_itemsContainerRow = GetTemplateChildT<RowDefinition>(c_itemsContainerRow, controlProtected);
         m_menuItemsScrollViewer = GetTemplateChildT<FrameworkElement>(c_menuItemsScrollViewer, controlProtected);
-        m_footerItemsScrollViewer = GetTemplateChildT<FrameworkElement>(c_footerItemsScrollViewer, controlProtected);
-        m_visualItemsSeparator = GetTemplateChildT<FrameworkElement>(c_visualItemsSeparator, controlProtected);
 
         m_itemsContainerSizeChangedRevoker?.Revoke();
         if (GetTemplateChildT<FrameworkElement>(c_itemsContainer, controlProtected) is { } itemsContainerRow)
@@ -500,66 +443,13 @@ public partial class NavigationView : ContentControl, IControlProtected
     {
         if (!m_appliedTemplate) return;
 
-        object itemsSource;
-        {
-            itemsSource = init();
-            object init()
-            {
-                if (FooterMenuItemsSource is { } menuItemsSource)
-                {
-                    return menuItemsSource;
-                }
-                UpdateSelectionForMenuItems();
-                return FooterMenuItems;
-            }
-        }
-
-        UpdateItemsRepeaterItemsSource(m_leftNavFooterMenuRepeater, null);
+        UpdateSelectionForMenuItems();
 
         if (sourceCollectionChanged || sourceCollectionReset)
         {
             var dataSource = new List<object>();
 
-            if (sourceCollectionReset)
-            {
-                if (m_footerItemsSource != null)
-                {
-                    m_footerItemsSource.CollectionChanged -= OnFooterItemsSourceCollectionChanged;
-                }
-                m_footerItemsSource = null;
-            }
-
-            if (m_footerItemsSource is null)
-            {
-                m_footerItemsSource = new InspectingDataSource(itemsSource);
-                m_footerItemsCollectionChangedRevoker = new ItemsSourceView.CollectionChangedRevoker(m_footerItemsSource, OnFooterItemsSourceCollectionChanged);
-            }
-
-            if (m_footerItemsSource != null)
-            {
-                var size = m_footerItemsSource.Count;
-
-                for (int i = 0; i < size; i++)
-                {
-                    var item = m_footerItemsSource.GetAt(i);
-                    dataSource.Add(item);
-                }
-            }
-
             m_selectionModelSource[1] = dataSource;
-        }
-
-        if (m_leftNavFooterMenuRepeater is { } repeater)
-        {
-            UpdateItemsRepeaterItemsSource(m_leftNavFooterMenuRepeater, m_selectionModelSource[1]);
-
-            // Footer items changed and we need to recalculate the layout.
-            // However repeater "lags" behind, so we need to force it to reevaluate itself now.
-            repeater.InvalidateMeasure();
-            repeater.UpdateLayout();
-
-            // Footer items changed, so let's update the pane layout.
-            UpdatePaneLayout();
         }
     }
 
@@ -654,8 +544,7 @@ public partial class NavigationView : ContentControl, IControlProtected
     {
         if (element != null)
         {
-            return element == m_leftNavRepeater ||
-                element == m_leftNavFooterMenuRepeater;
+            return element == m_leftNavRepeater;
         }
         return false;
     }
@@ -711,7 +600,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private IndexPath GetIndexPathForContainer(NavigationViewItemBase nvib)
     {
         var path = new List<int>();
-        bool isInFooterMenu;
 
         DependencyObject child = nvib;
         var parent = VisualTreeHelper.GetParent(child);
@@ -742,9 +630,7 @@ public partial class NavigationView : ContentControl, IControlProtected
             }
         }
 
-        isInFooterMenu = parent == m_leftNavFooterMenuRepeater;
-
-        path.Insert(0, isInFooterMenu ? c_footerMenuBlockIndex : c_mainMenuBlockIndex);
+        path.Insert(0, c_mainMenuBlockIndex);
 
         return IndexPath.CreateFromIndices(path);
     }
@@ -762,10 +648,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             {
                 NavigationViewRepeaterPosition init()
                 {
-                    if (ir == m_leftNavFooterMenuRepeater)
-                    {
-                        return NavigationViewRepeaterPosition.LeftFooter;
-                    }
                     return NavigationViewRepeaterPosition.LeftNav;
                 }
                 position = init();
@@ -982,26 +864,10 @@ public partial class NavigationView : ContentControl, IControlProtected
                 if (m_itemsContainerRow is { } paneContentRow)
                 {
                     // 20px is the padding between the two item lists
-                    if (m_leftNavFooterContentBorder is { } paneFooter)
-                    {
-                        return paneContentRow.ActualHeight - 29 - paneFooter.ActualHeight;
-                    }
-                    else
-                    {
-                        return paneContentRow.ActualHeight - 29;
-                    }
+                    return paneContentRow.ActualHeight - 29;
                 }
                 return 0.0;
             }
-        }
-
-        if (IsFooterSeparatorVisible == true && m_visualItemsSeparator != null)
-        {
-            m_visualItemsSeparator.Visibility = Visibility.Visible;
-        }
-        else if(IsFooterSeparatorVisible == false && m_visualItemsSeparator != null)
-        {
-            m_visualItemsSeparator.Visibility = Visibility.Collapsed;
         }
 
         // Only continue if we have a positive amount of space to manage.
@@ -1015,77 +881,15 @@ public partial class NavigationView : ContentControl, IControlProtected
                 heightForMenuItems = init();
                 double init()
                 {
-                    if (m_footerItemsScrollViewer is { } footerItemsScrollViewer)
-                    {
-                        if (m_leftNavFooterMenuRepeater is { } footerItemsRepeater)
-                        {
-                            // We know the actual height of footer items, so use that to determine how to split pane.
-                            if (m_leftNavRepeater is { } menuItems)
-                            {
-
-                                var footersActualHeight = footerItemsRepeater.ActualHeight;
-                                var menuItemsActualHeight = menuItems.ActualHeight;
-
-                                if (totalAvailableHeight >= menuItemsActualHeight + footersActualHeight)
-                                {
-                                    // We have enough space for two so let everyone get as much as they need.
-                                    footerItemsScrollViewer.MaxHeight = footersActualHeight;
-                                    return totalAvailableHeight - footersActualHeight;
-                                }
-                                else if (footersActualHeight > totalAvailableHeightHalf)
-                                {
-                                    // Footer items exceed over the half, so let's limit them.
-                                    footerItemsScrollViewer.MaxHeight = Math.Max(0, totalAvailableHeight - menuItemsActualHeight);
-                                    return menuItemsActualHeight;
-                                }
-                                else if (footersActualHeight <= totalAvailableHeightHalf)
-                                {
-                                    // Menu items exceed over the half, so let's limit them.
-                                    footerItemsScrollViewer.MaxHeight = footersActualHeight;
-                                    return totalAvailableHeight - footersActualHeight;
-                                }
-                                else
-                                {
-                                    // Both are more than half the height, so split evenly.
-                                    footerItemsScrollViewer.MaxHeight = totalAvailableHeightHalf;
-                                    return totalAvailableHeightHalf;
-                                }
-                            }
-                            else
-                            {
-                                // Couldn't determine the menuItems.
-                                // Let's just take all the height and let the other repeater deal with it.
-                                return totalAvailableHeight - footerItemsRepeater.ActualHeight;
-                            }
-                        }
-                        // We have no idea how much space to occupy as we are not able to get the size of the footer repeater.
-                        // Stick with 50% as backup.
-                        footerItemsScrollViewer.MaxHeight = totalAvailableHeightHalf;
-                    }
                     // We couldn't find a good strategy, so limit to 50% percent for the menu items.
                     return totalAvailableHeightHalf;
                 }
             }
-            // Footer items should have precedence as that usually contains very
-            // important items such as settings or the profile.
 
             if (m_menuItemsScrollViewer is { } menuItemsScrollViewer)
             {
                 // Update max height for menu items.
                 menuItemsScrollViewer.MaxHeight = heightForMenuItems;
-            }
-        }
-
-        if (IsFooterSeparatorVisible == null && m_visualItemsSeparator != null)
-        {
-            m_visualItemsSeparator.Visibility = Visibility.Collapsed;
-
-            if (m_menuItemsScrollViewer is ScrollViewer && m_footerItemsScrollViewer is ScrollViewer)
-            {
-                if ((m_menuItemsScrollViewer as ScrollViewer).ComputedVerticalScrollBarVisibility == Visibility.Visible)
-                {
-                    m_visualItemsSeparator.Visibility = Visibility.Visible;
-                }
             }
         }
     }
@@ -2190,7 +1994,7 @@ public partial class NavigationView : ContentControl, IControlProtected
                         rootRepeaterForSelectedItem = init();
                         object init()
                         {
-                            return m_selectionModel.SelectedIndex.GetAt(0) == c_mainMenuBlockIndex ? m_leftNavRepeater : m_leftNavFooterMenuRepeater;
+                            return m_leftNavRepeater;
                         }
                     }
 
@@ -2539,10 +2343,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             }
             UpdatePaneLayout();
         }
-        else if(property == IsFooterSeparatorVisibleProperty)
-        {
-            UpdatePaneLayout();
-        }
         else if (property == MenuItemsSourceProperty)
         {
             UpdateRepeaterItemsSource(true /*forceSelectionModelUpdate*/);
@@ -2550,14 +2350,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         else if (property == MenuItemsProperty)
         {
             UpdateRepeaterItemsSource(true /*forceSelectionModelUpdate*/);
-        }
-        else if (property == FooterMenuItemsSourceProperty)
-        {
-            UpdateFooterRepeaterItemsSource(true /*sourceCollectionReset*/, true /*sourceCollectionChanged*/);
-        }
-        else if (property == s_footerMenuItemsProperty)
-        {
-            UpdateFooterRepeaterItemsSource(true /*sourceCollectionReset*/, true /*sourceCollectionChanged*/);
         }
         else if (property == IsPaneVisibleProperty)
         {
@@ -2981,18 +2773,10 @@ public partial class NavigationView : ContentControl, IControlProtected
         //         </NavigationView.MenuItems>
         if (SelectedItem == null)
         {
-            bool foundFirstSelected = false;
-
             // firstly check Menu items
             if (MenuItems is IList menuItems)
             {
-                foundFirstSelected = UpdateSelectedItemFromMenuItems(menuItems);
-            }
-
-            // then do same for footer items and tell wenever selected item alreadyfound in MenuItems
-            if (FooterMenuItems is IList footerItems)
-            {
-                UpdateSelectedItemFromMenuItems(footerItems, foundFirstSelected);
+                UpdateSelectedItemFromMenuItems(menuItems);
             }
         }
     }
@@ -3208,29 +2992,11 @@ public partial class NavigationView : ContentControl, IControlProtected
             }
         }
 
-        // then look in footer menu
-        var footerRepeater = m_leftNavFooterMenuRepeater;
-        itemIndex = GetIndexFromItem(footerRepeater, data);
-        if (itemIndex >= 0)
-        {
-            if (footerRepeater.TryGetElement(itemIndex) is { } container)
-            {
-                return container as T;
-            }
-        }
-
         // If unsuccessful, unfortunately we are going to have to search through the whole tree
         // TODO: Either fix or remove implementation for TopNav.
         // It may not be required due to top nav rarely having realized children in its default state.
         {
             if (NavigationView.SearchEntireTreeForContainer(mainRepeater, data) is { } container)
-            {
-                return container as T;
-            }
-        }
-
-        {
-            if (NavigationView.SearchEntireTreeForContainer(footerRepeater, data) is { } container)
             {
                 return container as T;
             }
@@ -3335,10 +3101,9 @@ public partial class NavigationView : ContentControl, IControlProtected
         return new IndexPath([]);
     }
 
-    private UIElement GetContainerForIndex(int index, bool inFooter)
+    private UIElement GetContainerForIndex(int index)
     {
-        if ((inFooter ? m_leftNavFooterMenuRepeater.TryGetElement(index)
-                : m_leftNavRepeater.TryGetElement(index)) is { } container)
+        if (m_leftNavRepeater.TryGetElement(index) is { } container)
         {
             return container as NavigationViewItemBase;
         }
@@ -3349,7 +3114,7 @@ public partial class NavigationView : ContentControl, IControlProtected
     {
         if (ip != null && ip.GetSize() > 0)
         {
-            if (GetContainerForIndex(ip.GetAt(1), ip.GetAt(0) == c_footerMenuBlockIndex /*inFooter*/) is { } container)
+            if (GetContainerForIndex(ip.GetAt(1)) is { } container)
             {
                 if (lastVisible)
                 {
@@ -3461,16 +3226,13 @@ public partial class NavigationView : ContentControl, IControlProtected
     private SplitView m_rootSplitView;
     private RowDefinition m_itemsContainerRow;
     private FrameworkElement m_menuItemsScrollViewer;
-    private FrameworkElement m_footerItemsScrollViewer;
     private UIElement m_paneContentGrid;
     private FrameworkElement m_paneTitleHolderFrameworkElement;
     private FrameworkElement m_paneTitleFrameworkElement;
-    private FrameworkElement m_visualItemsSeparator;
     private Button m_paneSearchButton;
     private Button m_backButton;
     private Button m_closeButton;
     private ItemsRepeater m_leftNavRepeater;
-    private ItemsRepeater m_leftNavFooterMenuRepeater;
 
     // Indicator animations
     private UIElement m_prevIndicator;
@@ -3484,7 +3246,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private CoreApplicationViewTitleBar m_coreTitleBar;
 
     private ContentControl m_leftNavPaneAutoSuggestBoxPresenter;
-    private ContentControl m_leftNavFooterContentBorder;
     private ContentControl m_paneTitlePresenter;
 
     private ColumnDefinition m_paneHeaderCloseButtonColumn;
@@ -3496,7 +3257,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private FrameworkElementSizeChangedRevoker m_itemsContainerSizeChangedRevoker;
 
     private ItemsSourceView.CollectionChangedRevoker m_menuItemsCollectionChangedRevoker;
-    private ItemsSourceView.CollectionChangedRevoker m_footerItemsCollectionChangedRevoker;
 
     private bool m_wasForceClosed = false;
     private bool m_isClosedCompact = false;
@@ -3507,7 +3267,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private readonly List<object> m_selectionModelSource;
 
     private ItemsSourceView m_menuItemsSource = null;
-    private ItemsSourceView m_footerItemsSource = null;
 
     private bool m_appliedTemplate = false;
 
@@ -3532,7 +3291,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private bool m_tabKeyPrecedesFocusChange = false;
 
     private GettingFocusHelper m_leftNavRepeaterGettingFocusHelper;
-    private GettingFocusHelper m_leftNavFooterMenuRepeaterGettingFocusHelper;
 
     private readonly BitmapCache m_bitmapCache;
 

@@ -14,12 +14,6 @@ internal enum NavigationViewVisualStateDisplayMode
     MinimalWithBackButton
 }
 
-internal enum NavigationViewRepeaterPosition
-{
-    LeftNav,
-    LeftFooter
-}
-
 // Since RS5, a lot of functions in NavigationViewItem is moved to NavigationViewItemPresenter. So they both share some common codes.
 // This class helps to initialize and maintain the status of SelectionIndicator and ToolTip
 internal class NavigationViewItemHelper<T>

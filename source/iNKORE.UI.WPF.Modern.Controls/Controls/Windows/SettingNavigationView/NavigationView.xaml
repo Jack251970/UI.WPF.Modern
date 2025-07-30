@@ -356,23 +356,10 @@
                                             Style="{StaticResource DefaultContentControlStyle}" />
 
                                         <!--  "Non header" content  -->
-                                        <Grid x:Name="ItemsContainerGrid" Grid.Row="6">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition
-                                                    x:Name="MenuItemsRow"
-                                                    Height="*"
-                                                    MinHeight="{DynamicResource NavigationViewItemOnLeftMinHeight}" />
-                                                <!--  MenuItems  -->
-                                                <RowDefinition Height="Auto" MinHeight="21" />
-                                                <!--  Fill spacing  -->
-                                                <RowDefinition Height="Auto" />
-                                                <!--  PaneFooter  -->
-                                                <RowDefinition
-                                                    x:Name="FooterItemsRow"
-                                                    Height="Auto"
-                                                    MinHeight="{DynamicResource NavigationViewItemOnLeftMinHeight}" />
-                                                <!--  FooterItems  -->
-                                            </Grid.RowDefinitions>
+                                        <Grid
+                                            x:Name="ItemsContainerGrid"
+                                            Grid.Row="6"
+                                            MinHeight="{DynamicResource NavigationViewItemOnLeftMinHeight}">
 
                                             <!--  MenuItems  -->
                                             <controls:ItemsRepeaterScrollHost HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -382,23 +369,6 @@
                                                     VerticalScrollBarVisibility="Auto">
                                                     <!--  Left nav ItemsRepeater  -->
                                                     <controls:ItemsRepeater x:Name="MenuItemsHost" AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}" />
-                                                </ui:ScrollViewerEx>
-                                            </controls:ItemsRepeaterScrollHost>
-
-                                            <!--  PaneFooter  -->
-                                            <ContentControl
-                                                x:Name="FooterContentBorder"
-                                                Grid.Row="2"
-                                                Margin="0,0,0,4"
-                                                HorizontalContentAlignment="Stretch"
-                                                VerticalContentAlignment="Stretch"
-                                                IsTabStop="False"
-                                                Style="{StaticResource DefaultContentControlStyle}" />
-
-                                            <!--  FooterItems  -->
-                                            <controls:ItemsRepeaterScrollHost Grid.Row="3">
-                                                <ui:ScrollViewerEx x:Name="FooterItemsScrollViewer">
-                                                    <controls:ItemsRepeater x:Name="FooterMenuItemsHost" />
                                                 </ui:ScrollViewerEx>
                                             </controls:ItemsRepeaterScrollHost>
                                         </Grid>
@@ -640,7 +610,6 @@
                             <Setter TargetName="PaneTitleTextBlock" Property="Visibility" Value="Collapsed" />
                             <Setter TargetName="PaneHeaderContentBorder" Property="Visibility" Value="Collapsed" />
                             <Setter TargetName="PaneCustomContentBorder" Property="HorizontalAlignment" Value="Left" />
-                            <Setter TargetName="FooterContentBorder" Property="HorizontalAlignment" Value="Left" />
                         </Trigger>
 
                         <Trigger SourceName="PaneOverlayGroupListener" Property="CurrentStateName" Value="PaneNotOverlaying">

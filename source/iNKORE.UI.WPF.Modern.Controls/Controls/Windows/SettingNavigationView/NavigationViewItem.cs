@@ -124,7 +124,7 @@ public partial class NavigationViewItem : NavigationViewItemBase
             // Only update when on left
             if (GetPresenter() is { } presenter)
             {
-                presenter.UpdateCompactPaneLength(splitView.CompactPaneLength, IsOnLeftNav());
+                presenter.UpdateCompactPaneLength(splitView.CompactPaneLength, true);
             }
         }
     }
@@ -308,13 +308,10 @@ public partial class NavigationViewItem : NavigationViewItemBase
         bool shouldShowIcon = ShouldShowIcon();
         bool shouldShowContent = ShouldShowContent();
 
-        if (IsOnLeftNav())
+        if (m_navigationViewItemPresenter is { } presenter)
         {
-            if (m_navigationViewItemPresenter is { } presenter)
-            {
-                // Backward Compatibility with RS4-, new implementation prefer IconOnLeft/IconOnly/ContentOnly
-                VisualStateManager.GoToState(presenter, shouldShowIcon ? "IconVisible" : "IconCollapsed", useTransitions);
-            }
+            // Backward Compatibility with RS4-, new implementation prefer IconOnLeft/IconOnly/ContentOnly
+            VisualStateManager.GoToState(presenter, shouldShowIcon ? "IconVisible" : "IconCollapsed", useTransitions);
         }
 
         UpdateVisualStateForToolTip();
@@ -333,18 +330,12 @@ public partial class NavigationViewItem : NavigationViewItemBase
     bool ShouldEnableToolTip()
     {
         // We may enable Tooltip for IconOnly in the future, but not now
-        return IsOnLeftNav() && m_isClosedCompact;
+        return m_isClosedCompact;
     }
 
     bool ShouldShowContent()
     {
         return Content != null;
-    }
-
-    bool IsOnLeftNav()
-    {
-        var position = Position;
-        return position == NavigationViewRepeaterPosition.LeftNav || position == NavigationViewRepeaterPosition.LeftFooter;
     }
 
     UIElement GetPresenterOrItem()
