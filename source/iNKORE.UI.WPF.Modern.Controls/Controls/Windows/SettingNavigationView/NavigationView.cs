@@ -21,7 +21,6 @@ using iNKORE.UI.WPF.Modern.Controls.Primitives;
 using iNKORE.UI.WPF.Modern.Input;
 using iNKORE.UI.WPF.Modern.Media.Animation;
 using static Flow.Bar.Controls.NavigationView.CppWinRTHelpers;
-using static iNKORE.UI.WPF.Modern.Common.ResourceAccessor;
 using IControlProtected = Flow.Bar.Controls.NavigationView.CppWinRTHelpers.IControlProtected;
 
 #pragma warning disable IDE0060 // Remove unused parameter
@@ -387,23 +386,12 @@ public partial class NavigationView : ContentControl, IControlProtected
         {
             m_paneSearchButton = button;
             button.Click += OnPaneSearchButtonClick;
-
-            var searchButtonName = ResourceAccessor.GetLocalizedStringResource(SR_NavigationViewSearchButtonName);
-            AutomationProperties.SetName(button, searchButtonName);
-            var toolTip = new ToolTip
-            {
-                Content = searchButtonName
-            };
-            ToolTipService.SetToolTip(button, toolTip);
         }
 
         if (GetTemplateChild(c_navViewBackButton) is Button backButton)
         {
             m_backButton = backButton;
             backButton.Click += OnBackButtonClicked;
-
-            string navigationName = ResourceAccessor.GetLocalizedStringResource(SR_NavigationBackButtonName);
-            AutomationProperties.SetName(backButton, navigationName);
 
             WindowChrome.SetIsHitTestVisibleInChrome(backButton, true);
         }
@@ -421,8 +409,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
         if (GetTemplateChild(c_navViewBackButtonToolTip) is ToolTip backButtonToolTip)
         {
-            string navigationBackButtonToolTip = ResourceAccessor.GetLocalizedStringResource(SR_NavigationBackButtonToolTip);
-            backButtonToolTip.Content = navigationBackButtonToolTip;
+            backButtonToolTip.Content = "Back";
         }
 
         if (GetTemplateChild(c_navViewCloseButton) is Button closeButton)
@@ -430,16 +417,12 @@ public partial class NavigationView : ContentControl, IControlProtected
             m_closeButton = closeButton;
             closeButton.Click += OnPaneToggleButtonClick;
 
-            string navigationName = ResourceAccessor.GetLocalizedStringResource(SR_NavigationCloseButtonName);
-            AutomationProperties.SetName(closeButton, navigationName);
-
             WindowChrome.SetIsHitTestVisibleInChrome(closeButton, true);
         }
 
         if (GetTemplateChild(c_navViewCloseButtonToolTip) is ToolTip closeButtonToolTip)
         {
-            string navigationCloseButtonToolTip = ResourceAccessor.GetLocalizedStringResource(SR_NavigationButtonOpenName);
-            closeButtonToolTip.Content = navigationCloseButtonToolTip;
+            closeButtonToolTip.Content = "Close navigation";
         }
 
         m_itemsContainerRow = GetTemplateChildT<RowDefinition>(c_itemsContainerRow, controlProtected);
@@ -1435,11 +1418,11 @@ public partial class NavigationView : ContentControl, IControlProtected
         string navigationName;
         if (IsPaneOpen)
         {
-            navigationName = ResourceAccessor.GetLocalizedStringResource(SR_NavigationButtonOpenName);
+            navigationName = "Close navigation";
         }
         else
         {
-            navigationName = ResourceAccessor.GetLocalizedStringResource(SR_NavigationButtonClosedName);
+            navigationName = "Open navigation";
         }
 
         if (m_paneToggleButton is { } paneToggleButton)

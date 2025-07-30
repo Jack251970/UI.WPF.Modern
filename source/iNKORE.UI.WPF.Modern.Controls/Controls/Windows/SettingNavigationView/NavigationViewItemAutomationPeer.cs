@@ -5,7 +5,6 @@ using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using iNKORE.UI.WPF.Modern.Common;
-using static iNKORE.UI.WPF.Modern.Common.ResourceAccessor;
 
 namespace Flow.Bar.Controls.NavigationView;
 
@@ -15,8 +14,6 @@ public class NavigationViewItemAutomationPeer :
     ISelectionItemProvider,
     IExpandCollapseProvider
 {
-    private static ControlStrings ResourceAccessor => NavigationView.ResourceAccessor;
-
     public NavigationViewItemAutomationPeer(NavigationViewItem owner) :
         base(owner)
     {
@@ -33,14 +30,6 @@ public class NavigationViewItemAutomationPeer :
             {
                 returnHString = SharedHelpers.TryGetStringRepresentationFromObject(lvi.Content);
             }
-        }
-
-        if (string.IsNullOrEmpty(returnHString))
-        {
-            // NB: It'll be up to the app to determine the automation label for
-            // when they're using a PlaceholderValue vs. Value.
-
-            returnHString = ResourceAccessor.GetLocalizedStringResource(SR_NavigationViewItemDefaultControlName);
         }
 
         return returnHString;
