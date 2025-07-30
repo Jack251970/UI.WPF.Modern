@@ -586,29 +586,6 @@ public partial class NavigationView
 
     #endregion
 
-    #region ShoulderNavigationEnabled
-
-    public static readonly DependencyProperty ShoulderNavigationEnabledProperty =
-        DependencyProperty.Register(
-            nameof(ShoulderNavigationEnabled),
-            typeof(NavigationViewShoulderNavigationEnabled),
-            typeof(NavigationView),
-            new PropertyMetadata(NavigationViewShoulderNavigationEnabled.Never, OnShoulderNavigationEnabledPropertyChanged));
-
-    public NavigationViewShoulderNavigationEnabled ShoulderNavigationEnabled
-    {
-        get => (NavigationViewShoulderNavigationEnabled)GetValue(ShoulderNavigationEnabledProperty);
-        set => SetValue(ShoulderNavigationEnabledProperty, value);
-    }
-
-    private static void OnShoulderNavigationEnabledPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (NavigationView)sender;
-        owner.PropertyChanged(args);
-    }
-
-    #endregion
-
     #region IsTitleBarAutoPaddingEnabled
 
     public static readonly DependencyProperty IsTitleBarAutoPaddingEnabledProperty =

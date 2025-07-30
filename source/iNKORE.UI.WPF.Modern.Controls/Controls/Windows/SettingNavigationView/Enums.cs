@@ -16,10 +16,3 @@ public enum NavigationViewBackButtonVisible
     Visible = 1,
     Auto = 2,
 }
-
-public enum NavigationViewShoulderNavigationEnabled
-{
-    WhenSelectionFollowsFocus = 0,
-    Always = 1,
-    Never = 2
-}
