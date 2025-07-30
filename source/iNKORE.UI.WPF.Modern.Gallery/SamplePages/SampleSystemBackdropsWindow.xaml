@@ -132,10 +132,7 @@
 
             <scrollviewer:NavigationView.HeaderTemplate>
                 <DataTemplate>
-                    <controls:PageHeader
-                        Title="{Binding Header, ElementName=NavigationViewControl}"
-                        Background="Transparent"
-                        BackgroundColorOpacity="1" />
+                    <TextBlock Text="{Binding Header, ElementName=NavigationViewControl, Mode=OneWay}" />
                 </DataTemplate>
             </scrollviewer:NavigationView.HeaderTemplate>
 

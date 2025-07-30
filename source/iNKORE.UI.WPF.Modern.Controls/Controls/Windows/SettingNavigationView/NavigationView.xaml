@@ -242,10 +242,9 @@
                                     <TextBlock
                                         x:Name="PaneTitleTextBlock"
                                         Grid.Column="0"
-                                        Margin="0,0,0,0"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
-                                        Style="{DynamicResource NavigationViewItemHeaderTextStyle}"
+                                        Style="{DynamicResource SettingNavigationViewItemHeaderTextStyle}"
                                         Text="{TemplateBinding PaneTitle}" />
                                 </Button>
                                 <Grid
@@ -401,7 +400,7 @@
                                             Content="{TemplateBinding Header}"
                                             ContentTemplate="{TemplateBinding HeaderTemplate}"
                                             IsTabStop="False"
-                                            Style="{DynamicResource NavigationViewTitleHeaderContentControlTextStyle}" />
+                                            Style="{DynamicResource SettingNavigationViewTitleHeaderContentControlTextStyle}" />
 
                                         <ContentPresenter
                                             Grid.Row="2"
@@ -687,4 +686,21 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style
+        x:Key="SettingNavigationViewItemHeaderTextStyle"
+        BasedOn="{StaticResource BaseTextBlockStyle}"
+        TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+    </Style>
+
+    <Style x:Key="SettingNavigationViewTitleHeaderContentControlTextStyle" TargetType="ContentControl">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="4,0,0,10" />
+    </Style>
+
 </ResourceDictionary>
