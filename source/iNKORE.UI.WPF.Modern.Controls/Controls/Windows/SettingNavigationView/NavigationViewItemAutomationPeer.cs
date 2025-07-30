@@ -4,21 +4,15 @@
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
-using iNKORE.UI.WPF.Modern.Common;
 
 namespace Flow.Bar.Controls.NavigationView;
 
-public class NavigationViewItemAutomationPeer :
-    FrameworkElementAutomationPeer,
+public class NavigationViewItemAutomationPeer(NavigationViewItem owner) :
+    FrameworkElementAutomationPeer(owner),
     IInvokeProvider,
     ISelectionItemProvider,
     IExpandCollapseProvider
 {
-    public NavigationViewItemAutomationPeer(NavigationViewItem owner) :
-        base(owner)
-    {
-    }
-
     protected override string GetNameCore()
     {
         string returnHString = base.GetNameCore();
@@ -28,11 +22,16 @@ public class NavigationViewItemAutomationPeer :
         {
             if (Owner is NavigationViewItem lvi)
             {
-                returnHString = SharedHelpers.TryGetStringRepresentationFromObject(lvi.Content);
+                returnHString = TryGetStringRepresentationFromObject(lvi.Content);
             }
         }
 
         return returnHString;
+    }
+
+    private static string TryGetStringRepresentationFromObject(object obj)
+    {
+        return obj?.ToString() ?? string.Empty;
     }
 
     public override object GetPattern(PatternInterface pattern)

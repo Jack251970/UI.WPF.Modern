@@ -21,15 +21,8 @@ namespace Flow.Bar.Controls.NavigationView;
 //  We never Add/Delete A,B and C Vector directly, but change the flag.
 //  If flag for Homes is changed from A to B, it asks A to remove it by indexInRawData first, then insert the new data to B vector with indexInRawData
 // SplitVector itself maintained the mapping between indexInRawData and indexInSplitVector.
-public class SplitVector<T, SplitVectorID>
+public class SplitVector<T, SplitVectorID>(SplitVectorID id, Func<T, int> indexOfFunction)
 {
-    public SplitVector(SplitVectorID id, Func<T, int> indexOfFunction)
-    {
-        m_vectorID = id;
-        m_indexFunctionFromDataSource = indexOfFunction;
-        m_vector = new ObservableCollection<T>();
-    }
-
     public SplitVectorID GetVectorIDForItem() { return m_vectorID; }
 
     public IList GetVector() { return m_vector; }
@@ -125,10 +118,10 @@ public class SplitVector<T, SplitVectorID>
 
     int Size() { return m_indexesInOriginalVector.Count; }
 
-    readonly SplitVectorID m_vectorID;
-    readonly Collection<T> m_vector;
+    readonly SplitVectorID m_vectorID = id;
+    readonly Collection<T> m_vector = new ObservableCollection<T>();
     readonly List<int> m_indexesInOriginalVector = [];
-    readonly Func<T, int> m_indexFunctionFromDataSource;
+    readonly Func<T, int> m_indexFunctionFromDataSource = indexOfFunction;
 }
 
 class SplitDataSourceBase<T, SplitVectorID, AttachedDataType> where SplitVectorID : Enum

@@ -23,7 +23,7 @@ public sealed class NavigationViewItemExpandingEventArgs : EventArgs
                 return m_expandingItem;
             }
 
-            if (m_navigationView is { } nv)
+            if (m_navigationView is { })
             {
                 m_expandingItem = NavigationView.MenuItemFromContainer(ExpandingItemContainer);
                 return m_expandingItem;
@@ -33,6 +33,6 @@ public sealed class NavigationViewItemExpandingEventArgs : EventArgs
         }
     }
 
-    object m_expandingItem;
-    readonly NavigationView m_navigationView;
+    private object m_expandingItem;
+    private readonly NavigationView m_navigationView;
 }

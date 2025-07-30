@@ -3,7 +3,6 @@
 
 using System.Windows;
 using System.Windows.Controls;
-using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls;
 using static Flow.Bar.Controls.NavigationView.CppWinRTHelpers;
 
@@ -24,7 +23,7 @@ public class NavigationViewItemSeparator : NavigationViewItemBase
     {
     }
 
-    void UpdateVisualState(bool useTransitions)
+    private void UpdateVisualState(bool useTransitions)
     {
         if (m_appliedTemplate)
         {
@@ -33,7 +32,16 @@ public class NavigationViewItemSeparator : NavigationViewItemBase
                     ? "HorizontalLineCompact"
                     : "HorizontalLine";
 
-            VisualStateUtil.GoToStateIfGroupExists(this, groupName, stateName, false /*useTransitions*/);
+            GoToStateIfGroupExists(this, groupName, stateName, false /*useTransitions*/);
+        }
+    }
+
+    private static void GoToStateIfGroupExists(Control control, string groupName, string stateName, bool useTransitions)
+    {
+        //var visualStateGroup = GetVisualStateGroup(control, groupName);
+        //if (visualStateGroup != null)
+        {
+            VisualStateManager.GoToState(control, stateName, useTransitions);
         }
     }
 

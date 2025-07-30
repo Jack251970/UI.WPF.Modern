@@ -23,7 +23,7 @@ public sealed class NavigationViewItemCollapsedEventArgs : EventArgs
                 return m_collapsedItem;
             }
 
-            if (m_navigationView is { } nv)
+            if (m_navigationView is { })
             {
                 m_collapsedItem = NavigationView.MenuItemFromContainer(CollapsedItemContainer);
                 return m_collapsedItem;
@@ -33,6 +33,6 @@ public sealed class NavigationViewItemCollapsedEventArgs : EventArgs
         }
     }
 
-    object m_collapsedItem;
-    readonly NavigationView m_navigationView;
+    private object m_collapsedItem;
+    private readonly NavigationView m_navigationView;
 }

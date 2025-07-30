@@ -34,14 +34,17 @@ class NavigationViewItemHelper<T> : NavigationViewItemHelper
     {
     }
 
-    public UIElement GetSelectionIndicator() { return m_selectionIndicator; }
+    public UIElement GetSelectionIndicator()
+    {
+        return m_selectionIndicator;
+    }
 
     public void Init(IControlProtected controlProtected)
     {
-        m_selectionIndicator = controlProtected.GetTemplateChild(c_selectionIndicatorName) as UIElement;
+        m_selectionIndicator = controlProtected.GetTemplateChild(C_selectionIndicatorName) as UIElement;
     }
 
     UIElement m_selectionIndicator;
 
-    const string c_selectionIndicatorName = "SelectionIndicator";
+    private const string C_selectionIndicatorName = "SelectionIndicator";
 }
