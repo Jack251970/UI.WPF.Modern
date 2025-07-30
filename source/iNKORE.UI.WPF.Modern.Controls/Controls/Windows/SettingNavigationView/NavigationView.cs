@@ -1425,61 +1425,28 @@ namespace Flow.Bar.Controls.NavigationView
                                     var footersActualHeight = footerItemsRepeater.ActualHeight;
                                     var menuItemsActualHeight = menuItems.ActualHeight;
 
-                                    //Decide whether the separator show show or not. This doesnt work
-                                    //if(m_visualItemsSeparator != null && IsFooterSeparatorVisible == null)
-                                    //{
-                                    //    if (totalAvailableHeight >= menuItemsActualHeight + footersActualHeight)
-                                    //    {
-                                    //        m_visualItemsSeparator.Visibility = Visibility.Collapsed;
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        m_visualItemsSeparator.Visibility = Visibility.Visible;
-                                    //    }
-                                    //}
-
                                     if (totalAvailableHeight >= menuItemsActualHeight + footersActualHeight)
                                     {
                                         // We have enough space for two so let everyone get as much as they need.
                                         footerItemsScrollViewer.MaxHeight = footersActualHeight;
-                                        //if (m_visualItemsSeparator is { } separator)
-                                        //{
-                                        //    if (IsFooterSeparatorVisible == null)
-                                        //        separator.Visibility = Visibility.Collapsed;
-                                        //}
                                         return totalAvailableHeight - footersActualHeight;
                                     }
                                     else if (footersActualHeight > totalAvailableHeightHalf)
                                     {
                                         // Footer items exceed over the half, so let's limit them.
                                         footerItemsScrollViewer.MaxHeight = Math.Max(0, totalAvailableHeight - menuItemsActualHeight);
-                                        //if (m_visualItemsSeparator is { } separator)
-                                        //{
-                                        //    if (IsFooterSeparatorVisible == null)
-                                        //        separator.Visibility = Visibility.Visible;
-                                        //}
                                         return menuItemsActualHeight;
                                     }
                                     else if (footersActualHeight <= totalAvailableHeightHalf)
                                     {
                                         // Menu items exceed over the half, so let's limit them.
                                         footerItemsScrollViewer.MaxHeight = footersActualHeight;
-                                        ////if (m_visualItemsSeparator is { } separator)
-                                        ////{
-                                        ////    if (IsFooterSeparatorVisible == null)
-                                        ////        separator.Visibility = Visibility.Visible;
-                                        ////}
                                         return totalAvailableHeight - footersActualHeight;
                                     }
                                     else
                                     {
                                         // Both are more than half the height, so split evenly.
                                         footerItemsScrollViewer.MaxHeight = totalAvailableHeightHalf;
-                                        //if (m_visualItemsSeparator is { } separator)
-                                        //{
-                                        //    if (IsFooterSeparatorVisible == null)
-                                        //        separator.Visibility = Visibility.Visible;
-                                        //}
                                         return totalAvailableHeightHalf;
                                     }
                                 }
@@ -1555,6 +1522,7 @@ namespace Flow.Bar.Controls.NavigationView
             UpdateBackAndCloseButtonsVisibility();
         }
 
+        // Call this when you want an uncancellable open
         private void OpenPane()
         {
             try
