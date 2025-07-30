@@ -72,7 +72,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private const string c_topNavOverflowButton = "TopNavOverflowButton";
     private const string c_topNavMenuItemsOverflowHost = "TopNavMenuItemsOverflowHost";
     private const string c_topNavGrid = "TopNavGrid";
-    private const string c_topNavContentOverlayAreaGrid = "TopNavContentOverlayAreaGrid";
     private const string c_leftNavPaneAutoSuggestBoxPresenter = "PaneAutoSuggestBoxPresenter";
     private const string c_topNavPaneAutoSuggestBoxPresenter = "TopPaneAutoSuggestBoxPresenter";
     private const string c_paneTitlePresenter = "PaneTitlePresenter";
@@ -557,7 +556,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             topFooterMenuNavRepeater.ItemTemplate = m_navigationViewItemsFactory;
         }
 
-        m_topNavContentOverlayAreaGrid = GetTemplateChild(c_topNavContentOverlayAreaGrid) as Border;
         m_leftNavPaneAutoSuggestBoxPresenter = GetTemplateChild(c_leftNavPaneAutoSuggestBoxPresenter) as ContentControl;
         m_topNavPaneAutoSuggestBoxPresenter = GetTemplateChild(c_topNavPaneAutoSuggestBoxPresenter) as ContentControl;
 
@@ -3086,38 +3084,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         ArrangeTopNavItems(availableSize);
     }
 
-    private void HandleTopNavigationMeasureOverrideNormal(Size availableSize)
-    {
-        var desiredWidth = MeasureTopNavigationViewDesiredWidth(c_infSize);
-        if (desiredWidth > availableSize.Width)
-        {
-            ResetAndRearrangeTopNavItems(availableSize);
-        }
-    }
-
-    private void HandleTopNavigationMeasureOverrideOverflow(Size availableSize)
-    {
-        var desiredWidth = MeasureTopNavigationViewDesiredWidth(c_infSize);
-        if (desiredWidth > availableSize.Width)
-        {
-            ShrinkTopNavigationSize(desiredWidth, availableSize);
-        }
-        else if (desiredWidth < availableSize.Width)
-        {
-            var fullyRecoverWidth = m_topDataProvider.WidthRequiredToRecoveryAllItemsToPrimary();
-            if (availableSize.Width >= desiredWidth + fullyRecoverWidth + m_topNavigationRecoveryGracePeriodWidth)
-            {
-                // It's possible to recover from Overflow to Normal state, so we restart the MeasureOverride from first step
-                ResetAndRearrangeTopNavItems(availableSize);
-            }
-            else
-            {
-                var movableItems = FindMovableItemsRecoverToPrimaryList(availableSize.Width - desiredWidth, []/*includeItems*/);
-                m_topDataProvider.MoveItemsToPrimaryList(movableItems);
-            }
-        }
-    }
-
     private void ArrangeTopNavItems(Size availableSize)
     {
         SetOverflowButtonVisibility(Visibility.Collapsed);
@@ -3726,36 +3692,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         if (SelectedItem is { })
         {
             m_orientationChangedPendingAnimation = true;
-        }
-    }
-
-    private void UpdatePaneDisplayMode(NavigationViewPaneDisplayMode oldDisplayMode, NavigationViewPaneDisplayMode newDisplayMode)
-    {
-        if (!m_appliedTemplate)
-        {
-            return;
-        }
-
-        UpdatePaneDisplayMode();
-
-        // For better user experience, We help customer to Open/Close Pane automatically when we switch between LeftMinimal <. Left.
-        // From other navigation PaneDisplayMode to LeftMinimal, we expect pane is closed.
-        // From LeftMinimal to Left, it is expected the pane is open. For other configurations, this seems counterintuitive.
-        // See #1702 and #1787
-        if (IsPaneOpen)
-        {
-            if (newDisplayMode == NavigationViewPaneDisplayMode.LeftMinimal)
-            {
-                ClosePane();
-            }
-        }
-        else
-        {
-            if (oldDisplayMode == NavigationViewPaneDisplayMode.LeftMinimal
-                && newDisplayMode == NavigationViewPaneDisplayMode.Left)
-            {
-                OpenPane();
-            }
         }
     }
 
@@ -4836,12 +4772,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         return null;
     }
 
-    private void CollapseTopLevelMenuItems(NavigationViewPaneDisplayMode oldDisplayMode)
-    {
-        // We want to make sure only top level items are visible when switching pane modes
-        CollapseMenuItemsInRepeater(m_leftNavRepeater);
-    }
-
     private static void CollapseMenuItemsInRepeater(ItemsRepeater ir)
     {
         for (int index = 0; index < GetContainerCountInRepeater(ir); index++)
@@ -4920,7 +4850,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private Button m_topNavOverflowButton;
     private ItemsRepeater m_topNavRepeaterOverflowView;
     private Grid m_topNavGrid;
-    private Border m_topNavContentOverlayAreaGrid;
 
     // Indicator animations
     private UIElement m_prevIndicator;
@@ -5014,10 +4943,8 @@ public partial class NavigationView : ContentControl, IControlProtected
     private readonly BitmapCache m_bitmapCache;
 
     private static readonly PropertyPath s_opacityPath = new(OpacityProperty);
-    private static readonly PropertyPath s_centerXPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.CenterX)");
     private static readonly PropertyPath s_centerYPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.CenterY)");
     private static readonly PropertyPath s_scaleXPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)");
     private static readonly PropertyPath s_scaleYPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)");
-    private static readonly PropertyPath s_translateXPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.X)");
     private static readonly PropertyPath s_translateYPath = new("(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)");
 }
