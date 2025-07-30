@@ -31,26 +31,6 @@ public class NavigationViewTemplateSettings : DependencyObject
 
     #endregion
 
-    #region OverflowButtonVisibility
-
-    private static readonly DependencyPropertyKey s_overflowButtonVisibilityPropertyKey =
-        DependencyProperty.RegisterReadOnly(
-            nameof(OverflowButtonVisibility),
-            typeof(Visibility),
-            typeof(NavigationViewTemplateSettings),
-            new PropertyMetadata(Visibility.Collapsed));
-
-    public static readonly DependencyProperty OverflowButtonVisibilityProperty =
-        s_overflowButtonVisibilityPropertyKey.DependencyProperty;
-
-    public Visibility OverflowButtonVisibility
-    {
-        get => (Visibility)GetValue(OverflowButtonVisibilityProperty);
-        internal set => SetValue(s_overflowButtonVisibilityPropertyKey, value);
-    }
-
-    #endregion
-
     #region PaneToggleButtonVisibility
 
     private static readonly DependencyPropertyKey s_paneToggleButtonVisibilityPropertyKey =
