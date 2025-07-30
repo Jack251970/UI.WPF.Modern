@@ -2861,7 +2861,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private void UpdatePaneToggleButtonVisibility(bool visible)
     {
-        GetTemplateSettings().PaneToggleButtonVisibility = Util.VisibilityFromBool(visible);
+        GetTemplateSettings().PaneToggleButtonVisibility = visible ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void UpdatePaneDisplayMode()
@@ -3002,7 +3002,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
 
         var shouldShowBackButton = ShouldShowBackButton();
-        var backButtonVisibility = Util.VisibilityFromBool(shouldShowBackButton);
+        var backButtonVisibility = shouldShowBackButton ? Visibility.Visible : Visibility.Collapsed;
         var visualStateDisplayMode = GetVisualStateDisplayMode(DisplayMode);
         bool useLeftPaddingForBackOrCloseButton =
             visualStateDisplayMode == NavigationViewVisualStateDisplayMode.Minimal ||
@@ -3037,7 +3037,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
         if (m_closeButton is { } closeButton)
         {
-            var closeButtonVisibility = Util.VisibilityFromBool(ShouldShowCloseButton());
+            var closeButtonVisibility = ShouldShowCloseButton() ? Visibility.Visible : Visibility.Collapsed;
 
             closeButton.Visibility = closeButtonVisibility;
 
