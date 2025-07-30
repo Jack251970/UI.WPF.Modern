@@ -57,7 +57,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private const string c_navViewBackButtonToolTip = "NavigationViewBackButtonToolTip";
     private const string c_navViewCloseButton = "NavigationViewCloseButton";
     private const string c_navViewCloseButtonToolTip = "NavigationViewCloseButtonToolTip";
-    private const string c_flyoutRootGrid = "FlyoutRootGrid";
 
     // DisplayMode Left specific items
     const string c_leftNavPaneAutoSuggestBoxPresenter = "PaneAutoSuggestBoxPresenter";
@@ -731,15 +730,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         return false;
     }
 
-    private static bool IsRootGridOfFlyout(DependencyObject element)
-    {
-        if (element is Grid grid)
-        {
-            return grid.Name == c_flyoutRootGrid;
-        }
-        return false;
-    }
-
     private ItemsRepeater GetParentRootItemsRepeaterForContainer(NavigationViewItemBase nvib)
     {
         var parentIR = GetParentItemsRepeaterForContainer(nvib);
@@ -801,7 +791,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
 
         // Search through VisualTree for a root itemsrepeater
-        while (parent != null && !IsRootItemsRepeater(parent) && !IsRootGridOfFlyout(parent))
+        while (parent != null && !IsRootItemsRepeater(parent))
         {
             if (parent is ItemsRepeater parentIR)
             {
@@ -812,16 +802,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             }
             child = parent;
             parent = VisualTreeHelper.GetParent(parent);
-        }
-
-        // If the item is in a flyout, then we need to final index of its parent
-        if (IsRootGridOfFlyout(parent))
-        {
-            if (m_lastItemExpandedIntoFlyout is { } nvi)
-            {
-                child = nvi;
-                parent = m_leftNavRepeater;
-            }
         }
 
         // If item is in one of the disconnected ItemRepeaters, account for that in IndexPath calculations
