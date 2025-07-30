@@ -96,7 +96,7 @@
             PaneClosing="NavigationViewControl_PaneClosing"
             PaneOpening="NavigationViewControl_PaneOpening"
             SelectionChanged="OnNavigationViewSelectionChanged">
-            <scrollviewer:NavigationView.PaneHeader>
+            <scrollviewer:NavigationView.PaneCustomContent>
                 <ikw:SimpleStackPanel
                     Margin="4,10,0,10"
                     Orientation="Horizontal"
@@ -116,7 +116,7 @@
                         Text="{x:Static local:NavigationRootPage.GetAppTitleFromSystem}"
                         TextWrapping="NoWrap" />
                 </ikw:SimpleStackPanel>
-            </scrollviewer:NavigationView.PaneHeader>
+            </scrollviewer:NavigationView.PaneCustomContent>
 
             <scrollviewer:NavigationView.MenuItems>
                 <scrollviewer:NavigationViewItem Content="General">
