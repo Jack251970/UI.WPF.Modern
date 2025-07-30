@@ -25,7 +25,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Rectangle
+        <!--<Rectangle
             x:Name="XboxContentSafeRect"
             Width="48"
             Canvas.ZIndex="0"
@@ -39,7 +39,8 @@
             VerticalAlignment="Top"
             Background="Transparent"
             Canvas.ZIndex="1"
-            IsHitTestVisible="True">
+            IsHitTestVisible="True"
+            Visibility="Collapsed">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -63,7 +64,7 @@
                         Style="{DynamicResource CaptionTextBlockStyle}"
                         Text="{x:Static local:NavigationRootPage.GetAppTitleFromSystem}"
                         TextWrapping="NoWrap" />
-                    <!--<ui:AutoSuggestBox
+                    <ui:AutoSuggestBox
                         x:Name="controlsSearchBox"
                         MinWidth="200"
                         VerticalAlignment="Center"
@@ -77,10 +78,10 @@
                                 Glyph="&#xE721;"
                                 RenderTransformOrigin="0.5,0.5" />
                         </ui:AutoSuggestBox.QueryIcon>
-                    </ui:AutoSuggestBox>-->
+                    </ui:AutoSuggestBox>
                 </ikw:SimpleStackPanel>
             </Grid>
-        </Border>
+        </Border>-->
 
         <scrollviewer:NavigationView
             x:Name="NavigationViewControl"
@@ -110,7 +111,8 @@
                         Grid.Column="1"
                         Margin="0,1,20,0"
                         VerticalAlignment="Center"
-                        FontSize="13"
+                        FontSize="14"
+                        FontWeight="SemiBold"
                         Style="{DynamicResource CaptionTextBlockStyle}"
                         Text="{x:Static local:NavigationRootPage.GetAppTitleFromSystem}"
                         TextWrapping="NoWrap" />
