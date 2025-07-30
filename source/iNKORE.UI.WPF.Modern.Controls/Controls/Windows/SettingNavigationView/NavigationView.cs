@@ -1246,14 +1246,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private static readonly Point s_frame2point1 = new(0.1, 0.9);
     private static readonly Point s_frame2point2 = new(0.2, 1.0);
 
-    private void AnimateSelectionChangedToItem(object selectedItem)
-    {
-        if (selectedItem != null)
-        {
-            AnimateSelectionChanged(selectedItem);
-        }
-    }
-
     // Please clear the field m_lastSelectedItemPendingAnimationInTopNav when calling this method to prevent garbage value and incorrect animation
     // when the layout is invalidated as it's called in OnLayoutUpdated.
     private void AnimateSelectionChanged(object nextItem)
