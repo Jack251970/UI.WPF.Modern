@@ -2222,24 +2222,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private void UndoSelectionAndRevertSelectionTo(object prevSelectedItem, object nextItem)
-    {
-        object selectedItem = null;
-        if (prevSelectedItem != null)
-        {
-            ChangeSelectStatusForItem(prevSelectedItem, true /*selected*/);
-            AnimateSelectionChangedToItem(prevSelectedItem);
-            selectedItem = prevSelectedItem;
-        }
-        else
-        {
-            // Bug 18033309, A SelectsOnInvoked=false item is clicked, if we don't unselect it from listview, the second click will not raise ItemClicked
-            // because listview doesn't raise SelectionChange.
-            ChangeSelectStatusForItem(nextItem, false /*selected*/);
-        }
-        SelectedItem = selectedItem;
-    }
-
     private void UpdatePaneOverlayGroup()
     {
         var splitView = m_rootSplitView;
@@ -2817,15 +2799,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private static bool NeedTopPaddingForRS5OrHigher(CoreApplicationViewTitleBar coreTitleBar)
-    {
-        // Starting on RS5, we will be using the following IsVisible API together with ExtendViewIntoTitleBar
-        // to decide whether to try to add top padding or not.
-        // We don't add padding when in fullscreen or tablet mode.
-        return coreTitleBar.IsVisible && coreTitleBar.ExtendViewIntoTitleBar
-            && !IsFullScreenOrTabletMode();
-    }
-
     private void UpdateTitleBarPadding()
     {
         if (!m_appliedTemplate)
@@ -3000,57 +2973,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
 
         return null;
-    }
-
-    private NavigationViewItemBase ResolveContainerForItem(object item, int index)
-    {
-        var args = new ElementFactoryGetArgs
-        {
-            Data = item,
-            Index = index
-        };
-
-        if (m_navigationViewItemsFactory.GetElement(args) is { } container)
-        {
-            if (container is NavigationViewItemBase nvib)
-            {
-                return nvib;
-            }
-        }
-        return null;
-    }
-
-    private void RecycleContainer(UIElement container)
-    {
-        var args = new ElementFactoryRecycleArgs
-        {
-            Element = container
-        };
-        m_navigationViewItemsFactory.RecycleElement(args);
-    }
-
-    private static int GetContainerCountInRepeater(ItemsRepeater ir)
-    {
-        if (ir != null)
-        {
-            if (ir.ItemsSourceView is { } repeaterItemSourceView)
-            {
-                return repeaterItemSourceView.Count;
-            }
-        }
-        return -1;
-    }
-
-    private static bool DoesRepeaterHaveRealizedContainers(ItemsRepeater ir)
-    {
-        if (ir != null)
-        {
-            if (ir.TryGetElement(0) != null)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     private static int GetIndexFromItem(ItemsRepeater ir, object data)
