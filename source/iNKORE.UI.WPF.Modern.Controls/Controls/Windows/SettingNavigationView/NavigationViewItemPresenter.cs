@@ -9,7 +9,6 @@ using System.Windows.Media.Animation;
 using iNKORE.UI.WPF.Helpers;
 using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls.Helpers;
-using iNKORE.UI.WPF.Modern.Helpers;
 using iNKORE.UI.WPF.Modern.Input;
 using static CppWinRTHelpers;
 using ControlHelper = iNKORE.UI.WPF.Modern.Controls.Helpers.ControlHelper;

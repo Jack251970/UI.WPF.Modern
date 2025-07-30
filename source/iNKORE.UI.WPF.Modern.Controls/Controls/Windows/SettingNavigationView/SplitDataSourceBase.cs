@@ -21,7 +21,7 @@ namespace Flow.Bar.Controls.NavigationView;
 //  We never Add/Delete A,B and C Vector directly, but change the flag.
 //  If flag for Homes is changed from A to B, it asks A to remove it by indexInRawData first, then insert the new data to B vector with indexInRawData
 // SplitVector itself maintained the mapping between indexInRawData and indexInSplitVector.
-class SplitVector<T, SplitVectorID>
+public class SplitVector<T, SplitVectorID>
 {
     public SplitVector(SplitVectorID id, Func<T, int> indexOfFunction)
     {

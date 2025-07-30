@@ -9,7 +9,7 @@ using iNKORE.UI.WPF.Modern.Controls;
 
 namespace Flow.Bar.Controls.NavigationView;
 
-class NavigationViewItemsFactory : ElementFactory
+public class NavigationViewItemsFactory : ElementFactory
 {
     public void UserElementFactory(object newValue)
     {
