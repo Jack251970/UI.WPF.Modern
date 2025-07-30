@@ -88,18 +88,7 @@ public class NavigationViewItemAutomationPeer(NavigationViewItem owner) :
                     {
                         if (repeater.TryGetElement(index) is { } dependencyObject)
                         {
-                            if (dependencyObject is NavigationViewItemHeader)
-                            {
-                                if (automationOutput == AutomationOutput.Size && itemFound)
-                                {
-                                    break;
-                                }
-                                else
-                                {
-                                    returnValue = 0;
-                                }
-                            }
-                            else if (dependencyObject is NavigationViewItem navviewItem)
+                            if (dependencyObject is NavigationViewItem navviewItem)
                             {
                                 if (navviewItem.Visibility == System.Windows.Visibility.Visible)
                                 {
