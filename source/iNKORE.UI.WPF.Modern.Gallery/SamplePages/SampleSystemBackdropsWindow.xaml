@@ -96,14 +96,26 @@
             PaneOpening="NavigationViewControl_PaneOpening"
             PaneTitle=""
             SelectionChanged="OnNavigationViewSelectionChanged">
-            <scrollviewer:NavigationView.HeaderTemplate>
-                <DataTemplate>
-                    <controls:PageHeader
-                        Title="{Binding Header, ElementName=NavigationViewControl}"
-                        Background="Transparent"
-                        BackgroundColorOpacity="1" />
-                </DataTemplate>
-            </scrollviewer:NavigationView.HeaderTemplate>
+            <scrollviewer:NavigationView.PaneHeader>
+                <ikw:SimpleStackPanel
+                    Margin="4,10,0,10"
+                    Orientation="Horizontal"
+                    Spacing="12">
+                    <Image
+                        Width="60"
+                        Height="60"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Source="/Assets/WpfLibrary_Minimal_64w.png" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="0,1,20,0"
+                        VerticalAlignment="Center"
+                        FontSize="13"
+                        Style="{DynamicResource CaptionTextBlockStyle}"
+                        Text="{x:Static local:NavigationRootPage.GetAppTitleFromSystem}"
+                        TextWrapping="NoWrap" />
+                </ikw:SimpleStackPanel>
+            </scrollviewer:NavigationView.PaneHeader>
 
             <scrollviewer:NavigationView.MenuItems>
                 <scrollviewer:NavigationViewItem Content="General">
@@ -117,6 +129,15 @@
                     </scrollviewer:NavigationViewItem.Icon>
                 </scrollviewer:NavigationViewItem>
             </scrollviewer:NavigationView.MenuItems>
+
+            <scrollviewer:NavigationView.HeaderTemplate>
+                <DataTemplate>
+                    <controls:PageHeader
+                        Title="{Binding Header, ElementName=NavigationViewControl}"
+                        Background="Transparent"
+                        BackgroundColorOpacity="1" />
+                </DataTemplate>
+            </scrollviewer:NavigationView.HeaderTemplate>
 
             <ui:Frame
                 x:Name="rootFrame"

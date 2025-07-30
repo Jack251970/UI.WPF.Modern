@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -57,7 +58,9 @@ public partial class NavigationView : ContentControl, IControlProtected
     private const string c_navViewCloseButtonToolTip = "NavigationViewCloseButtonToolTip";
 
     // DisplayMode Left specific items
-    const string c_leftNavPaneAutoSuggestBoxPresenter = "PaneAutoSuggestBoxPresenter";
+    private const string c_leftNavPaneAutoSuggestBoxPresenter = "PaneAutoSuggestBoxPresenter";
+    private const string c_leftNavPaneHeaderContentBorder = "PaneHeaderContentBorder";
+    private const string c_leftNavPaneCustomContentBorder = "PaneCustomContentBorder";
 
     private const string c_itemsContainer = "ItemsContainerGrid";
     private const string c_itemsContainerRow = "ItemsContainerRow";
@@ -243,6 +246,9 @@ public partial class NavigationView : ContentControl, IControlProtected
 
             WindowChrome.SetIsHitTestVisibleInChrome(paneToggleButton, true);
         }
+
+        m_leftNavPaneHeaderContentBorder = GetTemplateChild(c_leftNavPaneHeaderContentBorder) as ContentControl;
+        m_leftNavPaneCustomContentBorder = GetTemplateChild(c_leftNavPaneCustomContentBorder) as ContentControl;
 
         // Get a pointer to the root SplitView
         if (GetTemplateChild(c_rootSplitViewName) is SplitView splitView)
@@ -2479,7 +2485,11 @@ public partial class NavigationView : ContentControl, IControlProtected
         {
             return;
         }
+
         UpdateAdaptiveLayout(ActualWidth, true /*forceSetDisplayMode*/);
+
+        SetContentBinding(m_leftNavPaneHeaderContentBorder, "PaneHeader");
+        SetContentBinding(m_leftNavPaneCustomContentBorder, "PaneCustomContent");
 
         UpdateContentBindingsForPaneDisplayMode();
         UpdateRepeaterItemsSource(false /*forceSelectionModelUpdate*/);
@@ -2504,6 +2514,19 @@ public partial class NavigationView : ContentControl, IControlProtected
             templateSettings.LeftPaneVisibility = Visibility.Collapsed;
 
             VisualStateManager.GoToState(this, "PaneCollapsed", false /*useTransitions*/);
+        }
+    }
+
+    private static void SetContentBinding(ContentControl newParentTrackRef, string propertyPathName)
+    {
+        if (newParentTrackRef is { } newParent)
+        {
+            Binding binding = new(propertyPathName)
+            {
+                RelativeSource = RelativeSource.TemplatedParent
+            };
+
+            BindingOperations.SetBinding(newParent, ContentControl.ContentProperty, binding);
         }
     }
 
@@ -3159,6 +3182,10 @@ public partial class NavigationView : ContentControl, IControlProtected
     private CoreApplicationViewTitleBar m_coreTitleBar;
 
     private ContentControl m_leftNavPaneAutoSuggestBoxPresenter;
+
+    private ContentControl m_leftNavPaneHeaderContentBorder;
+    private ContentControl m_leftNavPaneCustomContentBorder;
+
     private ContentControl m_paneTitlePresenter;
 
     private ColumnDefinition m_paneHeaderCloseButtonColumn;
