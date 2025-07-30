@@ -609,29 +609,6 @@ public partial class NavigationView
 
     #endregion
 
-    #region OverflowLabelMode
-
-    public static readonly DependencyProperty OverflowLabelModeProperty =
-        DependencyProperty.Register(
-            nameof(OverflowLabelMode),
-            typeof(NavigationViewOverflowLabelMode),
-            typeof(NavigationView),
-            new PropertyMetadata(NavigationViewOverflowLabelMode.MoreLabel, OnOverflowLabelModePropertyChanged));
-
-    public NavigationViewOverflowLabelMode OverflowLabelMode
-    {
-        get => (NavigationViewOverflowLabelMode)GetValue(OverflowLabelModeProperty);
-        set => SetValue(OverflowLabelModeProperty, value);
-    }
-
-    private static void OnOverflowLabelModePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (NavigationView)sender;
-        owner.PropertyChanged(args);
-    }
-
-    #endregion
-
     #region IsTitleBarAutoPaddingEnabled
 
     public static readonly DependencyProperty IsTitleBarAutoPaddingEnabledProperty =
@@ -668,7 +645,7 @@ public partial class NavigationView
     {
         if (baseValue is double value)
         {
-            NavigationView.CoerceToGreaterThanZero(ref value);
+            CoerceToGreaterThanZero(ref value);
             return value;
         }
         return baseValue;

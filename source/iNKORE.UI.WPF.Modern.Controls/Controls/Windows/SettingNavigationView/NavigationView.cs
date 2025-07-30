@@ -2253,14 +2253,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private void UpdateVisualStateForOverflowButton()
-    {
-        var state = (OverflowLabelMode == NavigationViewOverflowLabelMode.MoreLabel) ?
-            "OverflowButtonWithLabel" :
-            "OverflowButtonNoLabel";
-        VisualStateManager.GoToState(this, state, false /* useTransitions*/);
-    }
-
     private void UpdateLeftNavigationOnlyVisualState(bool useTransitions)
     {
         bool isToggleButtonVisible = GetPaneToggleButtonVisiblity();
@@ -2345,13 +2337,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             if (IsPaneVisible && DisplayMode == NavigationViewDisplayMode.Expanded && !IsPaneOpen)
             {
                 OpenPane();
-            }
-        }
-        else if (property == OverflowLabelModeProperty)
-        {
-            if (m_appliedTemplate)
-            {
-                UpdateVisualStateForOverflowButton();
             }
         }
         else if (property == CompactPaneLengthProperty)
@@ -3065,7 +3050,7 @@ public partial class NavigationView : ContentControl, IControlProtected
                 // This will return null if requesting children containers of
                 // items in the primary list, or unrealized items in the overflow popup.
                 // However this should not happen.
-                return NavigationView.GetContainerForIndexPath(container, ip, lastVisible);
+                return GetContainerForIndexPath(container, ip, lastVisible);
             }
         }
         return null;

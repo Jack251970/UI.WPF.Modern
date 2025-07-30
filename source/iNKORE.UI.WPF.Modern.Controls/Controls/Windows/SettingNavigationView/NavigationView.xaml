@@ -527,14 +527,6 @@
                                 </VisualState>
                             </VisualStateGroup>
 
-                            <VisualStateGroup x:Name="OverflowLabelGroup">
-                                <ui:VisualStateGroupListener.Listener>
-                                    <ui:VisualStateGroupListener x:Name="OverflowLabelGroupListener" />
-                                </ui:VisualStateGroupListener.Listener>
-                                <VisualState x:Name="OverflowButtonWithLabel" />
-                                <VisualState x:Name="OverflowButtonNoLabel" />
-                            </VisualStateGroup>
-
                             <VisualStateGroup x:Name="BackButtonGroup">
                                 <VisualState x:Name="BackButtonVisible" />
                                 <VisualState x:Name="BackButtonCollapsed">
