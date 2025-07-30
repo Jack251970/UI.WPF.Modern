@@ -881,8 +881,30 @@ public partial class NavigationView : ContentControl, IControlProtected
                 heightForMenuItems = init();
                 double init()
                 {
-                    // We couldn't find a good strategy, so limit to 50% percent for the menu items.
-                    return totalAvailableHeightHalf;
+                    // We know the actual height of footer items, so use that to determine how to split pane.
+                    if (m_leftNavRepeater is { } menuItems)
+                    {
+                        var menuItemsActualHeight = menuItems.ActualHeight;
+
+                        if (totalAvailableHeight >= menuItemsActualHeight ||
+                            0 <= totalAvailableHeightHalf)
+                        {
+                            // We have enough space for two so let everyone get as much as they need.
+                            // Or menu items exceed over the half, so let's limit them.
+                            return totalAvailableHeight;
+                        }
+                        else
+                        {
+                            // Both are more than half the height, so split evenly.
+                            return totalAvailableHeightHalf;
+                        }
+                    }
+                    else
+                    {
+                        // Couldn't determine the menuItems.
+                        // Let's just take all the height and let the other repeater deal with it.
+                        return totalAvailableHeight;
+                    }
                 }
             }
 
