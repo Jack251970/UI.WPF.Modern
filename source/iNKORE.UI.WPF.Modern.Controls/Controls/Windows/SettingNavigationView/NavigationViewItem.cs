@@ -148,11 +148,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         {
             ShowHideChildren();
         }
-
-        /*
-        var visual = ElementCompositionPreview.GetElementVisual(this);
-        NavigationView.CreateAndAttachHeaderAnimation(visual);
-        */
     }
 
     void UpdateRepeaterItemsSource()
@@ -714,15 +709,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         base.OnContentChanged(oldContent, newContent);
         SuggestedToolTipChanged(newContent);
         UpdateVisualStateNoTransition();
-
-        if (!IsOnLeftNav())
-        {
-            // Content has changed for the item, so we want to trigger a re-measure
-            if (GetNavigationView() is { } navView)
-            {
-                navView.TopNavigationViewItemContentChanged();
-            }
-        }
     }
 
     protected override void OnGotFocus(RoutedEventArgs e)
@@ -733,10 +719,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
             // It's used to support bluebar have difference appearance between focused and focused+selection. 
             // For example, we can move the SelectionIndicator 3px up when focused and selected to make sure focus rectange doesn't override SelectionIndicator. 
             // If it's a pointer or programatic, no focus rectangle, so no action
-            /*
-            var focusState = originalSource.FocusState;
-            if (focusState == FocusState.Keyboard)
-            */
             if (originalSource.IsKeyboardFocused && InputManager.Current.MostRecentInputDevice is KeyboardDevice)
             {
                 m_hasKeyboardFocus = true;
@@ -757,11 +739,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
 
     void OnPresenterPointerPressed(object sender, PointerRoutedEventArgs args)
     {
-        // Inherited code, removed Debug.Asserts
-        // Debug.Assert(!m_isPressed);
-        // Debug.Assert(!m_isMouseCaptured);
-
-        // TODO: Update to look at presenter instead
         m_isPressed = args.LeftButton == MouseButtonState.Pressed || args.RightButton == MouseButtonState.Pressed;
 
         var presenter = GetPresenterOrItem();
