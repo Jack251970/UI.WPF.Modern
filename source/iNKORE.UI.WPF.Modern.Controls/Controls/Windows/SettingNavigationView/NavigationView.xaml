@@ -11,8 +11,6 @@
         <ResourceDictionary>
             <ui:BindingProxy x:Key="OverlayCornerRadiusProxy" Value="{DynamicResource OverlayCornerRadius}" />
             <ikw:CornerRadiusFilterConverter x:Key="RightCornerRadiusFilterConverter" Filter="Right" />
-            <ikw:CornerRadiusExtractionConverter x:Key="TopLeftCornerRadiusDoubleValueConverter" TargetMember="TopLeft" />
-            <ikw:CornerRadiusExtractionConverter x:Key="BottomRightCornerRadiusDoubleValueConverter" TargetMember="BottomRight" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
