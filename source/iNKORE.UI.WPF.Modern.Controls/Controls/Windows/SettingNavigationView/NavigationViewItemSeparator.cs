@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls;
-using static CppWinRTHelpers;
+using static Flow.Bar.Controls.NavigationView.CppWinRTHelpers;
 
 namespace Flow.Bar.Controls.NavigationView;
 

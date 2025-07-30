@@ -10,7 +10,8 @@ using iNKORE.UI.WPF.Helpers;
 using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls.Helpers;
 using iNKORE.UI.WPF.Modern.Input;
-using static CppWinRTHelpers;
+using static Flow.Bar.Controls.NavigationView.CppWinRTHelpers;
+using IControlProtected = Flow.Bar.Controls.NavigationView.CppWinRTHelpers.IControlProtected;
 using ControlHelper = iNKORE.UI.WPF.Modern.Controls.Helpers.ControlHelper;
 
 namespace Flow.Bar.Controls.NavigationView;

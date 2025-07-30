@@ -13,8 +13,9 @@ using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Primitives;
 using iNKORE.UI.WPF.Modern.Input;
-using static CppWinRTHelpers;
+using static Flow.Bar.Controls.NavigationView.CppWinRTHelpers;
 using static Flow.Bar.Controls.NavigationView.NavigationViewItemHelper;
+using IControlProtected = Flow.Bar.Controls.NavigationView.CppWinRTHelpers.IControlProtected;
 using PointerRoutedEventArgs = System.Windows.Input.MouseEventArgs;
 
 namespace Flow.Bar.Controls.NavigationView;

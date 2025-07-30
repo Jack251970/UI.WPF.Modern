@@ -20,8 +20,9 @@ using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Primitives;
 using iNKORE.UI.WPF.Modern.Input;
 using iNKORE.UI.WPF.Modern.Media.Animation;
-using static CppWinRTHelpers;
+using static Flow.Bar.Controls.NavigationView.CppWinRTHelpers;
 using static iNKORE.UI.WPF.Modern.Common.ResourceAccessor;
+using IControlProtected = Flow.Bar.Controls.NavigationView.CppWinRTHelpers.IControlProtected;
 
 #pragma warning disable IDE0060 // Remove unused parameter
 #pragma warning disable IDE1006 // Naming Styles
@@ -62,8 +63,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     const string c_leftNavPaneAutoSuggestBoxPresenter = "PaneAutoSuggestBoxPresenter";
 
     private const string c_leftNavFooterContentBorder = "FooterContentBorder";
-    private const string c_leftNavPaneHeaderContentBorder = "PaneHeaderContentBorder";
-    private const string c_leftNavPaneCustomContentBorder = "PaneCustomContentBorder";
 
     private const string c_itemsContainer = "ItemsContainerGrid";
     private const string c_itemsContainerRow = "ItemsContainerRow";

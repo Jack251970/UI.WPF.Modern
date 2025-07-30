@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using System.Windows;
-using iNKORE.UI.WPF.Modern.Common;
+using IControlProtected = Flow.Bar.Controls.NavigationView.CppWinRTHelpers.IControlProtected;
 
 namespace Flow.Bar.Controls.NavigationView;
 
