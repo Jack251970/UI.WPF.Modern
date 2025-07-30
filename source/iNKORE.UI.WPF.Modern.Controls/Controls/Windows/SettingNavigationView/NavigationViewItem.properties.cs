@@ -3,7 +3,6 @@
 
 using System.Collections;
 using System.Windows;
-using iNKORE.UI.WPF.Modern.Common;
 using iNKORE.UI.WPF.Modern.Controls.Helpers;
 
 namespace Flow.Bar.Controls.NavigationView;

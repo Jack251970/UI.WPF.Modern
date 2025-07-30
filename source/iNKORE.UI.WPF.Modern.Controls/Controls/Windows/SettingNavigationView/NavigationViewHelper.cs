@@ -6,7 +6,7 @@ using IControlProtected = Flow.Bar.Controls.NavigationView.CppWinRTHelpers.ICont
 
 namespace Flow.Bar.Controls.NavigationView;
 
-enum NavigationViewVisualStateDisplayMode
+internal enum NavigationViewVisualStateDisplayMode
 {
     Compact,
     Expanded,
@@ -14,7 +14,7 @@ enum NavigationViewVisualStateDisplayMode
     MinimalWithBackButton
 }
 
-enum NavigationViewRepeaterPosition
+internal enum NavigationViewRepeaterPosition
 {
     LeftNav,
     LeftFooter
@@ -22,7 +22,7 @@ enum NavigationViewRepeaterPosition
 
 // Since RS5, a lot of functions in NavigationViewItem is moved to NavigationViewItemPresenter. So they both share some common codes.
 // This class helps to initialize and maintain the status of SelectionIndicator and ToolTip
-class NavigationViewItemHelper<T>
+internal class NavigationViewItemHelper<T>
 {
     public NavigationViewItemHelper()
     {
@@ -38,7 +38,7 @@ class NavigationViewItemHelper<T>
         m_selectionIndicator = controlProtected.GetTemplateChild(C_selectionIndicatorName) as UIElement;
     }
 
-    UIElement m_selectionIndicator;
+    private UIElement m_selectionIndicator;
 
     private const string C_selectionIndicatorName = "SelectionIndicator";
 }
