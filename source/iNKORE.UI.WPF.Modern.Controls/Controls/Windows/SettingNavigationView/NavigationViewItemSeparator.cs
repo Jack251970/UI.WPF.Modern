@@ -29,11 +29,9 @@ public class NavigationViewItemSeparator : NavigationViewItemBase
         if (m_appliedTemplate)
         {
             const string groupName = "NavigationSeparatorLineStates";
-            var stateName = (Position != NavigationViewRepeaterPosition.TopPrimary && Position != NavigationViewRepeaterPosition.TopFooter)
-                ? m_isClosedCompact
+            var stateName = m_isClosedCompact
                     ? "HorizontalLineCompact"
-                    : "HorizontalLine"
-                : "VerticalLine";
+                    : "HorizontalLine";
 
             VisualStateUtil.GoToStateIfGroupExists(this, groupName, stateName, false /*useTransitions*/);
         }

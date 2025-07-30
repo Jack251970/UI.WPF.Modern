@@ -14,7 +14,7 @@ using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Primitives;
 using iNKORE.UI.WPF.Modern.Input;
 using static CppWinRTHelpers;
-using static iNKORE.UI.WPF.Modern.Controls.NavigationViewItemHelper;
+using static Flow.Bar.Controls.NavigationView.NavigationViewItemHelper;
 using PointerRoutedEventArgs = System.Windows.Input.MouseEventArgs;
 
 namespace Flow.Bar.Controls.NavigationView;
@@ -355,20 +355,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
                     }
                 }
                 break;
-            case NavigationViewRepeaterPosition.TopPrimary:
-            case NavigationViewRepeaterPosition.TopFooter:
-                if (SharedHelpers.IsRS4OrHigher() && false /*Application.Current.FocusVisualKind == FocusVisualKind.Reveal*/)
-                {
-                    stateName = c_OnTopNavigationPrimaryReveal;
-                }
-                else
-                {
-                    stateName = c_OnTopNavigationPrimary;
-                }
-                break;
-            case NavigationViewRepeaterPosition.TopOverflow:
-                stateName = c_OnTopNavigationOverflow;
-                break;
         }
 
         if (!handled)
@@ -550,11 +536,6 @@ public partial class NavigationViewItem : NavigationViewItemBase
         return position == NavigationViewRepeaterPosition.LeftNav || position == NavigationViewRepeaterPosition.LeftFooter;
     }
 
-    bool IsOnTopPrimary()
-    {
-        return Position == NavigationViewRepeaterPosition.TopPrimary;
-    }
-
     UIElement GetPresenterOrItem()
     {
         if (m_navigationViewItemPresenter is { } presenter)
@@ -646,7 +627,7 @@ public partial class NavigationViewItem : NavigationViewItemBase
 
     internal bool ShouldRepeaterShowInFlyout()
     {
-        return (m_isClosedCompact && IsTopLevelItem) || IsOnTopPrimary();
+        return m_isClosedCompact && IsTopLevelItem;
     }
 
     internal bool IsRepeaterVisible()

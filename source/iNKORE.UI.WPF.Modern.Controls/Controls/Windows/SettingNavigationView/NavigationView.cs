@@ -903,10 +903,6 @@ public partial class NavigationView : ContentControl, IControlProtected
                 {
                     int init()
                     {
-                        if (position == NavigationViewRepeaterPosition.TopPrimary)
-                        {
-                            return 0;
-                        }
                         return nvibImpl.Depth + 1;
 
                     }

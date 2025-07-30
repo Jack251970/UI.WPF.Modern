@@ -17,27 +17,13 @@ enum NavigationViewVisualStateDisplayMode
 enum NavigationViewRepeaterPosition
 {
     LeftNav,
-    TopPrimary,
-    TopOverflow,
-    LeftFooter,
-    TopFooter
-}
-
-enum NavigationViewPropagateTarget
-{
-    LeftListView,
-    TopListView,
-    OverflowListView,
-    All
+    LeftFooter
 }
 
 class NavigationViewItemHelper
 {
     internal const string c_OnLeftNavigationReveal = "OnLeftNavigationReveal";
     internal const string c_OnLeftNavigation = "OnLeftNavigation";
-    internal const string c_OnTopNavigationPrimary = "OnTopNavigationPrimary";
-    internal const string c_OnTopNavigationPrimaryReveal = "OnTopNavigationPrimaryReveal";
-    internal const string c_OnTopNavigationOverflow = "OnTopNavigationOverflow";
 }
 
 // Since RS5, a lot of functions in NavigationViewItem is moved to NavigationViewItemPresenter. So they both share some common codes.

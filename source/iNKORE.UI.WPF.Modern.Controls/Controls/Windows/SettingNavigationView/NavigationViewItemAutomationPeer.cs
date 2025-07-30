@@ -116,6 +116,12 @@ public class NavigationViewItemAutomationPeer :
 
         return sizeOfSet;
     }
+
+    bool IsOnFooterNavigation()
+    {
+        var position = GetNavigationViewRepeaterPosition();
+        return position == NavigationViewRepeaterPosition.LeftFooter;
+    }
 #endif
 
     void IInvokeProvider.Invoke()
@@ -199,17 +205,6 @@ public class NavigationViewItemAutomationPeer :
     {
         var position = GetNavigationViewRepeaterPosition();
         return position != NavigationViewRepeaterPosition.LeftNav && position != NavigationViewRepeaterPosition.LeftFooter;
-    }
-
-    internal bool IsOnTopNavigationOverflow()
-    {
-        return GetNavigationViewRepeaterPosition() == NavigationViewRepeaterPosition.TopOverflow;
-    }
-
-    bool IsOnFooterNavigation()
-    {
-        var position = GetNavigationViewRepeaterPosition();
-        return position == NavigationViewRepeaterPosition.LeftFooter || position == NavigationViewRepeaterPosition.TopFooter;
     }
 
     NavigationViewRepeaterPosition GetNavigationViewRepeaterPosition()
