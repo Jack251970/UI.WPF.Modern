@@ -5,7 +5,6 @@
     xmlns:controls="clr-namespace:iNKORE.UI.WPF.Modern.Controls"
     xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:local="clr-namespace:Flow.Bar.Controls.NavigationView"
-    xmlns:primitives="clr-namespace:iNKORE.UI.WPF.Modern.Controls.Primitives"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/iNKORE.UI.WPF.Modern;component/Themes/Controls/Button.xaml" />
@@ -486,7 +485,6 @@
                                             <!--  FooterItems  -->
                                             <controls:ItemsRepeaterScrollHost Grid.Row="3">
                                                 <ui:ScrollViewerEx x:Name="FooterItemsScrollViewer">
-                                                    <!--  contract7Present:VerticalAnchorRatio="1"  -->
                                                     <controls:ItemsRepeater x:Name="FooterMenuItemsHost" />
                                                 </ui:ScrollViewerEx>
                                             </controls:ItemsRepeaterScrollHost>
