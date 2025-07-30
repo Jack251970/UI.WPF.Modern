@@ -298,8 +298,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             WindowChrome.SetIsHitTestVisibleInChrome(paneToggleButton, true);
         }
 
-        m_leftNavPaneHeaderContentBorder = GetTemplateChild(c_leftNavPaneHeaderContentBorder) as ContentControl;
-        m_leftNavPaneCustomContentBorder = GetTemplateChild(c_leftNavPaneCustomContentBorder) as ContentControl;
         m_leftNavFooterContentBorder = GetTemplateChild(c_leftNavFooterContentBorder) as ContentControl;
 
         // Get a pointer to the root SplitView
@@ -2508,27 +2506,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private NavigationRecommendedTransitionDirection GetRecommendedTransitionDirection(DependencyObject prev, DependencyObject next)
-    {
-        var recommendedTransitionDirection = NavigationRecommendedTransitionDirection.Default;
-
-        if (prev != null && next != null)
-        {
-            var prevIndexPath = GetIndexPathForContainer(prev as NavigationViewItemBase);
-            var nextIndexPath = GetIndexPathForContainer(next as NavigationViewItemBase);
-
-            var compare = prevIndexPath.CompareTo(nextIndexPath);
-
-            recommendedTransitionDirection = compare switch
-            {
-                -1 => NavigationRecommendedTransitionDirection.FromRight,
-                1 => NavigationRecommendedTransitionDirection.FromLeft,
-                _ => NavigationRecommendedTransitionDirection.Default,
-            };
-        }
-        return recommendedTransitionDirection;
-    }
-
     private NavigationViewTemplateSettings GetTemplateSettings()
     {
         return TemplateSettings;
@@ -2954,19 +2931,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             templateSettings.LeftPaneVisibility = Visibility.Collapsed;
 
             VisualStateManager.GoToState(this, "PaneCollapsed", false /*useTransitions*/);
-        }
-    }
-
-    private static void SwapPaneHeaderContent(ContentControl newParentTrackRef, ContentControl oldParentTrackRef, string propertyPathName)
-    {
-        if (newParentTrackRef is { } newParent)
-        {
-            if (oldParentTrackRef is { } oldParent)
-            {
-                oldParent.ClearValue(ContentControl.ContentProperty);
-            }
-
-            SharedHelpers.SetBinding(propertyPathName, newParent, ContentControl.ContentProperty);
         }
     }
 
@@ -4080,8 +4044,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private CoreApplicationViewTitleBar m_coreTitleBar;
 
     private ContentControl m_leftNavPaneAutoSuggestBoxPresenter;
-    private ContentControl m_leftNavPaneHeaderContentBorder;
-    private ContentControl m_leftNavPaneCustomContentBorder;
     private ContentControl m_leftNavFooterContentBorder;
     private ContentControl m_paneTitlePresenter;
 
