@@ -1,4 +1,5 @@
 ﻿using iNKORE.UI.WPF.Helpers;
+using iNKORE.UI.WPF.Modern.Controls;
 using iNKORE.UI.WPF.Modern.Controls.Helpers;
 using iNKORE.UI.WPF.Modern.Controls.Primitives;
 using iNKORE.UI.WPF.Modern.Helpers;
@@ -56,6 +57,23 @@ namespace iNKORE.UI.WPF.Modern.Gallery.SamplePages
             else if (OSVersionHelper.IsWindowsVistaOrGreater)
             {
                 WindowHelper.SetUseAeroBackdrop(this, !m_useAeroBackdrop);
+            }
+        }
+
+        private void Grid_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is FrameworkElement element)
+            {
+                var position = e.GetPosition(element);
+                var _contextMenu = new MenuFlyout();
+                var settingItem = new MenuItem
+                {
+                    Header = "Appbar settings",
+                    Icon = new FontIcon { Glyph = "\ue713" }
+                };
+                _contextMenu.Items.Add(settingItem);
+                _contextMenu.ShowAt(element, new FlyoutShowOptions() { Position = position});
+                e.Handled = true;
             }
         }
     }
