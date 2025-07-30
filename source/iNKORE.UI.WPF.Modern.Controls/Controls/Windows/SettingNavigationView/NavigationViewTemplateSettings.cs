@@ -71,26 +71,6 @@ public class NavigationViewTemplateSettings : DependencyObject
 
     #endregion
 
-    #region TopPaneVisibility
-
-    private static readonly DependencyPropertyKey s_topPaneVisibilityPropertyKey =
-        DependencyProperty.RegisterReadOnly(
-            nameof(TopPaneVisibility),
-            typeof(Visibility),
-            typeof(NavigationViewTemplateSettings),
-            new PropertyMetadata(Visibility.Collapsed));
-
-    public static readonly DependencyProperty TopPaneVisibilityProperty =
-        s_topPaneVisibilityPropertyKey.DependencyProperty;
-
-    public Visibility TopPaneVisibility
-    {
-        get => (Visibility)GetValue(TopPaneVisibilityProperty);
-        internal set => SetValue(s_topPaneVisibilityPropertyKey, value);
-    }
-
-    #endregion
-
     #region LeftPaneVisibility
 
     private static readonly DependencyPropertyKey s_leftPaneVisibilityPropertyKey =

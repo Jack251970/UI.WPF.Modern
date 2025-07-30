@@ -2542,14 +2542,12 @@ public partial class NavigationView : ContentControl, IControlProtected
         var templateSettings = GetTemplateSettings();
         if (IsPaneVisible)
         {
-            templateSettings.TopPaneVisibility = Visibility.Collapsed;
             templateSettings.LeftPaneVisibility = Visibility.Visible;
 
             VisualStateManager.GoToState(this, "PaneVisible", false /*useTransitions*/);
         }
         else
         {
-            templateSettings.TopPaneVisibility = Visibility.Collapsed;
             templateSettings.LeftPaneVisibility = Visibility.Collapsed;
 
             VisualStateManager.GoToState(this, "PaneCollapsed", false /*useTransitions*/);
