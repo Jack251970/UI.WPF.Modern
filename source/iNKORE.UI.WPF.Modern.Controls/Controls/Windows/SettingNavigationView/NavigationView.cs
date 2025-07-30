@@ -2529,7 +2529,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         bool useLeftPaddingForBackOrCloseButton =
             visualStateDisplayMode == NavigationViewVisualStateDisplayMode.Minimal ||
             visualStateDisplayMode == NavigationViewVisualStateDisplayMode.MinimalWithBackButton;
-        double leftPaddingForBackOrCloseButton = 0.0;
         double paneHeaderPaddingForToggleButton = 0.0;
         double paneHeaderPaddingForCloseButton = 0.0;
         double paneHeaderContentBorderRowMinHeight = 0.0;
@@ -2540,21 +2539,11 @@ public partial class NavigationView : ContentControl, IControlProtected
         {
             paneHeaderContentBorderRowMinHeight = GetPaneToggleButtonHeight();
             paneHeaderPaddingForToggleButton = GetPaneToggleButtonWidth();
-
-            if (useLeftPaddingForBackOrCloseButton)
-            {
-                leftPaddingForBackOrCloseButton = paneHeaderPaddingForToggleButton;
-            }
         }
 
         if (m_backButton is { } backButton)
         {
             backButton.Visibility = backButtonVisibility;
-
-            if (useLeftPaddingForBackOrCloseButton && backButtonVisibility == Visibility.Visible)
-            {
-                leftPaddingForBackOrCloseButton += backButton.Width;
-            }
         }
 
         if (m_closeButton is { } closeButton)
@@ -2570,14 +2559,21 @@ public partial class NavigationView : ContentControl, IControlProtected
                 if (useLeftPaddingForBackOrCloseButton)
                 {
                     paneHeaderPaddingForCloseButton = closeButton.Width;
-                    leftPaddingForBackOrCloseButton += paneHeaderPaddingForCloseButton;
                 }
             }
         }
 
         if (m_contentLeftPadding is { } contentLeftPadding)
         {
-            contentLeftPadding.Width = leftPaddingForBackOrCloseButton;
+            // TODO: Workaround for minimal left padding
+            if (DisplayMode == NavigationViewDisplayMode.Minimal)
+            {
+                contentLeftPadding.Width = 24;
+            }
+            else
+            {
+                contentLeftPadding.Width = 0;
+            }
         }
 
         if (m_paneHeaderToggleButtonColumn is { } paneHeaderToggleButtonColumn)
