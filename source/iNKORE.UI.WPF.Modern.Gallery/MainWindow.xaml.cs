@@ -31,7 +31,7 @@ namespace iNKORE.UI.WPF.Modern.Gallery
             window.Show();
             Current = this;
             InitializeComponent();
-            Close();
+            InitialzeApp();
         }
 
         private async void InitialzeApp()
