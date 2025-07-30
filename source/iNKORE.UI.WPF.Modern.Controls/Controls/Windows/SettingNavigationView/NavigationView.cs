@@ -1313,10 +1313,16 @@ public partial class NavigationView : ContentControl, IControlProtected
         // instead of this:
         m_initialListSizeStateSet = false; // see UpdateIsClosedCompact()
 
-        NavigationViewDisplayMode displayMode =
-            width >= ExpandedMinimalModeThresholdWidth ?
-            NavigationViewDisplayMode.Expanded :
-            NavigationViewDisplayMode.Minimal;
+        NavigationViewDisplayMode displayMode = NavigationViewDisplayMode.Compact;
+
+        if (width >= ExpandedModeThresholdWidth)
+        {
+            displayMode = NavigationViewDisplayMode.Expanded;
+        }
+        else if (width < CompactModeThresholdWidth)
+        {
+            displayMode = NavigationViewDisplayMode.Minimal;
+        }
 
         if (!forceSetDisplayMode && m_initialNonForcedModeUpdate)
         {
@@ -3480,7 +3486,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private static void CoerceToGreaterThanZero(ref double value)
     {
-        // Property coercion for OpenPaneLength, CompactPaneLength, ExpandedMinimalModeThresholdWidth
+        // Property coercion for OpenPaneLength, CompactPaneLength, CompactModeThresholdWidth, ExpandedModeThresholdWidth
         value = Math.Max(value, 0.0);
     }
 
@@ -3493,7 +3499,8 @@ public partial class NavigationView : ContentControl, IControlProtected
             OnIsPaneOpenChanged();
             UpdateVisualStateForDisplayModeGroup(DisplayMode);
         }
-        else if (property == ExpandedMinimalModeThresholdWidthProperty)
+        else if (property == CompactModeThresholdWidthProperty ||
+            property == ExpandedModeThresholdWidthProperty)
         {
             UpdateAdaptiveLayout(ActualWidth);
         }

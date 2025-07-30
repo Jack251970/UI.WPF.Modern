@@ -54,22 +54,45 @@ namespace Flow.Bar.Controls.NavigationView
 
         #endregion
 
-        #region ExpandedMinimalModeThresholdWidth
+        #region CompactModeThresholdWidth
 
-        public static readonly DependencyProperty ExpandedMinimalModeThresholdWidthProperty =
+        public static readonly DependencyProperty CompactModeThresholdWidthProperty =
             DependencyProperty.Register(
-                nameof(ExpandedMinimalModeThresholdWidth),
+                nameof(CompactModeThresholdWidth),
                 typeof(double),
                 typeof(NavigationView),
-                new PropertyMetadata(800.0, OnExpandedMinimalModeThresholdWidthPropertyChanged, CoerceToGreaterThanZero));
+                new PropertyMetadata(641.0, OnCompactModeThresholdWidthPropertyChanged, CoerceToGreaterThanZero));
 
-        public double ExpandedMinimalModeThresholdWidth
+        public double CompactModeThresholdWidth
         {
-            get => (double)GetValue(ExpandedMinimalModeThresholdWidthProperty);
-            set => SetValue(ExpandedMinimalModeThresholdWidthProperty, value);
+            get => (double)GetValue(CompactModeThresholdWidthProperty);
+            set => SetValue(CompactModeThresholdWidthProperty, value);
         }
 
-        private static void OnExpandedMinimalModeThresholdWidthPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+        private static void OnCompactModeThresholdWidthPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+        {
+            var owner = (NavigationView)sender;
+            owner.PropertyChanged(args);
+        }
+
+        #endregion
+
+        #region ExpandedModeThresholdWidth
+
+        public static readonly DependencyProperty ExpandedModeThresholdWidthProperty =
+            DependencyProperty.Register(
+                nameof(ExpandedModeThresholdWidth),
+                typeof(double),
+                typeof(NavigationView),
+                new PropertyMetadata(1008.0, OnExpandedModeThresholdWidthPropertyChanged, CoerceToGreaterThanZero));
+
+        public double ExpandedModeThresholdWidth
+        {
+            get => (double)GetValue(ExpandedModeThresholdWidthProperty);
+            set => SetValue(ExpandedModeThresholdWidthProperty, value);
+        }
+
+        private static void OnExpandedModeThresholdWidthPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
             var owner = (NavigationView)sender;
             owner.PropertyChanged(args);
