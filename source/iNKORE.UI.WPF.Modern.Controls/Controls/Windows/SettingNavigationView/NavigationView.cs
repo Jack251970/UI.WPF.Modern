@@ -41,8 +41,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 {
     // General items
     private const string c_togglePaneButtonName = "TogglePaneButton";
-    private const string c_paneTitleHolderFrameworkElement = "PaneTitleHolder";
-    private const string c_paneTitleFrameworkElement = "PaneTitleTextBlock";
     private const string c_rootSplitViewName = "RootSplitView";
     private const string c_menuItemsHost = "MenuItemsHost";
     private const string c_paneContentGridName = "PaneContentGrid";
@@ -103,15 +101,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
 
         m_itemsContainerSizeChangedRevoker?.Revoke();
-
-        if (m_paneTitleHolderFrameworkElement != null)
-        {
-            m_paneTitleHolderFrameworkElement.SizeChanged -= OnPaneTitleHolderSizeChanged;
-            m_paneTitleHolderFrameworkElement = null;
-        }
-
-        m_paneTitleFrameworkElement = null;
-        m_paneTitlePresenter = null;
 
         m_paneHeaderCloseButtonColumn = null;
         m_paneHeaderToggleButtonColumn = null;
@@ -302,13 +291,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         m_paneHeaderCloseButtonColumn = GetTemplateChild(c_paneHeaderCloseButtonColumn) as ColumnDefinition;
         m_paneHeaderToggleButtonColumn = GetTemplateChild(c_paneHeaderToggleButtonColumn) as ColumnDefinition;
         m_paneHeaderContentBorderRow = GetTemplateChild(c_paneHeaderContentBorderRow) as RowDefinition;
-        m_paneTitleFrameworkElement = GetTemplateChild(c_paneTitleFrameworkElement) as FrameworkElement;
-
-        if (GetTemplateChild(c_paneTitleHolderFrameworkElement) is FrameworkElement paneTitleHolderFrameworkElement)
-        {
-            m_paneTitleHolderFrameworkElement = paneTitleHolderFrameworkElement;
-            paneTitleHolderFrameworkElement.SizeChanged += OnPaneTitleHolderSizeChanged;
-        }
 
         // Set automation name on search button
         if (GetTemplateChild(c_searchButtonName) is Button button)
@@ -386,13 +368,11 @@ public partial class NavigationView : ContentControl, IControlProtected
         // Do initial setup
         UpdatePaneDisplayMode();
         UpdateHeaderVisibility();
-        UpdatePaneTitleFrameworkElementParents();
         UpdateTitleBarPadding();
         UpdatePaneTabFocusNavigation();
         UpdateBackAndCloseButtonsVisibility();
         UpdatePaneVisibility();
         UpdateVisualState();
-        UpdatePaneTitleMargins();
         UpdatePaneLayout();
         UpdatePaneOverlayGroup();
     }
@@ -940,11 +920,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private void OnPaneTitleHolderSizeChanged(object sender, SizeChangedEventArgs args)
-    {
-        UpdateBackAndCloseButtonsVisibility();
-    }
-
     // Call this when you want an uncancellable open
     private void OpenPane()
     {
@@ -1079,7 +1054,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
             UpdateTitleBarPadding();
             UpdateBackAndCloseButtonsVisibility();
-            UpdatePaneTitleMargins();
             UpdatePaneToggleSize();
         }
     }
@@ -1199,46 +1173,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             };
             ToolTipService.SetToolTip(paneToggleButton, toolTip);
         }
-    }
-
-    // Updates the PaneTitleHolder.Visibility and PaneTitleTextBlock.Parent properties based on the PaneDisplayMode, PaneTitle and IsPaneToggleButtonVisible properties.
-    private void UpdatePaneTitleFrameworkElementParents()
-    {
-        if (m_paneTitleHolderFrameworkElement is { } paneTitleHolderFrameworkElement)
-        {
-            var isPaneToggleButtonVisible = GetPaneToggleButtonVisiblity();
-
-            paneTitleHolderFrameworkElement.Visibility =
-                (isPaneToggleButtonVisible ||
-                    PaneTitle.Length == 0) ?
-                Visibility.Collapsed : Visibility.Visible;
-
-            if (m_paneTitleFrameworkElement is { } paneTitleFrameworkElement)
-            {
-                var first = NavigationView.SetPaneTitleFrameworkElementParent(m_paneToggleButton, paneTitleFrameworkElement, !isPaneToggleButtonVisible);
-                var second = NavigationView.SetPaneTitleFrameworkElementParent(m_paneTitlePresenter, paneTitleFrameworkElement, isPaneToggleButtonVisible);
-                (first ?? second)?.Invoke();
-            }
-        }
-    }
-
-    private static Action SetPaneTitleFrameworkElementParent(ContentControl parent, FrameworkElement paneTitle, bool shouldNotContainPaneTitle)
-    {
-        if (parent != null)
-        {
-            if ((parent.Content == paneTitle) == shouldNotContainPaneTitle)
-            {
-                if (shouldNotContainPaneTitle)
-                {
-                    parent.Content = null;
-                }
-                else
-                {
-                    return () => { parent.Content = paneTitle; };
-                }
-            }
-        }
-        return null;
     }
 
     private static readonly Point s_frame1point1 = new(0.9, 0.1);
@@ -2288,12 +2222,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         {
             OnSelectedItemPropertyChanged(args);
         }
-        else if (property == PaneTitleProperty)
-        {
-            UpdatePaneTitleFrameworkElementParents();
-            UpdateBackAndCloseButtonsVisibility();
-            UpdatePaneToggleSize();
-        }
         else if (property == IsBackButtonVisibleProperty)
         {
             UpdateBackAndCloseButtonsVisibility();
@@ -2440,7 +2368,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
         SetPaneToggleButtonAutomationName();
         UpdatePaneTabFocusNavigation();
-        UpdatePaneTitleFrameworkElementParents();
         UpdatePaneOverlayGroup();
 
         UpdatePaneButtonsWidths();
@@ -2577,21 +2504,9 @@ public partial class NavigationView : ContentControl, IControlProtected
     {
         if (!ShouldPreserveNavigationViewRS3Behavior())
         {
-            if (m_rootSplitView is { } splitView)
+            if (m_rootSplitView is { })
             {
                 double togglePaneButtonWidth = GetPaneToggleButtonWidth();
-
-                if (!m_isClosedCompact && PaneTitle?.Length > 0)
-                {
-                    if (splitView.DisplayMode == SplitViewDisplayMode.Overlay && IsPaneOpen)
-                    {
-                        togglePaneButtonWidth = OpenPaneLength - ((ShouldShowBackButton() || ShouldShowCloseButton()) ? c_backButtonWidth : 0);
-                    }
-                    else if (!(splitView.DisplayMode == SplitViewDisplayMode.Overlay && !IsPaneOpen))
-                    {
-                        togglePaneButtonWidth = OpenPaneLength;
-                    }
-                }
 
                 if (m_paneToggleButton is { } toggleButton)
                 {
@@ -2677,15 +2592,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             paneHeaderCloseButtonColumn.Width = GridLengthHelper.FromValueAndType(paneHeaderPaddingForCloseButton, GridUnitType.Pixel);
         }
 
-        if (m_paneTitleHolderFrameworkElement is { } paneTitleHolderFrameworkElement)
-        {
-            if (paneHeaderContentBorderRowMinHeight == 0.00 && paneTitleHolderFrameworkElement.Visibility == Visibility.Visible)
-            {
-                // Handling the case where the PaneTottleButton is collapsed and the PaneTitle's height needs to push the rest of the NavigationView's UI down.
-                paneHeaderContentBorderRowMinHeight = paneTitleHolderFrameworkElement.ActualHeight;
-            }
-        }
-
         if (m_paneHeaderContentBorderRow is { } paneHeaderContentBorderRow)
         {
             paneHeaderContentBorderRow.MinHeight = paneHeaderContentBorderRowMinHeight;
@@ -2719,21 +2625,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
 
         UpdateTitleBarPadding();
-    }
-
-    private void UpdatePaneTitleMargins()
-    {
-        if (m_paneTitleFrameworkElement is { } paneTitleFrameworkElement)
-        {
-            double width = GetPaneToggleButtonWidth();
-
-            if (ShouldShowBackButton() && IsOverlay())
-            {
-                width += c_backButtonWidth;
-            }
-
-            paneTitleFrameworkElement.Margin = new Thickness(width, 0, 0, 0); // see "Hamburger title" on uni
-        }
     }
 
     private void UpdateSelectionForMenuItems()
@@ -2861,17 +2752,15 @@ public partial class NavigationView : ContentControl, IControlProtected
                 }
             }
 
-            var paneTitleHolderFrameworkElement = m_paneTitleHolderFrameworkElement;
             var paneToggleButton = m_paneToggleButton;
 
-            bool setPaneTitleHolderFrameworkElementMargin = paneTitleHolderFrameworkElement != null && paneTitleHolderFrameworkElement.Visibility == Visibility.Visible;
-            bool setPaneToggleButtonMargin = !setPaneTitleHolderFrameworkElementMargin && paneToggleButton != null && paneToggleButton.Visibility == Visibility.Visible;
+            bool setPaneToggleButtonMargin = paneToggleButton != null && paneToggleButton.Visibility == Visibility.Visible;
 
-            if (setPaneTitleHolderFrameworkElementMargin || setPaneToggleButtonMargin)
+            if (setPaneToggleButtonMargin)
             {
-                var thickness = ThicknessHelper.FromLengths(0, 0, 0, 0);
+                Thickness thickness;
                 var thicknessToggleButton = ThicknessHelper.FromLengths(4, 2, 4, 2);
-
+                
                 if (ShouldShowBackButton())
                 {
                     if (IsOverlay())
@@ -2891,16 +2780,8 @@ public partial class NavigationView : ContentControl, IControlProtected
                     thicknessToggleButton = thickness;
                 }
 
-                if (setPaneTitleHolderFrameworkElementMargin)
-                {
-                    // The PaneHeader is hosted by PaneTitlePresenter and PaneTitleHolder.
-                    paneTitleHolderFrameworkElement.Margin = thickness;
-                }
-                else
-                {
-                    // The PaneHeader is hosted by PaneToggleButton
-                    paneToggleButton.Margin = thicknessToggleButton;
-                }
+                // The PaneHeader is hosted by PaneToggleButton
+                paneToggleButton.Margin = thicknessToggleButton;
             }
         }
 
@@ -3140,8 +3021,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private RowDefinition m_itemsContainerRow;
     private FrameworkElement m_menuItemsScrollViewer;
     private UIElement m_paneContentGrid;
-    private FrameworkElement m_paneTitleHolderFrameworkElement;
-    private FrameworkElement m_paneTitleFrameworkElement;
     private Button m_paneSearchButton;
     private Button m_backButton;
     private Button m_closeButton;
@@ -3162,8 +3041,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private ContentControl m_leftNavPaneHeaderContentBorder;
     private ContentControl m_leftNavPaneCustomContentBorder;
-
-    private ContentControl m_paneTitlePresenter;
 
     private ColumnDefinition m_paneHeaderCloseButtonColumn;
     private ColumnDefinition m_paneHeaderToggleButtonColumn;

@@ -95,7 +95,6 @@
             Loaded="OnNavigationViewControlLoaded"
             PaneClosing="NavigationViewControl_PaneClosing"
             PaneOpening="NavigationViewControl_PaneOpening"
-            PaneTitle=""
             SelectionChanged="OnNavigationViewSelectionChanged">
             <scrollviewer:NavigationView.PaneHeader>
                 <ikw:SimpleStackPanel

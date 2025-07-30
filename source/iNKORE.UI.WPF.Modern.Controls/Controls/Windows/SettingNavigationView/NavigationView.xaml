@@ -238,27 +238,7 @@
                                     VerticalAlignment="Top"
                                     ui:FocusVisualHelper.FocusVisualMargin="0"
                                     Style="{TemplateBinding PaneToggleButtonStyle}"
-                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.PaneToggleButtonVisibility}">
-                                    <TextBlock
-                                        x:Name="PaneTitleTextBlock"
-                                        Grid.Column="0"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Style="{DynamicResource NavigationViewItemHeaderTextStyle}"
-                                        Text="{TemplateBinding PaneTitle}" />
-                                </Button>
-                                <Grid
-                                    x:Name="PaneTitleHolder"
-                                    Height="40"
-                                    Visibility="Collapsed">
-                                    <ContentControl
-                                        x:Name="PaneTitlePresenter"
-                                        Margin="{DynamicResource NavigationViewPaneTitlePresenterMargin}"
-                                        HorizontalContentAlignment="Stretch"
-                                        VerticalContentAlignment="Stretch"
-                                        IsTabStop="False"
-                                        Style="{StaticResource DefaultContentControlStyle}" />
-                                </Grid>
+                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.PaneToggleButtonVisibility}" />
                             </Grid>
                         </Grid>
 
@@ -585,13 +565,11 @@
 
                         <Trigger SourceName="TogglePaneGroupListener" Property="CurrentStateName" Value="TogglePaneButtonVisible">
                             <Setter TargetName="PaneContentGridToggleButtonRow" Property="MinHeight" Value="{DynamicResource NavigationViewPaneHeaderRowMinHeight}" />
-                            <Setter TargetName="PaneTitlePresenter" Property="Margin" Value="{DynamicResource NavigationViewItemInnerHeaderMargin}" />
                         </Trigger>
 
                         <Trigger SourceName="PaneStateListSizeGroupListener" Property="CurrentStateName" Value="ListSizeCompact">
                             <Setter TargetName="PaneContentBorder" Property="Width" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CompactPaneLength}" />
                             <Setter TargetName="ShadowCaster" Property="Width" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CompactPaneLength}" />
-                            <Setter TargetName="PaneTitleTextBlock" Property="Visibility" Value="Collapsed" />
                             <Setter TargetName="PaneHeaderContentBorder" Property="Visibility" Value="Collapsed" />
                             <Setter TargetName="PaneCustomContentBorder" Property="HorizontalAlignment" Value="Left" />
                         </Trigger>
@@ -618,24 +596,6 @@
                             </MultiTrigger.Conditions>
                             <Setter TargetName="TogglePaneButton" Property="HorizontalAlignment" Value="Center" />
                             <Setter TargetName="TogglePaneButton" Property="Padding" Value="{DynamicResource NavigationViewItemButtonNormalMargin}" />
-                        </MultiTrigger>
-
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="PaneTitle" Value="" />
-                                <Condition Property="DisplayMode" Value="Compact" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="TogglePaneButton" Property="Padding" Value="0" />
-                            <Setter TargetName="TogglePaneButton" Property="HorizontalAlignment" Value="Center" />
-                        </MultiTrigger>
-
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="PaneTitle" Value="" />
-                                <Condition Property="DisplayMode" Value="Expanded" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="TogglePaneButton" Property="Padding" Value="0" />
-                            <Setter TargetName="TogglePaneButton" Property="HorizontalAlignment" Value="Center" />
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

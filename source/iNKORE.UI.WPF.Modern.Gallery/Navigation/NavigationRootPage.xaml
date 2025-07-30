@@ -99,7 +99,7 @@
             PaneClosing="NavigationViewControl_PaneClosing"
             PaneDisplayMode="Auto"
             PaneOpening="NavigationViewControl_PaneOpening"
-            PaneTitle=""
+            PaneTitle="Test"
             SelectionChanged="OnNavigationViewSelectionChanged">
 
             <ui:NavigationView.PaneHeader>
