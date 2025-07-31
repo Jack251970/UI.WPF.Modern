@@ -213,6 +213,29 @@ public partial class NavigationView
 
     #endregion
 
+    #region ContentLeftPadding
+
+    public static readonly DependencyProperty ContentLeftPaddingProperty =
+        DependencyProperty.Register(
+            nameof(ContentLeftPadding),
+            typeof(double),
+            typeof(NavigationView),
+            new PropertyMetadata(24.0, OnContentLeftPaddingPropertyChanged, CoerceToGreaterThanZero));
+
+    public double ContentLeftPadding
+    {
+        get => (double)GetValue(ContentLeftPaddingProperty);
+        set => SetValue(ContentLeftPaddingProperty, value);
+    }
+
+    private static void OnContentLeftPaddingPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        var owner = (NavigationView)sender;
+        owner.PropertyChanged(args);
+    }
+
+    #endregion
+
     #region PaneToggleButtonStyle
 
     public static readonly DependencyProperty PaneToggleButtonStyleProperty =

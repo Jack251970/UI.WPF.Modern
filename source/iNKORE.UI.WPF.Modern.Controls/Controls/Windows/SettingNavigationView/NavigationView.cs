@@ -48,7 +48,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private const string c_searchButtonName = "PaneAutoSuggestButton";
     private const string c_togglePaneTopPadding = "TogglePaneTopPadding";
     private const string c_contentPaneTopPadding = "ContentPaneTopPadding";
-    private const string c_contentLeftPadding = "ContentLeftPadding";
     private const string c_navViewBackButton = "NavigationViewBackButton";
     private const string c_navViewBackButtonToolTip = "NavigationViewBackButtonToolTip";
     private const string c_navViewCloseButton = "NavigationViewCloseButton";
@@ -279,8 +278,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
         // Get pointer to the pane content area, for use in the selection indicator animation
         m_paneContentGrid = GetTemplateChild(c_paneContentGridName) as UIElement;
-
-        m_contentLeftPadding = GetTemplateChild(c_contentLeftPadding) as FrameworkElement;
 
         m_paneHeaderCloseButtonColumn = GetTemplateChild(c_paneHeaderCloseButtonColumn) as ColumnDefinition;
         m_paneHeaderToggleButtonColumn = GetTemplateChild(c_paneHeaderToggleButtonColumn) as ColumnDefinition;
@@ -2504,6 +2501,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         var shouldShowBackButton = ShouldShowBackButton();
         var backButtonVisibility = shouldShowBackButton ? Visibility.Visible : Visibility.Collapsed;
         var visualStateDisplayMode = GetVisualStateDisplayMode(DisplayMode);
+        // TODO: CHECK
         bool useLeftPaddingForBackOrCloseButton =
             visualStateDisplayMode == NavigationViewVisualStateDisplayMode.Minimal ||
             visualStateDisplayMode == NavigationViewVisualStateDisplayMode.MinimalWithBackButton;
@@ -2538,19 +2536,6 @@ public partial class NavigationView : ContentControl, IControlProtected
                 {
                     paneHeaderPaddingForCloseButton = closeButton.Width;
                 }
-            }
-        }
-
-        if (m_contentLeftPadding is { } contentLeftPadding)
-        {
-            // TODO: Workaround for minimal left padding
-            if (DisplayMode == NavigationViewDisplayMode.Minimal)
-            {
-                contentLeftPadding.Width = 24;
-            }
-            else
-            {
-                contentLeftPadding.Width = 0;
             }
         }
 
@@ -3007,7 +2992,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private FrameworkElement m_togglePaneTopPadding;
     private FrameworkElement m_contentPaneTopPadding;
-    private FrameworkElement m_contentLeftPadding;
 
     private CoreApplicationViewTitleBar m_coreTitleBar;
 

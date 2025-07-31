@@ -7,10 +7,6 @@ namespace Flow.Bar.Controls.NavigationView;
 
 public class NavigationViewTemplateSettings : DependencyObject
 {
-    public NavigationViewTemplateSettings()
-    {
-    }
-
     #region TopPadding
 
     private static readonly DependencyPropertyKey s_topPaddingPropertyKey =

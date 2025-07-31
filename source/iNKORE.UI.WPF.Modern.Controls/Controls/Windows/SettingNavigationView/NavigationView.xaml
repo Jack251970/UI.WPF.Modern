@@ -370,7 +370,11 @@
                                             Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.TopPadding}"
                                             Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.LeftPaneVisibility}" />
 
-                                        <Grid x:Name="ContentLeftPadding" Grid.Row="1" />
+                                        <Grid
+                                            x:Name="ContentLeftPadding"
+                                            Grid.Row="1"
+                                            Grid.RowSpan="2"
+                                            Width="{TemplateBinding ContentLeftPadding}" />
 
                                         <ContentControl
                                             x:Name="HeaderContent"
