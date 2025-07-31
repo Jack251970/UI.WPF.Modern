@@ -476,12 +476,18 @@ public partial class NavigationView
             nameof(PaneHeader),
             typeof(UIElement),
             typeof(NavigationView),
-            null);
+            new PropertyMetadata(OnPaneHeaderPropertyChanged));
 
     public UIElement PaneHeader
     {
         get => (UIElement)GetValue(PaneHeaderProperty);
         set => SetValue(PaneHeaderProperty, value);
+    }
+
+    private static void OnPaneHeaderPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        var owner = (NavigationView)sender;
+        owner.PropertyChanged(args);
     }
 
     #endregion
@@ -493,12 +499,18 @@ public partial class NavigationView
             nameof(PaneCustomContent),
             typeof(UIElement),
             typeof(NavigationView),
-            null);
+            new PropertyMetadata(OnPaneCustomContentPropertyChanged));
 
     public UIElement PaneCustomContent
     {
         get => (UIElement)GetValue(PaneCustomContentProperty);
         set => SetValue(PaneCustomContentProperty, value);
+    }
+
+    private static void OnPaneCustomContentPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        var owner = (NavigationView)sender;
+        owner.PropertyChanged(args);
     }
 
     #endregion

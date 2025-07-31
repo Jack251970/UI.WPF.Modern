@@ -294,6 +294,7 @@
                                                 Grid.Column="2"
                                                 HorizontalContentAlignment="Stretch"
                                                 VerticalContentAlignment="Stretch"
+                                                Content="{TemplateBinding PaneHeader}"
                                                 IsTabStop="False"
                                                 Style="{StaticResource DefaultContentControlStyle}" />
                                         </Grid>
@@ -325,6 +326,7 @@
                                             Grid.Row="4"
                                             HorizontalContentAlignment="Stretch"
                                             VerticalContentAlignment="Stretch"
+                                            Content="{TemplateBinding PaneCustomContent}"
                                             IsTabStop="False"
                                             Style="{StaticResource DefaultContentControlStyle}" />
 
