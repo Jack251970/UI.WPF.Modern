@@ -61,7 +61,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private const string c_menuItemsScrollViewer = "MenuItemsScrollViewer";
 
     private const int c_backButtonHeight = 40;
-    private const int c_backButtonWidth = 40;
     private const int c_paneToggleButtonWidth = 40;
     private const int c_toggleButtonHeightWhenShouldPreserveNavigationViewRS3Behavior = 56;
     private const int c_backButtonRowDefinition = 1;
@@ -738,8 +737,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         {
             var m_openPaneWidth = Math.Max(0.0, Math.Min(width, OpenPaneLength));
 
-            var templateSettings = GetTemplateSettings();
-            templateSettings.OpenPaneWidth = m_openPaneWidth;
+            TemplateSettings.OpenPaneWidth = m_openPaneWidth;
         }
     }
 
@@ -1034,8 +1032,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private void UpdatePaneButtonsWidths()
     {
-        var templateSettings = GetTemplateSettings();
-
         double newButtonWidths;
         {
             double init()
@@ -1049,8 +1045,8 @@ public partial class NavigationView : ContentControl, IControlProtected
             newButtonWidths = init();
         }
 
-        templateSettings.PaneToggleButtonWidth = newButtonWidths;
-        templateSettings.SmallerPaneToggleButtonWidth = Math.Max(0, newButtonWidths-8);
+        TemplateSettings.PaneToggleButtonWidth = newButtonWidths;
+        TemplateSettings.SmallerPaneToggleButtonWidth = Math.Max(0, newButtonWidths-8);
     }
 
     private void OnBackButtonClicked(object sender, RoutedEventArgs args)
@@ -2041,11 +2037,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private NavigationViewTemplateSettings GetTemplateSettings()
-    {
-        return TemplateSettings;
-    }
-
     private void OnMenuItemsSourceCollectionChanged(object sender, object args)
     {
         if (m_leftNavRepeater is { } repeater)
@@ -2325,12 +2316,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private void UpdatePaneToggleButtonVisibility(bool visible)
     {
-        GetTemplateSettings().PaneToggleButtonVisibility = visible ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    private bool GetPaneToggleButtonVisiblity()
-    {
-        return GetTemplateSettings().PaneToggleButtonVisibility == Visibility.Visible;
+        TemplateSettings.PaneToggleButtonVisibility = visible ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void UpdatePaneDisplayMode()
@@ -2353,16 +2339,15 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private void UpdatePaneVisibility(bool useTransitions = false)
     {
-        var templateSettings = GetTemplateSettings();
         if (IsPaneVisible)
         {
-            templateSettings.LeftPaneVisibility = Visibility.Visible;
+            TemplateSettings.LeftPaneVisibility = Visibility.Visible;
 
             VisualStateManager.GoToState(this, "PaneVisible", useTransitions);
         }
         else
         {
-            templateSettings.LeftPaneVisibility = Visibility.Collapsed;
+            TemplateSettings.LeftPaneVisibility = Visibility.Collapsed;
 
             VisualStateManager.GoToState(this, "PaneCollapsed", useTransitions);
         }
@@ -2444,7 +2429,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         var shouldShowBackButton = ShouldShowBackButton();
         var backButtonVisibility = shouldShowBackButton ? Visibility.Visible : Visibility.Collapsed;
 
-        GetTemplateSettings().BackButtonVisibility = backButtonVisibility;
+        TemplateSettings.BackButtonVisibility = backButtonVisibility;
 
         if (m_backButton is { } backButton)
         {
@@ -2621,7 +2606,7 @@ public partial class NavigationView : ContentControl, IControlProtected
             // Epsilon is 0.1 here.
             if (Math.Abs(templateSettings.TopPadding - topPadding) > 0.1)
             {
-                GetTemplateSettings().TopPadding = topPadding;
+                TemplateSettings.TopPadding = topPadding;
             }
         }
     }
