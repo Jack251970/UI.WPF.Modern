@@ -210,39 +210,42 @@
                                 Grid.Row="0"
                                 Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.TopPadding}" />
 
-                            <Grid
-                                x:Name="ButtonHolderGrid"
-                                Grid.Row="1"
-                                Margin="{DynamicResource NavigationViewButtonHolderGridMargin}">
-                                <Button
-                                    x:Name="NavigationViewBackButton"
-                                    Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.SmallerPaneToggleButtonWidth}"
-                                    VerticalAlignment="Top"
-                                    IsEnabled="{TemplateBinding IsBackEnabled}"
-                                    Style="{DynamicResource NavigationBackButtonNormalStyle}"
-                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.BackButtonVisibility}">
-                                    <ToolTipService.ToolTip>
-                                        <ToolTip x:Name="NavigationViewBackButtonToolTip" />
-                                    </ToolTipService.ToolTip>
-                                </Button>
-                                <Button
-                                    x:Name="NavigationViewCloseButton"
-                                    Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.SmallerPaneToggleButtonWidth}"
-                                    VerticalAlignment="Top"
-                                    Style="{DynamicResource NavigationBackButtonNormalStyle}">
-                                    <ToolTipService.ToolTip>
-                                        <ToolTip x:Name="NavigationViewCloseButtonToolTip" />
-                                    </ToolTipService.ToolTip>
-                                </Button>
-                                <Button
-                                    x:Name="TogglePaneButton"
-                                    MinWidth="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.SmallerPaneToggleButtonWidth}"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    ui:FocusVisualHelper.FocusVisualMargin="0"
-                                    Style="{TemplateBinding PaneToggleButtonStyle}"
-                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.PaneToggleButtonVisibility}" />
-                            </Grid>
+                            <StackPanel x:Name="TitleArea" Orientation="Horizontal">
+                                <Grid x:Name="ButtonHolderGrid1" Margin="{DynamicResource NavigationViewButtonHolderGridMargin}">
+                                    <Button
+                                        x:Name="NavigationViewBackButton"
+                                        Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.SmallerPaneToggleButtonWidth}"
+                                        VerticalAlignment="Top"
+                                        IsEnabled="{TemplateBinding IsBackEnabled}"
+                                        Style="{DynamicResource NavigationBackButtonNormalStyle}"
+                                        Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.BackButtonVisibility}">
+                                        <ToolTipService.ToolTip>
+                                            <ToolTip x:Name="NavigationViewBackButtonToolTip" />
+                                        </ToolTipService.ToolTip>
+                                    </Button>
+                                    <Button
+                                        x:Name="NavigationViewCloseButton"
+                                        Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.SmallerPaneToggleButtonWidth}"
+                                        VerticalAlignment="Top"
+                                        Style="{DynamicResource NavigationBackButtonNormalStyle}">
+                                        <ToolTipService.ToolTip>
+                                            <ToolTip x:Name="NavigationViewCloseButtonToolTip" />
+                                        </ToolTipService.ToolTip>
+                                    </Button>
+                                </Grid>
+
+                                <Grid x:Name="ButtonHolderGrid2" Margin="{DynamicResource NavigationViewButtonHolderGridMargin}">
+                                    <Button
+                                        x:Name="TogglePaneButton"
+                                        MinWidth="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.SmallerPaneToggleButtonWidth}"
+                                        Margin="6,0,0,0"
+                                        Padding="{DynamicResource NavigationViewItemButtonNormalMargin}"
+                                        VerticalAlignment="Top"
+                                        ui:FocusVisualHelper.FocusVisualMargin="0"
+                                        Style="{TemplateBinding PaneToggleButtonStyle}"
+                                        Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.PaneToggleButtonVisibility}" />
+                                </Grid>
+                            </StackPanel>
                         </Grid>
 
                         <!--  Content layouts for Displaymode (compact/minimal/normal) left  -->
@@ -532,7 +535,6 @@
                             <Setter TargetName="HeaderContent" Property="Margin" Value="0,44,0,0" />
                             <!--  Workaround for min height: Use PaneToggleButtonGrid.Height instead  -->
                             <Setter TargetName="ContentPaneTopPadding" Property="Margin" Value="0,40,0,0" />
-                            <Setter TargetName="NavigationViewBackButton" Property="Style" Value="{DynamicResource NavigationBackButtonSmallStyle}" />
                             <Setter TargetName="ContentBorder" Property="BorderThickness" Value="{DynamicResource NavigationViewMinimalContentGridBorderThickness}" />
                             <Setter TargetName="ContentBorder" Property="CornerRadius" Value="{DynamicResource NavigationViewMinimalContentGridCornerRadius}" />
                             <Setter TargetName="ContentBorder" Property="Margin" Value="{DynamicResource NavigationViewMinimalContentMargin}" />
@@ -542,7 +544,6 @@
                             <Setter TargetName="HeaderContent" Property="Margin" Value="0,44,0,0" />
                             <!--  Workaround for min height: Use PaneToggleButtonGrid.Height  -->
                             <Setter TargetName="ContentPaneTopPadding" Property="Margin" Value="0,40,0,0" />
-                            <Setter TargetName="NavigationViewBackButton" Property="Style" Value="{DynamicResource NavigationBackButtonSmallStyle}" />
                             <Setter TargetName="ContentBorder" Property="BorderThickness" Value="{DynamicResource NavigationViewMinimalContentGridBorderThickness}" />
                             <Setter TargetName="ContentBorder" Property="CornerRadius" Value="{DynamicResource NavigationViewMinimalContentGridCornerRadius}" />
                             <Setter TargetName="ContentBorder" Property="Margin" Value="{DynamicResource NavigationViewMinimalContentMargin}" />
@@ -559,24 +560,6 @@
                             <Setter TargetName="ShadowCaster" Property="Opacity" Value="0" />
                             <Setter TargetName="RootSplitView" Property="PaneBackground" Value="{DynamicResource NavigationViewExpandedPaneBackground}" />
                         </Trigger>
-
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsPaneOpen" Value="False" />
-                                <Condition Property="DisplayMode" Value="Compact" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="TogglePaneButton" Property="HorizontalAlignment" Value="Center" />
-                            <Setter TargetName="TogglePaneButton" Property="Padding" Value="{DynamicResource NavigationViewItemButtonNormalMargin}" />
-                        </MultiTrigger>
-
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsPaneOpen" Value="False" />
-                                <Condition Property="DisplayMode" Value="Expanded" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="TogglePaneButton" Property="HorizontalAlignment" Value="Center" />
-                            <Setter TargetName="TogglePaneButton" Property="Padding" Value="{DynamicResource NavigationViewItemButtonNormalMargin}" />
-                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

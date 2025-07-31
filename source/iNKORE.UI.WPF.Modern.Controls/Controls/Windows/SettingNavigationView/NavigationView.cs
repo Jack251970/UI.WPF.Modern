@@ -2612,43 +2612,13 @@ public partial class NavigationView : ContentControl, IControlProtected
                     fe.Height = topPadding;
                 }
             }
-
-            var paneToggleButton = m_paneToggleButton;
-
-            bool setPaneToggleButtonMargin = paneToggleButton != null && paneToggleButton.Visibility == Visibility.Visible;
-
-            if (setPaneToggleButtonMargin)
-            {
-                Thickness thickness;
-                var thicknessToggleButton = ThicknessHelper.FromLengths(4, 2, 4, 2);
-                
-                if (ShouldShowBackButton())
-                {
-                    if (IsOverlay())
-                    {
-                        thickness = ThicknessHelper.FromLengths(c_backButtonWidth, 0, 0, 0);
-                        thicknessToggleButton = thickness;
-                    }
-                    else
-                    {
-                        thickness = ThicknessHelper.FromLengths(0, c_backButtonHeight, 0, 0);
-                        thicknessToggleButton = thickness;
-                    }
-                }
-                else if (ShouldShowCloseButton() && IsOverlay())
-                {
-                    thickness = ThicknessHelper.FromLengths(c_backButtonWidth, 0, 0, 0);
-                    thicknessToggleButton = thickness;
-                }
-
-                // The PaneHeader is hosted by PaneToggleButton
-                paneToggleButton.Margin = thicknessToggleButton;
-            }
         }
 
         if (TemplateSettings is { } templateSettings)
         {
-            // 0.0 and 0.00000000 is not the same in double world. try to reduce the number of TopPadding update event. epsilon is 0.1 here.
+            // 0.0 and 0.00000000 is not the same in double world.
+            // Try to reduce the number of TopPadding update event.
+            // Epsilon is 0.1 here.
             if (Math.Abs(templateSettings.TopPadding - topPadding) > 0.1)
             {
                 GetTemplateSettings().TopPadding = topPadding;
