@@ -1003,7 +1003,7 @@ public partial class NavigationView : ContentControl, IControlProtected
                     if (splitView.DisplayMode == SplitViewDisplayMode.CompactOverlay || splitView.DisplayMode == SplitViewDisplayMode.CompactInline)
                     {
                         // See UpdateIsClosedCompact 'RS3+ animation timing enhancement' for explanation:
-                        VisualStateManager.GoToState(this, "ListSizeCompact", true /*useTransitions*/);
+                        VisualStateManager.GoToState(this, "ListSizeCompact", useTransitions: true);
                         UpdatePaneToggleSize();
                     }
                 }
@@ -1021,26 +1021,26 @@ public partial class NavigationView : ContentControl, IControlProtected
         if (m_leftNavRepeater != null)
         {
             // See UpdateIsClosedCompact 'RS3+ animation timing enhancement' for explanation:
-            VisualStateManager.GoToState(this, "ListSizeFull", true /*useTransitions*/);
+            VisualStateManager.GoToState(this, "ListSizeFull", useTransitions: true);
         }
 
         PaneOpening?.Invoke(this, null);
     }
 
-    private void UpdateIsClosedCompact()
+    private void UpdateIsClosedCompact(bool useTransitions = true)
     {
         if (m_rootSplitView is { } splitView)
         {
             // Check if the pane is closed and if the splitview is in either compact mode.
             var splitViewDisplayMode = splitView.DisplayMode;
             m_isClosedCompact = !splitView.IsPaneOpen && (splitViewDisplayMode == SplitViewDisplayMode.CompactOverlay || splitViewDisplayMode == SplitViewDisplayMode.CompactInline);
-            VisualStateManager.GoToState(this, m_isClosedCompact ? "ClosedCompact" : "NotClosedCompact", true /*useTransitions*/);
+            VisualStateManager.GoToState(this, m_isClosedCompact ? "ClosedCompact" : "NotClosedCompact", useTransitions);
 
             // Set the initial state of the list size
             if (!m_initialListSizeStateSet)
             {
                 m_initialListSizeStateSet = true;
-                VisualStateManager.GoToState(this, m_isClosedCompact ? "ListSizeCompact" : "ListSizeFull", true /*useTransitions*/);
+                VisualStateManager.GoToState(this, m_isClosedCompact ? "ListSizeCompact" : "ListSizeFull", useTransitions);
             }
 
             UpdateTitleBarPadding();
@@ -1703,7 +1703,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private void UpdateVisualStateForDisplayModeGroup(NavigationViewDisplayMode displayMode)
+    private void UpdateVisualStateForDisplayModeGroup(NavigationViewDisplayMode displayMode, bool useTransitions = false)
     {
         if (m_rootSplitView is { } splitView)
         {
@@ -1738,7 +1738,7 @@ public partial class NavigationView : ContentControl, IControlProtected
                 splitViewDisplayMode = SplitViewDisplayMode.CompactOverlay;
             }
 
-            VisualStateManager.GoToState(this, visualStateName, false /*useTransitions*/);
+            VisualStateManager.GoToState(this, visualStateName, useTransitions);
             splitView.DisplayMode = splitViewDisplayMode;
         }
     }
@@ -2141,18 +2141,18 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private void UpdatePaneOverlayGroup()
+    private void UpdatePaneOverlayGroup(bool useTransitions = true)
     {
         var splitView = m_rootSplitView;
         if (splitView != null)
         {
             if (IsPaneOpen && (splitView.DisplayMode == SplitViewDisplayMode.CompactOverlay || splitView.DisplayMode == SplitViewDisplayMode.Overlay))
             {
-                VisualStateManager.GoToState(this, "PaneOverlaying", true /*useTransitions*/);
+                VisualStateManager.GoToState(this, "PaneOverlaying", useTransitions);
             }
             else
             {
-                VisualStateManager.GoToState(this, "PaneNotOverlaying", true /*useTransitions*/);
+                VisualStateManager.GoToState(this, "PaneNotOverlaying", useTransitions);
             }
         }
     }
@@ -2162,9 +2162,9 @@ public partial class NavigationView : ContentControl, IControlProtected
         if (m_appliedTemplate)
         {
             var box = AutoSuggestBox;
-            VisualStateManager.GoToState(this, box != null ? "AutoSuggestBoxVisible" : "AutoSuggestBoxCollapsed", false /*useTransitions*/);
+            VisualStateManager.GoToState(this, box != null ? "AutoSuggestBoxVisible" : "AutoSuggestBoxCollapsed", useTransitions);
 
-            VisualStateManager.GoToState(this, "SettingsCollapsed", false /*useTransitions*/);
+            VisualStateManager.GoToState(this, "SettingsCollapsed", useTransitions);
         }
     }
 
@@ -2384,20 +2384,20 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private void UpdatePaneVisibility()
+    private void UpdatePaneVisibility(bool useTransitions = false)
     {
         var templateSettings = GetTemplateSettings();
         if (IsPaneVisible)
         {
             templateSettings.LeftPaneVisibility = Visibility.Visible;
 
-            VisualStateManager.GoToState(this, "PaneVisible", false /*useTransitions*/);
+            VisualStateManager.GoToState(this, "PaneVisible", useTransitions);
         }
         else
         {
             templateSettings.LeftPaneVisibility = Visibility.Collapsed;
 
-            VisualStateManager.GoToState(this, "PaneCollapsed", false /*useTransitions*/);
+            VisualStateManager.GoToState(this, "PaneCollapsed", useTransitions);
         }
     }
 
@@ -2422,7 +2422,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         UpdateHeaderVisibility(DisplayMode);
     }
 
-    private void UpdateHeaderVisibility(NavigationViewDisplayMode displayMode)
+    private void UpdateHeaderVisibility(NavigationViewDisplayMode displayMode, bool useTransitions = false)
     {
         // Ignore AlwaysShowHeader property in case DisplayMode is Minimal and it's not Top NavigationView
         bool showHeader = AlwaysShowHeader || displayMode == NavigationViewDisplayMode.Minimal;
@@ -2436,7 +2436,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         {
             showHeader = Header != null && showHeader;
         }
-        VisualStateManager.GoToState(this, showHeader ? "HeaderVisible" : "HeaderCollapsed", false /*useTransitions*/);
+        VisualStateManager.GoToState(this, showHeader ? "HeaderVisible" : "HeaderCollapsed", useTransitions);
     }
 
     private void UpdatePaneTabFocusNavigation()
