@@ -527,6 +527,8 @@
                         <Trigger SourceName="DisplayModeGroupListener" Property="CurrentStateName" Value="Minimal">
                             <!--  Workaround for top margin: Use NavigationViewMinimalHeaderMargin instead  -->
                             <Setter TargetName="HeaderContent" Property="Margin" Value="0,44,0,0" />
+                            <!--  Workaround for min height: Use PaneToggleButtonGrid.Height instead  -->
+                            <Setter TargetName="ContentPaneTopPadding" Property="Margin" Value="0,40,0,0" />
                             <Setter TargetName="NavigationViewBackButton" Property="Style" Value="{DynamicResource NavigationBackButtonSmallStyle}" />
                             <Setter TargetName="ContentBorder" Property="BorderThickness" Value="{DynamicResource NavigationViewMinimalContentGridBorderThickness}" />
                             <Setter TargetName="ContentBorder" Property="CornerRadius" Value="{DynamicResource NavigationViewMinimalContentGridCornerRadius}" />
@@ -535,6 +537,8 @@
                         <Trigger SourceName="DisplayModeGroupListener" Property="CurrentStateName" Value="MinimalWithBackButton">
                             <!--  Workaround for top margin: Use NavigationViewMinimalHeaderMargin instead  -->
                             <Setter TargetName="HeaderContent" Property="Margin" Value="0,44,0,0" />
+                            <!--  Workaround for min height: Use PaneToggleButtonGrid.Height  -->
+                            <Setter TargetName="ContentPaneTopPadding" Property="Margin" Value="0,40,0,0" />
                             <Setter TargetName="NavigationViewBackButton" Property="Style" Value="{DynamicResource NavigationBackButtonSmallStyle}" />
                             <Setter TargetName="ContentBorder" Property="BorderThickness" Value="{DynamicResource NavigationViewMinimalContentGridBorderThickness}" />
                             <Setter TargetName="ContentBorder" Property="CornerRadius" Value="{DynamicResource NavigationViewMinimalContentGridCornerRadius}" />
