@@ -407,14 +407,6 @@
                                 <VisualState x:Name="MinimalWithBackButton" />
                             </VisualStateGroup>
 
-                            <VisualStateGroup x:Name="TogglePaneGroup">
-                                <ui:VisualStateGroupListener.Listener>
-                                    <ui:VisualStateGroupListener x:Name="TogglePaneGroupListener" />
-                                </ui:VisualStateGroupListener.Listener>
-                                <VisualState x:Name="TogglePaneButtonVisible" />
-                                <VisualState x:Name="TogglePaneButtonCollapsed" />
-                            </VisualStateGroup>
-
                             <VisualStateGroup x:Name="HeaderGroup">
                                 <VisualState x:Name="HeaderVisible" />
                                 <VisualState x:Name="HeaderCollapsed">
@@ -563,10 +555,6 @@
                             <Setter TargetName="ContentBorder" Property="BorderThickness" Value="{DynamicResource NavigationViewMinimalContentGridBorderThickness}" />
                             <Setter TargetName="ContentBorder" Property="CornerRadius" Value="{DynamicResource NavigationViewMinimalContentGridCornerRadius}" />
                             <Setter TargetName="ContentBorder" Property="Margin" Value="{DynamicResource NavigationViewMinimalContentMargin}" />
-                        </Trigger>
-
-                        <Trigger SourceName="TogglePaneGroupListener" Property="CurrentStateName" Value="TogglePaneButtonVisible">
-                            <Setter TargetName="PaneContentGridToggleButtonRow" Property="MinHeight" Value="{DynamicResource NavigationViewPaneHeaderRowMinHeight}" />
                         </Trigger>
 
                         <Trigger SourceName="PaneStateListSizeGroupListener" Property="CurrentStateName" Value="ListSizeCompact">

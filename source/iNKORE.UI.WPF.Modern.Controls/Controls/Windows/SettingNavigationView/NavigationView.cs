@@ -2165,25 +2165,17 @@ public partial class NavigationView : ContentControl, IControlProtected
             VisualStateManager.GoToState(this, box != null ? "AutoSuggestBoxVisible" : "AutoSuggestBoxCollapsed", false /*useTransitions*/);
 
             VisualStateManager.GoToState(this, "SettingsCollapsed", false /*useTransitions*/);
-
-            UpdateLeftNavigationOnlyVisualState(useTransitions);
         }
-    }
-
-    private void UpdateLeftNavigationOnlyVisualState(bool useTransitions)
-    {
-        bool isToggleButtonVisible = GetPaneToggleButtonVisiblity();
-        VisualStateManager.GoToState(this, isToggleButtonVisible ? "TogglePaneButtonVisible" : "TogglePaneButtonCollapsed", false /*useTransitions*/);
     }
 
     private double GetPaneToggleButtonWidth()
     {
-        return (double)(SharedHelpers.FindResource("PaneToggleButtonWidth", this, (double)c_paneToggleButtonWidth));
+        return (double)SharedHelpers.FindResource("PaneToggleButtonWidth", this, (double)c_paneToggleButtonWidth);
     }
 
     private double GetPaneToggleButtonHeight()
     {
-        return (double)(SharedHelpers.FindResource("PaneToggleButtonHeight", this, (double)c_paneToggleButtonHeight));
+        return (double)SharedHelpers.FindResource("PaneToggleButtonHeight", this, (double)c_paneToggleButtonHeight);
     }
 
     private static void CoerceToGreaterThanZero(ref double value)
