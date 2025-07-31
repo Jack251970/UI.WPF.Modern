@@ -503,23 +503,6 @@ public partial class NavigationView
 
     #endregion
 
-    #region ContentOverlay
-
-    public static readonly DependencyProperty ContentOverlayProperty =
-        DependencyProperty.Register(
-            nameof(ContentOverlay),
-            typeof(UIElement),
-            typeof(NavigationView),
-            null);
-
-    public UIElement ContentOverlay
-    {
-        get => (UIElement)GetValue(ContentOverlayProperty);
-        set => SetValue(ContentOverlayProperty, value);
-    }
-
-    #endregion
-
     #region IsPaneVisible
 
     public static readonly DependencyProperty IsPaneVisibleProperty =
