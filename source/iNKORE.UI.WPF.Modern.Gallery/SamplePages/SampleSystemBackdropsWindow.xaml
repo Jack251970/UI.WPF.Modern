@@ -20,71 +20,8 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-
-        <!--<Rectangle
-            x:Name="XboxContentSafeRect"
-            Width="48"
-            Canvas.ZIndex="0"
-            Fill="{DynamicResource NavigationViewDefaultPaneBackground}"
-            Visibility="Collapsed" />
-
-        <Border
-            x:Name="AppTitleBar"
-            Grid.Column="1"
-            Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
-            VerticalAlignment="Top"
-            Background="Transparent"
-            Canvas.ZIndex="1"
-            IsHitTestVisible="True"
-            Visibility="Collapsed">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="137" />
-                </Grid.ColumnDefinitions>
-                <ikw:SimpleStackPanel
-                    x:Name="AppTitle"
-                    Orientation="Horizontal"
-                    Spacing="12">
-                    <Image
-                        Width="20"
-                        Margin="-3,0,0,0"
-                        RenderOptions.BitmapScalingMode="HighQuality"
-                        Source="/Assets/WpfLibrary_Minimal_64w.png" />
-                    <TextBlock
-                        x:Name="AppTitleText"
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Style="{DynamicResource CaptionTextBlockStyle}"
-                        Text="{x:Static local:NavigationRootPage.GetAppTitleFromSystem}"
-                        TextWrapping="NoWrap" />
-                    <ui:AutoSuggestBox
-                        x:Name="controlsSearchBox"
-                        MinWidth="200"
-                        VerticalAlignment="Center"
-                        x:FieldModifier="public"
-                        PlaceholderText="Search"
-                        QuerySubmitted="OnControlsSearchBoxQuerySubmitted"
-                        TextChanged="OnControlsSearchBoxTextChanged">
-                        <ui:AutoSuggestBox.QueryIcon>
-                            <ui:FontIcon
-                                FontSize="12"
-                                Glyph="&#xE721;"
-                                RenderTransformOrigin="0.5,0.5" />
-                        </ui:AutoSuggestBox.QueryIcon>
-                    </ui:AutoSuggestBox>
-                </ikw:SimpleStackPanel>
-            </Grid>
-        </Border>-->
-
         <scrollviewer:NavigationView
             x:Name="NavigationViewControl"
-            Grid.Column="1"
             AlwaysShowHeader="True"
             Canvas.ZIndex="0"
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
