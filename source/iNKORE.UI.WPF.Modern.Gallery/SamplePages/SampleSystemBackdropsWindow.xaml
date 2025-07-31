@@ -132,7 +132,6 @@
             <scrollviewer:NavigationView.HeaderTemplate>
                 <DataTemplate>
                     <TextBlock
-                        Margin="24,0,0,24"
                         FontSize="28"
                         FontWeight="SemiBold"
                         Text="{Binding Header, ElementName=NavigationViewControl, Mode=OneWay}" />
@@ -141,7 +140,7 @@
 
             <ui:Frame
                 x:Name="rootFrame"
-                Margin="24,0,0,0"
+                Margin="0,24,0,0"
                 Navigated="OnRootFrameNavigated"
                 Navigating="OnRootFrameNavigating" />
         </scrollviewer:NavigationView>
