@@ -123,6 +123,29 @@ public partial class NavigationView
 
     #endregion
 
+    #region Title
+
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(
+            nameof(Title),
+            typeof(UIElement),
+            typeof(NavigationView),
+            new PropertyMetadata(OnTitlePropertyChanged));
+
+    public UIElement Title
+    {
+        get => (UIElement)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
+    private static void OnTitlePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        var owner = (NavigationView)sender;
+        owner.PropertyChanged(args);
+    }
+
+    #endregion
+
     #region DisplayMode
 
     private static readonly DependencyPropertyKey s_displayModePropertyKey =

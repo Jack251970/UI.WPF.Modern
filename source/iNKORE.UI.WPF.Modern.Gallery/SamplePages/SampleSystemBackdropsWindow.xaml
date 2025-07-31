@@ -94,6 +94,20 @@
             PaneClosing="NavigationViewControl_PaneClosing"
             PaneOpening="NavigationViewControl_PaneOpening"
             SelectionChanged="OnNavigationViewSelectionChanged">
+            <scrollviewer:NavigationView.Title>
+                <Grid
+                    Margin="{DynamicResource NavigationViewButtonHolderGridMargin}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Stretch">
+                    <TextBlock
+                        Margin="4,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{DynamicResource CaptionTextBlockStyle}"
+                        Text="Settings" />
+                </Grid>
+            </scrollviewer:NavigationView.Title>
+
             <scrollviewer:NavigationView.PaneCustomContent>
                 <ikw:SimpleStackPanel
                     Margin="4,10,0,10"

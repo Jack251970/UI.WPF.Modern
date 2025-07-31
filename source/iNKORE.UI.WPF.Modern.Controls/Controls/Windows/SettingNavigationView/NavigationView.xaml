@@ -246,6 +246,14 @@
                                         Style="{TemplateBinding PaneToggleButtonStyle}"
                                         Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.PaneToggleButtonVisibility}" />
                                 </Grid>
+
+                                <ContentControl
+                                    x:Name="TitleContentBorder"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"
+                                    Content="{TemplateBinding Title}"
+                                    IsTabStop="False"
+                                    Style="{StaticResource DefaultContentControlStyle}" />
                             </StackPanel>
                         </Grid>
 
