@@ -386,7 +386,6 @@
                                         <ContentPresenter
                                             Grid.Row="2"
                                             Grid.Column="1"
-                                            Grid.ColumnSpan="2"
                                             Content="{TemplateBinding Content}" />
                                     </Grid>
                                 </ikw:ClippedContent>
