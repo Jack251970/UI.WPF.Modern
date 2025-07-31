@@ -60,13 +60,8 @@ public partial class NavigationView : ContentControl, IControlProtected
     private const string c_itemsContainerRow = "ItemsContainerRow";
     private const string c_menuItemsScrollViewer = "MenuItemsScrollViewer";
 
-    private const string c_paneHeaderCloseButtonColumn = "PaneHeaderCloseButtonColumn";
-    private const string c_paneHeaderToggleButtonColumn = "PaneHeaderToggleButtonColumn";
-    private const string c_paneHeaderContentBorderRow = "PaneHeaderContentBorderRow";
-
     private const int c_backButtonHeight = 40;
     private const int c_backButtonWidth = 40;
-    private const int c_paneToggleButtonHeight = 40;
     private const int c_paneToggleButtonWidth = 40;
     private const int c_toggleButtonHeightWhenShouldPreserveNavigationViewRS3Behavior = 56;
     private const int c_backButtonRowDefinition = 1;
@@ -97,10 +92,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
 
         m_itemsContainerSizeChangedRevoker?.Revoke();
-
-        m_paneHeaderCloseButtonColumn = null;
-        m_paneHeaderToggleButtonColumn = null;
-        m_paneHeaderContentBorderRow = null;
 
         if (m_leftNavRepeater != null)
         {
@@ -278,10 +269,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
         // Get pointer to the pane content area, for use in the selection indicator animation
         m_paneContentGrid = GetTemplateChild(c_paneContentGridName) as UIElement;
-
-        m_paneHeaderCloseButtonColumn = GetTemplateChild(c_paneHeaderCloseButtonColumn) as ColumnDefinition;
-        m_paneHeaderToggleButtonColumn = GetTemplateChild(c_paneHeaderToggleButtonColumn) as ColumnDefinition;
-        m_paneHeaderContentBorderRow = GetTemplateChild(c_paneHeaderContentBorderRow) as RowDefinition;
 
         // Set automation name on search button
         if (GetTemplateChild(c_searchButtonName) is Button button)
@@ -1004,7 +991,6 @@ public partial class NavigationView : ContentControl, IControlProtected
                     {
                         // See UpdateIsClosedCompact 'RS3+ animation timing enhancement' for explanation:
                         VisualStateManager.GoToState(this, "ListSizeCompact", useTransitions: true);
-                        UpdatePaneToggleSize();
                     }
                 }
             }
@@ -1045,7 +1031,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
             UpdateTitleBarPadding();
             UpdateBackAndCloseButtonsVisibility();
-            UpdatePaneToggleSize();
         }
     }
 
@@ -1663,8 +1648,6 @@ public partial class NavigationView : ContentControl, IControlProtected
 
             UpdatePaneTabFocusNavigation();
 
-            UpdatePaneToggleSize();
-
             RaiseDisplayModeChanged(displayMode);
         }
     }
@@ -2167,16 +2150,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private double GetPaneToggleButtonWidth()
-    {
-        return (double)SharedHelpers.FindResource("PaneToggleButtonWidth", this, (double)c_paneToggleButtonWidth);
-    }
-
-    private double GetPaneToggleButtonHeight()
-    {
-        return (double)SharedHelpers.FindResource("PaneToggleButtonHeight", this, (double)c_paneToggleButtonHeight);
-    }
-
     private static void CoerceToGreaterThanZero(ref double value)
     {
         // Property coercion for OpenPaneLength, CompactPaneLength, ExpandedMinimalModeThresholdWidth
@@ -2466,22 +2439,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
     }
 
-    private void UpdatePaneToggleSize()
-    {
-        if (!ShouldPreserveNavigationViewRS3Behavior())
-        {
-            if (m_rootSplitView is { })
-            {
-                double togglePaneButtonWidth = GetPaneToggleButtonWidth();
-
-                if (m_paneToggleButton is { } toggleButton)
-                {
-                    toggleButton.Width = togglePaneButtonWidth;
-                }
-            }
-        }
-    }
-
     private void UpdateBackAndCloseButtonsVisibility()
     {
         if (!m_appliedTemplate)
@@ -2491,22 +2448,8 @@ public partial class NavigationView : ContentControl, IControlProtected
 
         var shouldShowBackButton = ShouldShowBackButton();
         var backButtonVisibility = shouldShowBackButton ? Visibility.Visible : Visibility.Collapsed;
-        var visualStateDisplayMode = GetVisualStateDisplayMode(DisplayMode);
-        // TODO: CHECK
-        bool useLeftPaddingForBackOrCloseButton =
-            visualStateDisplayMode == NavigationViewVisualStateDisplayMode.Minimal ||
-            visualStateDisplayMode == NavigationViewVisualStateDisplayMode.MinimalWithBackButton;
-        double paneHeaderPaddingForToggleButton = 0.0;
-        double paneHeaderPaddingForCloseButton = 0.0;
-        double paneHeaderContentBorderRowMinHeight = 0.0;
 
         GetTemplateSettings().BackButtonVisibility = backButtonVisibility;
-
-        if (m_paneToggleButton != null && GetPaneToggleButtonVisiblity())
-        {
-            paneHeaderContentBorderRowMinHeight = GetPaneToggleButtonHeight();
-            paneHeaderPaddingForToggleButton = GetPaneToggleButtonWidth();
-        }
 
         if (m_backButton is { } backButton)
         {
@@ -2518,33 +2461,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             var closeButtonVisibility = ShouldShowCloseButton() ? Visibility.Visible : Visibility.Collapsed;
 
             closeButton.Visibility = closeButtonVisibility;
-
-            if (closeButtonVisibility == Visibility.Visible)
-            {
-                paneHeaderContentBorderRowMinHeight = Math.Max(paneHeaderContentBorderRowMinHeight, closeButton.Height);
-
-                if (useLeftPaddingForBackOrCloseButton)
-                {
-                    paneHeaderPaddingForCloseButton = closeButton.Width;
-                }
-            }
-        }
-
-        if (m_paneHeaderToggleButtonColumn is { } paneHeaderToggleButtonColumn)
-        {
-            // Account for the PaneToggleButton's width in the PaneHeader's placement.
-            paneHeaderToggleButtonColumn.Width = GridLengthHelper.FromValueAndType(paneHeaderPaddingForToggleButton, GridUnitType.Pixel);
-        }
-
-        if (m_paneHeaderCloseButtonColumn is { } paneHeaderCloseButtonColumn)
-        {
-            // Account for the CloseButton's width in the PaneHeader's placement.
-            paneHeaderCloseButtonColumn.Width = GridLengthHelper.FromValueAndType(paneHeaderPaddingForCloseButton, GridUnitType.Pixel);
-        }
-
-        if (m_paneHeaderContentBorderRow is { } paneHeaderContentBorderRow)
-        {
-            paneHeaderContentBorderRow.MinHeight = paneHeaderContentBorderRowMinHeight;
         }
 
         if (m_paneContentGrid is { } paneContentGridAsUIE)
@@ -2791,7 +2707,7 @@ public partial class NavigationView : ContentControl, IControlProtected
         // TODO: Either fix or remove implementation for TopNav.
         // It may not be required due to top nav rarely having realized children in its default state.
         {
-            if (NavigationView.SearchEntireTreeForContainer(mainRepeater, data) is { } container)
+            if (SearchEntireTreeForContainer(mainRepeater, data) is { } container)
             {
                 return container as T;
             }
@@ -2987,10 +2903,6 @@ public partial class NavigationView : ContentControl, IControlProtected
     private CoreApplicationViewTitleBar m_coreTitleBar;
 
     private ContentControl m_leftNavPaneAutoSuggestBoxPresenter;
-
-    private ColumnDefinition m_paneHeaderCloseButtonColumn;
-    private ColumnDefinition m_paneHeaderToggleButtonColumn;
-    private RowDefinition m_paneHeaderContentBorderRow;
 
     // Event Tokens
     private bool m_layoutUpdatedToken;

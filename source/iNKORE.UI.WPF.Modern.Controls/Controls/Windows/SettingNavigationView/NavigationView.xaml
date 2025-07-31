@@ -278,26 +278,14 @@
 
                                         <Grid x:Name="ContentPaneTopPadding" Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.TopPadding}" />
 
-                                        <Grid Grid.Row="2">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition x:Name="PaneHeaderContentBorderRow" />
-                                            </Grid.RowDefinitions>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition x:Name="PaneHeaderCloseButtonColumn" />
-                                                <ColumnDefinition x:Name="PaneHeaderToggleButtonColumn" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <ContentControl
-                                                x:Name="PaneHeaderContentBorder"
-                                                Grid.Column="2"
-                                                HorizontalContentAlignment="Stretch"
-                                                VerticalContentAlignment="Stretch"
-                                                Content="{TemplateBinding PaneHeader}"
-                                                IsTabStop="False"
-                                                Style="{StaticResource DefaultContentControlStyle}" />
-                                        </Grid>
+                                        <ContentControl
+                                            x:Name="PaneHeaderContentBorder"
+                                            Grid.Row="2"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            Content="{TemplateBinding PaneHeader}"
+                                            IsTabStop="False"
+                                            Style="{StaticResource DefaultContentControlStyle}" />
 
                                         <Grid
                                             x:Name="AutoSuggestArea"
