@@ -9,10 +9,3 @@ public enum NavigationViewDisplayMode
     Compact = 1,
     Expanded = 2,
 }
-
-public enum NavigationViewBackButtonVisible
-{
-    Collapsed = 0,
-    Visible = 1,
-    Auto = 2,
-}

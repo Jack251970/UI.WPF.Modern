@@ -1137,8 +1137,7 @@ public partial class NavigationView : ContentControl, IControlProtected
 
     private bool ShouldShowBackOrCloseButton()
     {
-        var visibility = IsBackButtonVisible;
-        return (visibility == NavigationViewBackButtonVisible.Visible || (visibility == NavigationViewBackButtonVisible.Auto && !SharedHelpers.IsOnXbox()));
+        return IsBackButtonVisible;
     }
 
     // The automation name and tooltip for the pane toggle button changes depending on whether it is open or closed

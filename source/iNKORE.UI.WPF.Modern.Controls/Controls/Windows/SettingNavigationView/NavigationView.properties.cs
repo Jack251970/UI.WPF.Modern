@@ -451,13 +451,13 @@ public partial class NavigationView
     public static readonly DependencyProperty IsBackButtonVisibleProperty =
         DependencyProperty.Register(
             nameof(IsBackButtonVisible),
-            typeof(NavigationViewBackButtonVisible),
+            typeof(bool),
             typeof(NavigationView),
-            new PropertyMetadata(NavigationViewBackButtonVisible.Auto, OnIsBackButtonVisiblePropertyChanged));
+            new PropertyMetadata(true, OnIsBackButtonVisiblePropertyChanged));
 
-    public NavigationViewBackButtonVisible IsBackButtonVisible
+    public bool IsBackButtonVisible
     {
-        get => (NavigationViewBackButtonVisible)GetValue(IsBackButtonVisibleProperty);
+        get => (bool)GetValue(IsBackButtonVisibleProperty);
         set => SetValue(IsBackButtonVisibleProperty, value);
     }
 
