@@ -401,7 +401,6 @@
                                 <VisualState x:Name="Compact" />
                                 <VisualState x:Name="Expanded" />
                                 <VisualState x:Name="Minimal" />
-                                <VisualState x:Name="TopNavigationMinimal" />
                                 <VisualState x:Name="MinimalWithBackButton" />
                             </VisualStateGroup>
 
@@ -552,11 +551,6 @@
                             <Setter TargetName="ContentBorder" Property="BorderThickness" Value="{DynamicResource NavigationViewMinimalContentGridBorderThickness}" />
                             <Setter TargetName="ContentBorder" Property="CornerRadius" Value="{DynamicResource NavigationViewMinimalContentGridCornerRadius}" />
                             <Setter TargetName="ContentBorder" Property="Margin" Value="{DynamicResource NavigationViewMinimalContentMargin}" />
-                        </Trigger>
-                        <Trigger SourceName="DisplayModeGroupListener" Property="CurrentStateName" Value="TopNavigationMinimal">
-                            <Setter TargetName="ContentBorder" Property="BorderThickness" Value="{DynamicResource TopNavigationViewContentGridBorderThickness}" />
-                            <Setter TargetName="ContentBorder" Property="CornerRadius" Value="{DynamicResource TopNavigationViewContentGridCornerRadius}" />
-                            <Setter TargetName="ContentBorder" Property="Margin" Value="{DynamicResource TopNavigationViewContentMargin}" />
                         </Trigger>
                         <Trigger SourceName="DisplayModeGroupListener" Property="CurrentStateName" Value="MinimalWithBackButton">
                             <Setter TargetName="HeaderContent" Property="Margin" Value="{DynamicResource NavigationViewMinimalHeaderMargin}" />
