@@ -59,7 +59,6 @@
                     <TextBlock
                         x:Name="AppTitleText"
                         Grid.Column="1"
-                        Margin="0,1,20,0"
                         VerticalAlignment="Center"
                         Style="{DynamicResource CaptionTextBlockStyle}"
                         Text="{x:Static local:NavigationRootPage.GetAppTitleFromSystem}"
@@ -108,7 +107,6 @@
                         Source="/Assets/WpfLibrary_Minimal_64w.png" />
                     <TextBlock
                         Grid.Column="1"
-                        Margin="0,1,20,0"
                         VerticalAlignment="Center"
                         FontSize="14"
                         FontWeight="SemiBold"
