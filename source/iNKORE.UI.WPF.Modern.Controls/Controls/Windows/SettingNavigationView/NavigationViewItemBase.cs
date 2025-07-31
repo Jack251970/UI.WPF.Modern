@@ -75,19 +75,6 @@ public class NavigationViewItemBase : ContentControl, IControlProtected
 
     #endregion
 
-    internal NavigationViewRepeaterPosition Position
-    {
-        get => m_position;
-        set
-        {
-            if (m_position != value)
-            {
-                m_position = value;
-                OnNavigationViewItemBasePositionChanged();
-            }
-        }
-    }
-
     private protected virtual void OnNavigationViewItemBasePositionChanged() { }
 
     internal NavigationView GetNavigationView()
@@ -162,7 +149,6 @@ public class NavigationViewItemBase : ContentControl, IControlProtected
 
     private protected WeakReference<NavigationView> m_navigationView;
 
-    NavigationViewRepeaterPosition m_position = NavigationViewRepeaterPosition.LeftNav;
     int m_depth = 0;
     bool m_isTopLevelItem = false;
 

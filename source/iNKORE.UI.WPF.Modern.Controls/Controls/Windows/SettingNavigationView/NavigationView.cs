@@ -607,16 +607,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             nvibImpl.IsTopLevelItem = IsTopLevelItem(nvib);
 
             // Visual state info propagation
-            NavigationViewRepeaterPosition position;
-            {
-                NavigationViewRepeaterPosition init()
-                {
-                    return NavigationViewRepeaterPosition.LeftNav;
-                }
-                position = init();
-            }
-            nvibImpl.Position = position;
-
             if (GetParentNavigationViewItemForContainer(nvib) is { } parentNVI)
             {
                 var parentNVIImpl = parentNVI;
