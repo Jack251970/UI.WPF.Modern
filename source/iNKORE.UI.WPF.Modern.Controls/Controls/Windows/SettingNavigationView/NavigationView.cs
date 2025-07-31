@@ -339,8 +339,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             }
         }
 
-        UpdatePaneShadow();
-
         m_appliedTemplate = true;
 
         // Do initial setup
@@ -2216,9 +2214,6 @@ public partial class NavigationView : ContentControl, IControlProtected
         }
         else if (property == CompactPaneLengthProperty)
         {
-            // Need to update receiver margins when CompactPaneLength changes
-            UpdatePaneShadow();
-
             // Update pane-button-grid width when pane is closed and we are not in minimal
             UpdatePaneButtonsWidths();
         }
@@ -2669,15 +2664,6 @@ public partial class NavigationView : ContentControl, IControlProtected
             DisplayMode = displayMode
         };
         DisplayModeChanged?.Invoke(this, eventArgs);
-    }
-
-    private static bool IsFullScreenOrTabletMode()
-    {
-        return false;
-    }
-
-    private static void UpdatePaneShadow()
-    {
     }
 
     private T GetContainerForData<T>(object data) where T : class
