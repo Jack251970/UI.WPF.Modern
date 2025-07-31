@@ -565,7 +565,7 @@ public partial class NavigationView
             nameof(IsTitleBarAutoPaddingEnabled),
             typeof(bool),
             typeof(NavigationView),
-            new PropertyMetadata(true, OnIsTitleBarAutoPaddingEnabledPropertyChanged));
+            new PropertyMetadata(false, OnIsTitleBarAutoPaddingEnabledPropertyChanged));
 
     public bool IsTitleBarAutoPaddingEnabled
     {
