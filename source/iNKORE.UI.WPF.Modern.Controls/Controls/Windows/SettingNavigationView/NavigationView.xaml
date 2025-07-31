@@ -351,7 +351,13 @@
                             </controls:SplitView.Pane>
 
                             <controls:SplitView.Content>
-                                <ikw:ClippedContent x:Name="ContentBorder" Margin="{DynamicResource NavigationViewContentMargin}">
+                                <ikw:ClippedContent
+                                    x:Name="ContentBorder"
+                                    Margin="{DynamicResource NavigationViewContentMargin}"
+                                    Background="{DynamicResource NavigationViewContentBackground}"
+                                    BorderBrush="{DynamicResource NavigationViewContentGridBorderBrush}"
+                                    BorderThickness="{DynamicResource NavigationViewContentGridBorderThickness}"
+                                    CornerRadius="{DynamicResource NavigationViewContentGridCornerRadius}">
                                     <Grid x:Name="ContentGrid">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
