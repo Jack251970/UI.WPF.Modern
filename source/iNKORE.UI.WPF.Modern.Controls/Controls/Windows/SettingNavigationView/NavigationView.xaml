@@ -235,10 +235,11 @@
                                 </Grid>
 
                                 <Grid x:Name="ButtonHolderGrid2" Margin="{DynamicResource NavigationViewButtonHolderGridMargin}">
+                                    <!--  Workaround for TogglePaneButton margin: Use resource for Margin="6,0,12,0"  -->
                                     <Button
                                         x:Name="TogglePaneButton"
                                         MinWidth="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.SmallerPaneToggleButtonWidth}"
-                                        Margin="6,0,0,0"
+                                        Margin="6,0,12,0"
                                         Padding="{DynamicResource NavigationViewItemButtonNormalMargin}"
                                         VerticalAlignment="Top"
                                         ui:FocusVisualHelper.FocusVisualMargin="0"
