@@ -265,31 +265,27 @@
                                     Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.LeftPaneVisibility}">
                                     <Grid x:Name="PaneContentGrid" Margin="12,0,0,0">
                                         <Grid.RowDefinitions>
+                                            <!--  Conten Pane Top Padding  -->
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="0" />
-                                            <!--  above button margin + back button space  -->
-                                            <RowDefinition x:Name="PaneContentGridToggleButtonRow" Height="Auto" />
+                                            <!--  Auto Suggest Area  -->
                                             <RowDefinition Height="Auto" />
+                                            <!--  Pane Custom Content Border  -->
                                             <RowDefinition Height="Auto" />
+                                            <!--  Above list margin  -->
                                             <RowDefinition Height="0" />
-                                            <!--  above list margin  -->
+                                            <!--  "Non header" content  -->
                                             <RowDefinition x:Name="ItemsContainerRow" Height="*" />
                                         </Grid.RowDefinitions>
 
-                                        <Grid x:Name="ContentPaneTopPadding" Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.TopPadding}" />
-
-                                        <ContentControl
-                                            x:Name="PaneHeaderContentBorder"
-                                            Grid.Row="2"
-                                            HorizontalContentAlignment="Stretch"
-                                            VerticalContentAlignment="Stretch"
-                                            Content="{TemplateBinding PaneHeader}"
-                                            IsTabStop="False"
-                                            Style="{StaticResource DefaultContentControlStyle}" />
+                                        <Grid
+                                            x:Name="ContentPaneTopPadding"
+                                            Grid.Row="0"
+                                            Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.TopPadding}" />
 
                                         <Grid
                                             x:Name="AutoSuggestArea"
-                                            Grid.Row="3"
+                                            Grid.Row="2"
                                             Height="{DynamicResource NavigationViewTopPaneHeight}"
                                             Margin="0,0,0,8"
                                             VerticalAlignment="Center">
@@ -311,7 +307,7 @@
 
                                         <ContentControl
                                             x:Name="PaneCustomContentBorder"
-                                            Grid.Row="4"
+                                            Grid.Row="3"
                                             HorizontalContentAlignment="Stretch"
                                             VerticalContentAlignment="Stretch"
                                             Content="{TemplateBinding PaneCustomContent}"
@@ -321,7 +317,7 @@
                                         <!--  "Non header" content  -->
                                         <Grid
                                             x:Name="ItemsContainerGrid"
-                                            Grid.Row="6"
+                                            Grid.Row="5"
                                             MinHeight="{DynamicResource NavigationViewItemOnLeftMinHeight}">
 
                                             <!--  MenuItems  -->
@@ -548,7 +544,6 @@
                         <Trigger SourceName="PaneStateListSizeGroupListener" Property="CurrentStateName" Value="ListSizeCompact">
                             <Setter TargetName="PaneContentBorder" Property="Width" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CompactPaneLength}" />
                             <Setter TargetName="ShadowCaster" Property="Width" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CompactPaneLength}" />
-                            <Setter TargetName="PaneHeaderContentBorder" Property="Visibility" Value="Collapsed" />
                             <Setter TargetName="PaneCustomContentBorder" Property="HorizontalAlignment" Value="Left" />
                         </Trigger>
 

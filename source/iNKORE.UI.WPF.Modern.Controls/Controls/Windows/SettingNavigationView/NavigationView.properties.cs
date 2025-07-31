@@ -492,29 +492,6 @@ public partial class NavigationView
 
     #endregion
 
-    #region PaneHeader
-
-    public static readonly DependencyProperty PaneHeaderProperty =
-        DependencyProperty.Register(
-            nameof(PaneHeader),
-            typeof(UIElement),
-            typeof(NavigationView),
-            new PropertyMetadata(OnPaneHeaderPropertyChanged));
-
-    public UIElement PaneHeader
-    {
-        get => (UIElement)GetValue(PaneHeaderProperty);
-        set => SetValue(PaneHeaderProperty, value);
-    }
-
-    private static void OnPaneHeaderPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (NavigationView)sender;
-        owner.PropertyChanged(args);
-    }
-
-    #endregion
-
     #region PaneCustomContent
 
     public static readonly DependencyProperty PaneCustomContentProperty =
