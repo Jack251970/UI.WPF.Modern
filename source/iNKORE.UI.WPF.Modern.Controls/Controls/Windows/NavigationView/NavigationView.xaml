@@ -2,9 +2,9 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:local="clr-namespace:iNKORE.UI.WPF.Modern.Controls"
     xmlns:primitives="clr-namespace:iNKORE.UI.WPF.Modern.Controls.Primitives"
-    xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/iNKORE.UI.WPF.Modern;component/Themes/Controls/Button.xaml" />
@@ -96,13 +96,13 @@
 
                                 <ui:ContentPresenterEx
                                     x:Name="IconBox"
-                                    Height="{DynamicResource NavigationViewItemOnLeftIconBoxHeight}"
                                     Width="{DynamicResource NavigationViewItemOnLeftIconBoxHeight}"
+                                    Height="{DynamicResource NavigationViewItemOnLeftIconBoxHeight}"
                                     Margin="{DynamicResource NavigationViewItemOnLeftIconBoxMargin}"
                                     HorizontalAlignment="Center"
+                                    ClipToBounds="False"
                                     Content="{TemplateBinding Icon}"
-                                    Foreground="{TemplateBinding Foreground}" ClipToBounds="False">
-                                </ui:ContentPresenterEx>
+                                    Foreground="{TemplateBinding Foreground}" />
 
                                 <!--  Padding="{TemplateBinding Padding}"  -->
                                 <ui:ContentPresenterEx
@@ -312,14 +312,14 @@
                                     x:Name="IconBox"
                                     Grid.Row="1"
                                     Grid.Column="1"
-                                    Height="16"
                                     Width="16"
+                                    Height="16"
                                     Margin="0"
                                     HorizontalAlignment="Center"
-                                    VerticalAlignment="Center" 
+                                    VerticalAlignment="Center"
+                                    ClipToBounds="False"
                                     Content="{TemplateBinding Icon}"
-                                    Foreground="{TemplateBinding Foreground}" ClipToBounds="False">
-                                </ui:ContentPresenterEx>
+                                    Foreground="{TemplateBinding Foreground}" />
                                 <ContentPresenter
                                     x:Name="InfoBadgePresenter"
                                     Grid.Column="2"
@@ -430,9 +430,9 @@
                                     Margin="12,0,0,0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    ClipToBounds="False"
                                     Content="{TemplateBinding Icon}"
-                                    Foreground="{TemplateBinding Foreground}" ClipToBounds="False">
-                                </ui:ContentPresenterEx>
+                                    Foreground="{TemplateBinding Foreground}" />
                                 <ui:ContentPresenterEx
                                     x:Name="ContentPresenter"
                                     Grid.Column="1"
@@ -657,9 +657,9 @@
                                     Margin="16,0,0,0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    ClipToBounds="False"
                                     Content="{TemplateBinding Icon}"
-                                    Foreground="{TemplateBinding Foreground}" ClipToBounds="False">
-                                </ui:ContentPresenterEx>
+                                    Foreground="{TemplateBinding Foreground}" />
                                 <ui:ContentPresenterEx
                                     x:Name="ContentPresenter"
                                     Grid.Column="1"
@@ -1212,7 +1212,8 @@
                                 </local:SplitView.Pane>
 
                                 <local:SplitView.Content>
-                                    <ikw:ClippedContent x:Name="ContentBorder"
+                                    <ikw:ClippedContent
+                                        x:Name="ContentBorder"
                                         Margin="{DynamicResource NavigationViewContentMargin}"
                                         Background="{DynamicResource NavigationViewContentBackground}"
                                         BorderBrush="{DynamicResource NavigationViewContentGridBorderBrush}"
@@ -1330,40 +1331,44 @@
                                 <ui:VisualStateGroupListener.Listener>
                                     <ui:VisualStateGroupListener x:Name="PaneOverlayGroupListener" />
                                 </ui:VisualStateGroupListener.Listener>
-                                <VisualState x:Name="PaneOverlaying">
-                                    <Storyboard>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ShadowCasterTransform" Storyboard.TargetProperty="X">
-                                            <DiscreteDoubleKeyFrame KeyTime="0" Value="{Binding Source={StaticResource RootSplitViewProxy}, Path=Value.TemplateSettings.NegativeOpenPaneLengthMinusCompactLength}" />
-                                            <SplineDoubleKeyFrame
-                                                KeySpline="0.1,0.9 0.2,1.0"
-                                                KeyTime="0:0:0.35"
-                                                Value="0" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ShadowCaster" Storyboard.TargetProperty="Opacity">
-                                            <LinearDoubleKeyFrame KeyTime="0:0:0.35" Value="1" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ShadowCaster" Storyboard.TargetProperty="HorizontalAlignment">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static HorizontalAlignment.Left}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="PaneNotOverlaying">
-                                    <Storyboard x:Name="ShadowCasterEaseOutStoryboard">
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ShadowCasterTransform" Storyboard.TargetProperty="X">
-                                            <DiscreteDoubleKeyFrame KeyTime="0" Value="0" />
-                                            <SplineDoubleKeyFrame
-                                                KeySpline="0.1,0.9 0.2,1.0"
-                                                KeyTime="0:0:0.12"
-                                                Value="{Binding Source={StaticResource RootSplitViewProxy}, Path=Value.TemplateSettings.NegativeOpenPaneLengthMinusCompactLength}" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ShadowCaster" Storyboard.TargetProperty="Opacity">
-                                            <LinearDoubleKeyFrame KeyTime="0:0:0.12" Value="0" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ShadowCaster" Storyboard.TargetProperty="HorizontalAlignment">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static HorizontalAlignment.Left}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition From="PaneNotOverlaying" To="PaneOverlaying">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ShadowCasterTransform" Storyboard.TargetProperty="X">
+                                                <DiscreteDoubleKeyFrame KeyTime="0" Value="{Binding Source={x:Reference RootSplitView}, Path=TemplateSettings.NegativeOpenPaneLengthMinusCompactLength}" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="0.1,0.9 0.2,1.0"
+                                                    KeyTime="0:0:0.35"
+                                                    Value="0" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ShadowCaster" Storyboard.TargetProperty="Opacity">
+                                                <LinearDoubleKeyFrame KeyTime="0:0:0.35" Value="1" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ShadowCaster" Storyboard.TargetProperty="HorizontalAlignment">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static HorizontalAlignment.Left}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualTransition>
+                                    <VisualTransition From="PaneOverlaying" To="PaneNotOverlaying">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ShadowCasterTransform" Storyboard.TargetProperty="X">
+                                                <DiscreteDoubleKeyFrame KeyTime="0" Value="0" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="0.1,0.9 0.2,1.0"
+                                                    KeyTime="0:0:0.12"
+                                                    Value="{Binding Source={x:Reference RootSplitView}, Path=TemplateSettings.NegativeOpenPaneLengthMinusCompactLength}" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ShadowCaster" Storyboard.TargetProperty="Opacity">
+                                                <LinearDoubleKeyFrame KeyTime="0:0:0.12" Value="0" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ShadowCaster" Storyboard.TargetProperty="HorizontalAlignment">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static HorizontalAlignment.Left}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualTransition>
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="PaneOverlaying" />
+                                <VisualState x:Name="PaneNotOverlaying" />
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="TitleBarVisibilityGroup">
