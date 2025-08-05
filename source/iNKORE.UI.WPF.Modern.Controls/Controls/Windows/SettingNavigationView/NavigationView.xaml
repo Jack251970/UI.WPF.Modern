@@ -185,7 +185,8 @@
                             x:Name="ShadowCaster"
                             Grid.RowSpan="2"
                             Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.OpenPaneWidth}"
-                            HorizontalAlignment="Left">
+                            HorizontalAlignment="Left"
+                            IsShadowEnabled="False">
                             <ui:ThemeShadowChrome.RenderTransform>
                                 <TranslateTransform x:Name="ShadowCasterTransform" />
                             </ui:ThemeShadowChrome.RenderTransform>
@@ -500,23 +501,11 @@
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="PaneVisibilityGroup">
+                                <ui:VisualStateGroupListener.Listener>
+                                    <ui:VisualStateGroupListener x:Name="PaneVisibilityGroupListener" />
+                                </ui:VisualStateGroupListener.Listener>
                                 <VisualState x:Name="PaneVisible" />
-                                <VisualState x:Name="PaneCollapsed">
-                                    <Storyboard>
-                                        <!--  Note that RootSplitView.DisplayMode is set in code so we don't want to  -->
-                                        <!--  write it here and interfere. But these values work together to hide  -->
-                                        <!--  the left pane.  -->
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="RootSplitView" Storyboard.TargetProperty="CompactPaneLength">
-                                            <DiscreteDoubleKeyFrame KeyTime="0" Value="0" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ShadowCaster" Storyboard.TargetProperty="Width">
-                                            <DiscreteDoubleKeyFrame KeyTime="0" Value="0" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneToggleButtonGrid" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
+                                <VisualState x:Name="PaneCollapsed" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                     </Grid>
@@ -551,6 +540,15 @@
                             <Setter TargetName="RootSplitView" Property="BorderBrush" Value="Transparent" />
                             <Setter TargetName="ShadowCaster" Property="Opacity" Value="0" />
                             <Setter TargetName="RootSplitView" Property="PaneBackground" Value="{DynamicResource NavigationViewExpandedPaneBackground}" />
+                        </Trigger>
+
+                        <!--  Note that RootSplitView.DisplayMode is set in code so we don't want to  -->
+                        <!--  write it here and interfere. But these values work together to hide  -->
+                        <!--  the left pane.  -->
+                        <Trigger SourceName="PaneVisibilityGroupListener" Property="CurrentStateName" Value="PaneCollapsed">
+                            <Setter TargetName="RootSplitView" Property="CompactPaneLength" Value="0" />
+                            <Setter TargetName="ShadowCaster" Property="Width" Value="0" />
+                            <Setter TargetName="PaneToggleButtonGrid" Property="Visibility" Value="Collapsed" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
