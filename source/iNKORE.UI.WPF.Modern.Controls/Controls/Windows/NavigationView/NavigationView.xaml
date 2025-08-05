@@ -1350,7 +1350,7 @@
                                         </Storyboard>
                                     </VisualTransition>
                                     <VisualTransition From="PaneOverlaying" To="PaneNotOverlaying">
-                                        <Storyboard>
+                                        <Storyboard x:Name="ShadowCasterEaseOutStoryboard">
                                             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ShadowCasterTransform" Storyboard.TargetProperty="X">
                                                 <DiscreteDoubleKeyFrame KeyTime="0" Value="0" />
                                                 <SplineDoubleKeyFrame

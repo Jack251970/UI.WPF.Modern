@@ -1,6 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using iNKORE.UI.WPF.Helpers;
+using iNKORE.UI.WPF.Modern.Automation.Peers;
+using iNKORE.UI.WPF.Modern.Common;
+using iNKORE.UI.WPF.Modern.Common.IconKeys;
+using iNKORE.UI.WPF.Modern.Controls.Primitives;
+using iNKORE.UI.WPF.Modern.Input;
+using iNKORE.UI.WPF.Modern.Media.Animation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,14 +23,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shell;
 using System.Windows.Threading;
-using iNKORE.UI.WPF.Helpers;
-using iNKORE.UI.WPF.Modern.Automation.Peers;
-using iNKORE.UI.WPF.Modern.Common;
-using iNKORE.UI.WPF.Modern.Common.IconKeys;
-using iNKORE.UI.WPF.Modern.Controls.Primitives;
-using iNKORE.UI.WPF.Modern.Helpers;
-using iNKORE.UI.WPF.Modern.Input;
-using iNKORE.UI.WPF.Modern.Media.Animation;
 using static CppWinRTHelpers;
 using static iNKORE.UI.WPF.Modern.Common.ResourceAccessor;
 
@@ -108,6 +107,9 @@ namespace iNKORE.UI.WPF.Modern.Controls
 
         const int c_mainMenuBlockIndex = 0;
         const int c_footerMenuBlockIndex = 1;
+
+        const string c_shadowCaster = "ShadowCaster";
+        const string c_shadowCasterEaseOutStoryboard = "ShadowCasterEaseOutStoryboard";
 
         const int s_itemNotFound = -1;
 
@@ -724,6 +726,7 @@ namespace iNKORE.UI.WPF.Modern.Controls
             m_itemsContainerSizeChangedRevoker?.Revoke();
             if (GetTemplateChildT<FrameworkElement>(c_itemsContainer, controlProtected) is { } itemsContainerRow)
             {
+                m_itemsContainer = itemsContainerRow;
                 m_itemsContainerSizeChangedRevoker = new FrameworkElementSizeChangedRevoker(itemsContainerRow, OnItemsContainerSizeChanged);
             }
 
@@ -746,7 +749,8 @@ namespace iNKORE.UI.WPF.Modern.Controls
             // TODO: WPF - AccessKey
             //m_accessKeyInvokedRevoker = AccessKeyInvoked(winrt::auto_revoke, { this, &NavigationView::OnAccessKeyInvoked });
 
-            UpdatePaneShadow();
+            m_shadowCaster = GetTemplateChildT<Grid>(c_shadowCaster, controlProtected);
+            m_shadowCasterEaseOutStoryBoard = GetTemplateChildT<Storyboard>(c_shadowCasterEaseOutStoryboard, controlProtected);
 
             m_appliedTemplate = true;
 
@@ -775,8 +779,8 @@ namespace iNKORE.UI.WPF.Modern.Controls
                     {
                         return menuItemsSource;
                     }
-                        UpdateSelectionForMenuItems();
-                        return MenuItems;
+                    UpdateSelectionForMenuItems();
+                    return MenuItems;
                 };
                 itemsSource = init();
             }
@@ -994,6 +998,11 @@ namespace iNKORE.UI.WPF.Modern.Controls
             }
         }
 
+        void OnNavigationViewItemBaseVisibilityPropertyChanged(DependencyObject sender, DependencyProperty args)
+        {
+            UpdatePaneLayout();
+        }
+
         void OnNavigationViewItemIsSelectedPropertyChanged(DependencyObject sender, DependencyProperty args)
         {
             if (sender is NavigationViewItem nvi)
@@ -1064,7 +1073,6 @@ namespace iNKORE.UI.WPF.Modern.Controls
 
             // Determine the recommeded transition direction.
             // Any transitions other than `Default` only apply in top nav scenarios.
-
             NavigationRecommendedTransitionDirection recommendedDirection;
             {
                 NavigationRecommendedTransitionDirection init()
@@ -1470,8 +1478,6 @@ namespace iNKORE.UI.WPF.Modern.Controls
             UpdateTitleBarPadding();
             UpdateBackAndCloseButtonsVisibility();
             UpdatePaneLayout();
-            UpdatePaneOverlayGroup();
-            UpdatePaneButtonsWidths();
         }
 
         void OnItemsContainerSizeChanged(object sender, SizeChangedEventArgs e)
@@ -1581,28 +1587,20 @@ namespace iNKORE.UI.WPF.Modern.Controls
                     {
                         if (m_itemsContainerRow is { } paneContentRow)
                         {
-                            // 20px is the padding between the two item lists
-                            if (m_leftNavFooterContentBorder is { } paneFooter)
+                            var itemsContainerMargin = GetItemsContainerMargin();
+                            double GetItemsContainerMargin()
                             {
-                                return paneContentRow.ActualHeight - 29 - paneFooter.ActualHeight;
+                                if (m_itemsContainer is { } itemsContainer)
+                                {
+                                    var margin = itemsContainer.Margin;
+                                    return margin.Top + margin.Bottom;
+                                }
+                                return 0.0;
                             }
-                            else
-                            {
-                                return paneContentRow.ActualHeight - 29;
-                            }
+                            return paneContentRow.ActualHeight - itemsContainerMargin;
                         }
                         return 0.0;
                     }
-                }
-
-
-                if (IsFooterSeparatorVisible == true && m_visualItemsSeparator != null)
-                {
-                    m_visualItemsSeparator.Visibility = Visibility.Visible;
-                }
-                else if(IsFooterSeparatorVisible == false && m_visualItemsSeparator != null)
-                {
-                    m_visualItemsSeparator.Visibility = Visibility.Collapsed;
                 }
 
                 // Only continue if we have a positive amount of space to manage.
@@ -1623,65 +1621,93 @@ namespace iNKORE.UI.WPF.Modern.Controls
                                     // We know the actual height of footer items, so use that to determine how to split pane.
                                     if (m_leftNavRepeater is { } menuItems)
                                     {
+                                        var footersDesiredHeight = GetFootersDesiredHeight();
+                                        double GetFootersDesiredHeight()
+                                        {
+                                            double footerItemsRepeaterTopBottomMargin = 0.0;
+                                            if (footerItemsRepeater.Visibility == Visibility.Visible)
+                                            {
+                                                var footerItemsRepeaterMargin = footerItemsRepeater.Margin;
+                                                footerItemsRepeaterTopBottomMargin = footerItemsRepeaterMargin.Top + footerItemsRepeaterMargin.Bottom;
+                                            }
+                                            var footerItemsDesiredHeight = LayoutUtils.MeasureAndGetDesiredHeightFor(footerItemsRepeater, c_infSize);
+                                            return footerItemsDesiredHeight + footerItemsRepeaterTopBottomMargin;
+                                        }
 
-                                        var footersActualHeight = footerItemsRepeater.ActualHeight;
-                                        var menuItemsActualHeight = menuItems.ActualHeight;
+                                        var paneFooterActualHeight = GetPaneFooterActualHeight();
+                                        double GetPaneFooterActualHeight()
+                                        {
+                                            if (m_leftNavFooterContentBorder is { }  paneFooter)
+                                            {       
+                                                double paneFooterTopBottomMargin = 0.0;
+                                                if (paneFooter.Visibility == Visibility.Visible)
+                                                {
+                                                    var paneFooterMargin = paneFooter.Margin;
+                                                    paneFooterTopBottomMargin = paneFooterMargin.Top + paneFooterMargin.Bottom;
+                                                }
+                                                return paneFooter.ActualHeight + paneFooterTopBottomMargin;
+                                            }
+                                            return 0.0;
+                                        }
 
-                                        //Decide whether the separator show show or not. This doesnt work
-                                        //if(m_visualItemsSeparator != null && IsFooterSeparatorVisible == null)
-                                        //{
-                                        //    if (totalAvailableHeight >= menuItemsActualHeight + footersActualHeight)
-                                        //    {
-                                        //        m_visualItemsSeparator.Visibility = Visibility.Collapsed;
-                                        //    }
-                                        //    else
-                                        //    {
-                                        //        m_visualItemsSeparator.Visibility = Visibility.Visible;
-                                        //    }
-                                        //}
+                                        // This is the value computed during the measure pass of the layout process. This will be the value used to determine
+                                        // the partition logic between menuItems and footerGroup, since the ActualHeight may be taller if there's more space.
+                                        var menuItemsDesiredHeight = menuItems.DesiredSize.Height;
 
-                                        if (totalAvailableHeight >= menuItemsActualHeight + footersActualHeight)
+                                        // This is what the height ended up being, so will be the value that is used to calculate the partition
+                                        // between menuItems and footerGroup.
+                                        var menuItemsActualHeight = GetMenuItemsActualHeight();
+                                        double GetMenuItemsActualHeight()
+                                        {
+                                            double menuItemsTopBottomMargin = 0.0;
+                                            if (menuItems.Visibility == Visibility.Visible)
+                                            {
+                                                var menuItemsMargin = menuItems.Margin;
+                                                menuItemsTopBottomMargin = menuItemsMargin.Top + menuItemsMargin.Bottom;
+                                            }
+                                            return menuItems.ActualHeight + menuItemsTopBottomMargin;
+                                        }
+
+                                        // Footer and PaneFooter are included in the footerGroup to calculate available height for menu items.
+                                        var footerGroupDesiredHeight = footersDesiredHeight + paneFooterActualHeight;
+
+                                        if (m_footerItemsSource.Count == 0 && !IsSettingsVisible)
+                                        {
+                                            /*VisualStateManager.GoToState(this, c_separatorCollapsedStateName, false);*/
+                                            return totalAvailableHeight;
+                                        }
+                                        else if (m_menuItemsSource.Count == 0)
+                                        {
+                                            footerItemsScrollViewer.MaxHeight = totalAvailableHeight;
+                                            /*VisualStateManager.GoToState(this, c_separatorCollapsedStateName, false);*/
+                                            return 0.0;
+                                        }
+                                        else if (totalAvailableHeight >= menuItemsDesiredHeight + footerGroupDesiredHeight)
                                         {
                                             // We have enough space for two so let everyone get as much as they need.
-                                            footerItemsScrollViewer.MaxHeight = footersActualHeight;
-                                            //if (m_visualItemsSeparator is { } separator)
-                                            //{
-                                            //    if (IsFooterSeparatorVisible == null)
-                                            //        separator.Visibility = Visibility.Collapsed;
-                                            //}
-                                            return totalAvailableHeight - footersActualHeight;
+                                            footerItemsScrollViewer.MaxHeight = footersDesiredHeight;
+                                            /*VisualStateManager.GoToState(*this, c_separatorCollapsedStateName, false);*/
+                                            return totalAvailableHeight - footerGroupDesiredHeight;
                                         }
-                                        else if (footersActualHeight > totalAvailableHeightHalf)
+                                        else if (menuItemsDesiredHeight <= totalAvailableHeightHalf)
                                         {
                                             // Footer items exceed over the half, so let's limit them.
-                                            footerItemsScrollViewer.MaxHeight = Math.Max(0, totalAvailableHeight - menuItemsActualHeight);
-                                            //if (m_visualItemsSeparator is { } separator)
-                                            //{
-                                            //    if (IsFooterSeparatorVisible == null)
-                                            //        separator.Visibility = Visibility.Visible;
-                                            //}
+                                            footerItemsScrollViewer.MaxHeight = totalAvailableHeight - menuItemsActualHeight;
+                                            /*VisualStateManager.GoToState(this, c_separatorVisibleStateName, false);*/
                                             return menuItemsActualHeight;
                                         }
-                                        else if (footersActualHeight <= totalAvailableHeightHalf)
+                                        else if (footerGroupDesiredHeight <= totalAvailableHeightHalf)
                                         {
                                             // Menu items exceed over the half, so let's limit them.
-                                            footerItemsScrollViewer.MaxHeight = footersActualHeight;
-                                            ////if (m_visualItemsSeparator is { } separator)
-                                            ////{
-                                            ////    if (IsFooterSeparatorVisible == null)
-                                            ////        separator.Visibility = Visibility.Visible;
-                                            ////}
-                                            return totalAvailableHeight - footersActualHeight;
+                                            footerItemsScrollViewer.MaxHeight = footersDesiredHeight;
+                                            /*VisualStateManager.GoToState(this, c_separatorVisibleStateName, false);*/
+                                            return totalAvailableHeight - footerGroupDesiredHeight;
                                         }
                                         else
                                         {
                                             // Both are more than half the height, so split evenly.
                                             footerItemsScrollViewer.MaxHeight = totalAvailableHeightHalf;
-                                            //if (m_visualItemsSeparator is { } separator)
-                                            //{
-                                            //    if (IsFooterSeparatorVisible == null)
-                                            //        separator.Visibility = Visibility.Visible;
-                                            //}
+                                            /*VisualStateManager.GoToState(this, c_separatorVisibleStateName, false);*/
                                             return totalAvailableHeightHalf;
                                         }
                                     }
@@ -1707,19 +1733,6 @@ namespace iNKORE.UI.WPF.Modern.Controls
                     {
                         // Update max height for menu items.
                         menuItemsScrollViewer.MaxHeight = heightForMenuItems;
-                    }
-                }
-
-                if (IsFooterSeparatorVisible == null && m_visualItemsSeparator != null)
-                {
-                    m_visualItemsSeparator.Visibility = Visibility.Collapsed;
-
-                    if (m_menuItemsScrollViewer is ScrollViewer && m_footerItemsScrollViewer is ScrollViewer)
-                    {
-                        if ((m_menuItemsScrollViewer as ScrollViewer).ComputedVerticalScrollBarVisibility == Visibility.Visible)
-                        {
-                            m_visualItemsSeparator.Visibility = Visibility.Visible;
-                        }
                     }
                 }
             }
@@ -1927,19 +1940,6 @@ namespace iNKORE.UI.WPF.Modern.Controls
 
             templateSettings.PaneToggleButtonWidth = newButtonWidths;
             templateSettings.SmallerPaneToggleButtonWidth = Math.Max(0, newButtonWidths-8);
-
-            //if (m_backButton is { } backButton)
-            //{
-            //    backButton.Width = newButtonWidths;
-            //}
-            //if (m_paneToggleButton is { } paneToggleButton)
-            //{
-            //    paneToggleButton.MinWidth = newButtonWidths;
-            //    if (paneToggleButton.GetTemplateChild<ColumnDefinition>(c_paneToggleButtonIconGridColumnName) is { } paneToggleButtonIconColumn)
-            //    {
-            //        paneToggleButtonIconColumn.Width = new GridLength(newButtonWidths);
-            //    }
-            //}
         }
 
         void OnBackButtonClicked(object sender, RoutedEventArgs args)
@@ -2078,6 +2078,11 @@ namespace iNKORE.UI.WPF.Modern.Controls
                     var second = SetPaneTitleFrameworkElementParent(m_paneTitlePresenter, paneTitleFrameworkElement, isTopNavigationView || isPaneToggleButtonVisible);
                     var third = SetPaneTitleFrameworkElementParent(m_paneTitleOnTopPane, paneTitleFrameworkElement, !isTopNavigationView || isPaneToggleButtonVisible);
                     (first ?? second ?? third)?.Invoke();
+
+                    if (m_paneTitleOnTopPane != null)
+                    {
+                        m_paneTitleOnTopPane.Visibility = third != null ? Visibility.Visible : Visibility.Collapsed;
+                    }
                 }
             }
         }
@@ -2534,9 +2539,17 @@ namespace iNKORE.UI.WPF.Modern.Controls
             var eventArgs = new NavigationViewSelectionChangedEventArgs();
             eventArgs.SelectedItem = nextItem;
             eventArgs.IsSettingsSelected = isSettingsItem;
-            if (NavigationViewItemBaseOrSettingsContentFromData(nextItem) is { } container)
+            if (nextItem != null)
             {
-                eventArgs.SelectedItemContainer = container;
+                if (NavigationViewItemBaseOrSettingsContentFromData(nextItem) is { } container)
+                {
+                    eventArgs.SelectedItemContainer = container;
+                }
+                else if (GetContainerForIndexPath(m_selectionModel.SelectedIndex, false /* lastVisible */, true /* forceRealize */) is { } container1)
+                {
+                    Debug.Assert(MenuItemFromContainer(container1) == nextItem);
+                    eventArgs.SelectedItemContainer = container1;
+                }
             }
             eventArgs.RecommendedNavigationTransitionInfo = CreateNavigationTransitionInfo(recommendedDirection);
             SelectionChanged?.Invoke(this, eventArgs);
@@ -2599,6 +2612,8 @@ namespace iNKORE.UI.WPF.Modern.Controls
                 }
                 UnselectPrevItem(prevItem, nextItem);
                 ChangeSelectStatusForItem(nextItem, true /*selected*/);
+                // TODOTODO
+                /*UpdateSelectionModelSelectionForSelectedItem(nextItem);*/
 
                 try
                 {
@@ -2625,15 +2640,87 @@ namespace iNKORE.UI.WPF.Modern.Controls
                     m_shouldIgnoreUIASelectionRaiseAsExpandCollapseWillRaise = false;
                 }
 
-                RaiseSelectionChangedEvent(nextItem, isSettingsItem, recommendedDirection);
-                AnimateSelectionChanged(nextItem);
-
+                // If this item has an associated container, we'll raise the SelectionChanged event on it immediately.
                 if (NavigationViewItemOrSettingsContentFromData(nextItem) is { } nvi)
                 {
+                    RaiseSelectionChangedEvent(nextItem, isSettingsItem, recommendedDirection);
+                    AnimateSelectionChanged(nextItem);
                     ClosePaneIfNeccessaryAfterItemIsClicked(nvi);
+                }
+                else
+                {
+                    // TODOTODO
+                    // Otherwise, we'll wait until a container gets realized for this item and raise it then.
+                    /*m_isSelectionChangedPending = true;
+                    m_pendingSelectionChangedItem = nextItem;
+                    m_pendingSelectionChangedDirection = recommendedDirection;
+
+                    // Previously we used get_weak() here, but we hit a refcounting problem where 
+                    // in some scenarios the outer object gets an extra Release() in this process.
+                    auto weakThis { winrt::make_weak(static_cast<winrt::NavigationView>(*this))}
+                    ;
+                    DispatcherQueue().TryEnqueue(
+                        winrt::DispatcherQueuePriority::Low,
+                        winrt::DispatcherQueueHandler([weakThis]()
+                {
+                        if (auto strongThis = weakThis.get())
+                    {
+                            NavigationView* rawThis = winrt::get_self<NavigationView>(strongThis);
+                            rawThis->CompletePendingSelectionChange();
+                        }
+                    }));*/
                 }
             }
         }
+
+        // TODOTODO
+        /*void NavigationView::CompletePendingSelectionChange()
+        {
+            // It may be the case that this item is in a collapsed repeater, in which case
+            // no container will be realized for it.  We'll assume that this this is the case
+            // if the UI thread has fallen idle without any SelectionChanged being raised.
+            // In this case, we'll raise the SelectionChanged at that time, as otherwise it'll never be raised.
+            if (m_isSelectionChangedPending)
+            {
+                AnimateSelectionChanged(FindLowestLevelContainerToDisplaySelectionIndicator());
+
+                m_isSelectionChangedPending = false;
+
+                auto item = m_pendingSelectionChangedItem;
+                auto direction = m_pendingSelectionChangedDirection;
+
+                m_pendingSelectionChangedItem = nullptr;
+                m_pendingSelectionChangedDirection = NavigationRecommendedTransitionDirection::Default;
+
+                RaiseSelectionChangedEvent(item, IsSettingsItem(item), direction);
+            }
+        }
+
+        void NavigationView::UpdateSelectionModelSelectionForSelectedItem(const winrt::IInspectable& selectedItem)
+{
+    winrt::IndexPath indexPath { nullptr };
+
+    if (auto container = NavigationViewItemBaseOrSettingsContentFromData(selectedItem))
+    {
+        indexPath = GetIndexPathForContainer(container);
+    }
+    else
+    {
+        indexPath = GetIndexPathOfItem(selectedItem);
+}
+
+if (indexPath && indexPath.GetSize() > 0)
+{
+    // The SelectedItem property has already been updated. So we want to block any logic from executing
+    // in the SelectionModel selection changed callback.
+    auto scopeGuard = gsl::finally([this]()
+            {
+        m_shouldIgnoreNextSelectionChange = false;
+    });
+    m_shouldIgnoreNextSelectionChange = true;
+    UpdateSelectionModelSelection(indexPath);
+}
+}*/
 
         void UpdateSelectionModelSelection(IndexPath ip)
         {
@@ -2829,7 +2916,19 @@ namespace iNKORE.UI.WPF.Modern.Controls
                 {
                     VisualStateManager.GoToState(this, visualStateName, false /*useTransitions*/);
                 }
-                splitView.DisplayMode = splitViewDisplayMode;
+
+                // Updating the splitview 'DisplayMode' property in some diplaymodes causes children to be added to the popup root.
+                // This causes an exception if the NavigationView is in the popup root itself (as SplitView is trying to add children to the tree while it is being measured).
+                // Due to this, we want to defer updating this property for all calls coming from `OnApplyTemplate`to the OnLoaded function.
+                // TODOTODO
+                /*if (m_fromOnApplyTemplate)
+                {
+                    m_updateVisualStateForDisplayModeFromOnLoaded = true;
+                }
+                else*/
+                {
+                    splitView.DisplayMode = splitViewDisplayMode;
+                }
             }
         }
 
@@ -2984,6 +3083,32 @@ namespace iNKORE.UI.WPF.Modern.Controls
         {
             args.Handled = nvi.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
         }
+
+        // TODOTODO
+        /*winrt::UIElement NavigationView::GetFirstFocusableElement(const winrt::ItemsRepeater& ir)
+{
+    if (ir == nullptr)
+    {
+        return nullptr;
+    }
+
+    if (auto itemsSourceView = ir.ItemsSourceView())
+    {
+        const auto lastIndex = itemsSourceView.Count() - 1;
+    int index = 0;
+        while (index <= lastIndex)
+        {
+            if (auto element = ir.TryGetElement(index))
+            {
+                if (SharedHelpers::IsFocusableElement(element)) { return element;  }
+            }
+            index++;
+        }
+    }
+    return nullptr;
+}
+
+winrt::UIElement NavigationView::GetLastFocusableElement(const winrt::ItemsRepeater& ir)*/
 
         void KeyboardFocusFirstItemFromItem(NavigationViewItemBase nvib)
         {
@@ -3451,10 +3576,6 @@ namespace iNKORE.UI.WPF.Modern.Controls
         {
             if (!IsTopNavigationView())
             {
-                if (m_leftNavRepeater is { } repeater)
-                {
-                    repeater.UpdateLayout();
-                }
                 UpdatePaneLayout();
             }
         }
@@ -4200,7 +4321,6 @@ namespace iNKORE.UI.WPF.Modern.Controls
                 // When PaneDisplayMode is changed, reset the force flag to make the Pane can be opened automatically again.
                 m_wasForceClosed = false;
 
-                CollapseTopLevelMenuItems((NavigationViewPaneDisplayMode)args.OldValue);
                 UpdatePaneToggleButtonVisibility();
                 UpdatePaneDisplayMode((NavigationViewPaneDisplayMode)args.OldValue, (NavigationViewPaneDisplayMode)args.NewValue);
                 UpdatePaneTitleFrameworkElementParents();
@@ -4236,6 +4356,7 @@ namespace iNKORE.UI.WPF.Modern.Controls
             else if (property == AutoSuggestBoxProperty)
             {
                 InvalidateTopNavPrimaryLayout();
+                UpdateVisualState(false);
             }
             else if (property == SelectionFollowsFocusProperty)
             {
@@ -4246,6 +4367,7 @@ namespace iNKORE.UI.WPF.Modern.Controls
                 UpdatePaneTitleFrameworkElementParents();
                 UpdateBackAndCloseButtonsVisibility();
                 UpdatePaneToggleButtonVisibility();
+                UpdateTitleBarPadding();
                 UpdateVisualState();
             }
             else if (property == IsSettingsVisibleProperty)
@@ -4254,9 +4376,6 @@ namespace iNKORE.UI.WPF.Modern.Controls
             }
             else if (property == CompactPaneLengthProperty)
             {
-                // Need to update receiver margins when CompactPaneLength changes
-                UpdatePaneShadow();
-
                 // Update pane-button-grid width when pane is closed and we are not in minimal
                 UpdatePaneButtonsWidths();
             }
@@ -4268,6 +4387,15 @@ namespace iNKORE.UI.WPF.Modern.Controls
                 property == MenuItemTemplateSelectorProperty)
             {
                 SyncItemTemplates();
+            }
+            else if (property == PaneFooterProperty)
+            {
+                UpdatePaneLayout();
+            }
+            else if (property == OpenPaneLengthProperty)
+            {
+                // TODOTODO
+                /*UpdateOpenPaneLength(ActualWidth);*/
             }
         }
 
@@ -4330,6 +4458,13 @@ namespace iNKORE.UI.WPF.Modern.Controls
 
         void OnLoaded(object sender, RoutedEventArgs args)
         {
+            // TODOTODO: Important
+            /*if (m_updateVisualStateForDisplayModeFromOnLoaded)
+            {
+                m_updateVisualStateForDisplayModeFromOnLoaded = false;
+                UpdateVisualStateForDisplayModeGroup(DisplayMode);
+            }*/
+
             if (m_coreTitleBar is { } coreTitleBar)
             {
                 coreTitleBar.LayoutMetricsChanged += OnTitleBarMetricsChanged;
@@ -4369,24 +4504,23 @@ namespace iNKORE.UI.WPF.Modern.Controls
             UpdateSettingsItemToolTip();
             UpdatePaneTitleFrameworkElementParents();
             UpdatePaneOverlayGroup();
+            UpdatePaneButtonsWidths();
 
             if (SharedHelpers.IsThemeShadowAvailable())
             {
                 if (m_rootSplitView is { } splitView)
                 {
-                    var displayMode = splitView.DisplayMode;
-                    var isOverlay = displayMode == SplitViewDisplayMode.Overlay || displayMode == SplitViewDisplayMode.CompactOverlay;
-                    if (splitView.Pane is { } paneRoot)
+                    // TODOTODO: Important
+                    /*if (IsPaneOpen)
                     {
-                        /*
-                        var currentTranslation = paneRoot.Translation();
-                        var translation = float3{ currentTranslation.x, currentTranslation.y, IsPaneOpen && isOverlay ? c_paneElevationTranslationZ : 0.0f };
-                        paneRoot.Translation(translation);
-                        */
+                        SetDropShadow();
                     }
+                    else
+                    {
+                        UnsetDropShadow();
+                    }*/
                 }
             }
-            UpdatePaneButtonsWidths();
         }
 
         void UpdatePaneToggleButtonVisibility()
@@ -4997,6 +5131,17 @@ namespace iNKORE.UI.WPF.Modern.Controls
             }
         }
 
+        /*
+         * void NavigationView::OnAutoSuggestBoxQuerySubmitted(const winrt::AutoSuggestBox& sender, const winrt::Microsoft::UI::Xaml::Controls::AutoSuggestBoxQuerySubmittedEventArgs& args)
+{
+    // When in compact or minimal, we want to close pane when an item gets chosen.
+    if (DisplayMode() != winrt::NavigationViewDisplayMode::Expanded && args.ChosenSuggestion() != nullptr)
+    {
+        ClosePane();
+    }
+}
+         */
+
         void RaiseDisplayModeChanged(NavigationViewDisplayMode displayMode)
         {
             SetValue(DisplayModePropertyKey, displayMode);
@@ -5046,58 +5191,48 @@ namespace iNKORE.UI.WPF.Modern.Controls
             return false;
         }
 
-        void UpdatePaneShadow()
+        // TODOTODO
+        /*
+         * void NavigationView::SetDropShadow()
+{
+    const auto displayMode = DisplayMode();
+
+    if (displayMode == winrt::NavigationViewDisplayMode::Compact || displayMode == winrt::NavigationViewDisplayMode::Minimal)
+    {
+        if (const auto shadowCaster = m_shadowCaster.get())
         {
-            /*
-            if (SharedHelpers.IsThemeShadowAvailable())
-            {
-                Canvas shadowReceiver = GetTemplateChildT<Canvas>(c_paneShadowReceiverCanvas, this);
-                if (shadowReceiver == null)
-                {
-                    shadowReceiver = new Canvas();
-                    shadowReceiver.Name = (c_paneShadowReceiverCanvas);
+            shadowCaster.Shadow(winrt::ThemeShadow{});
 
-                    if (GetTemplateChildT<Grid>(c_contentGridName, this) is { } contentGrid)
-                    {
-                        Grid.SetRowSpan(shadowReceiver, contentGrid.RowDefinitions.Count);
-                        Grid.SetRow(shadowReceiver, 0);
-                        // Only register to columns if those are actually defined
-                        if (contentGrid.ColumnDefinitions.Count > 0)
-                        {
-                            Grid.SetColumn(shadowReceiver, 0);
-                            Grid.SetColumnSpan(shadowReceiver, contentGrid.ColumnDefinitions.Count);
-                        }
-                        contentGrid.Children.Add(shadowReceiver);
+            const auto translation = shadowCaster.Translation();
+            const double shadowDepth = unbox_value<double>(SharedHelpers::FindInApplicationResources(c_paneOverlayShadowDepthName, box_value(c_paneOverlayShadowDepth)));
 
-                        ThemeShadow shadow;
-                        shadow.Receivers().Append(shadowReceiver);
-                        if (m_rootSplitView is { } splitView)
-                        {
-                            if (splitView.Pane is { } paneRoot)
-                            {
-                                if (paneRoot is IUIElement10 paneRoot_uiElement10)
-                                {
-                                    paneRoot_uiElement10.Shadow(shadow);
-                                }
-                            }
-                        }
-                    }
-                }
-
-
-                // Shadow will get clipped if casting on the splitView.Content directly
-                // Creating a canvas with negative margins as receiver to allow shadow to be drawn outside the content grid 
-                Thickness shadowReceiverMargin = new Thickness(0, -c_paneElevationTranslationZ, -c_paneElevationTranslationZ, -c_paneElevationTranslationZ);
-
-                // Ensuring shadow is aligned to the left
-                shadowReceiver.HorizontalAlignment = (HorizontalAlignment.Left);
-
-                // Ensure shadow is as wide as the pane when it is open
-                shadowReceiver.Width = (OpenPaneLength);
-                shadowReceiver.Margin = (shadowReceiverMargin);
-            }
-            */
+            shadowCaster.Translation({ translation.x, translation.y, static_cast<float>(shadowDepth) });
         }
+    }
+}
+        void NavigationView::UnsetDropShadow()
+{
+    const auto shadowCaster = m_shadowCaster.get();
+
+    if (const auto shadowCasterEaseOutStoryboard = m_shadowCasterEaseOutStoryboard.get())
+    {
+        shadowCasterEaseOutStoryboard.Begin();
+
+        m_shadowCasterEaseOutStoryboardRevoker =
+            shadowCasterEaseOutStoryboard.Completed(winrt::auto_revoke,
+                {
+                    [this, shadowCaster](auto const&, auto const&) { ShadowCasterEaseOutStoryboard_Completed(shadowCaster); }
+                });
+    }
+}
+        void NavigationView::ShadowCasterEaseOutStoryboard_Completed(const winrt::Grid& shadowCaster)
+{
+    if (shadowCaster.Shadow())
+    {
+        shadowCaster.Shadow(nullptr);
+    }
+}
+         */
 
         T GetContainerForData<T>(object data) where T : class
         {
@@ -5453,7 +5588,7 @@ namespace iNKORE.UI.WPF.Modern.Controls
             return null;
         }
 
-        NavigationViewItemBase GetContainerForIndexPath(IndexPath ip, bool lastVisible = false)
+        NavigationViewItemBase GetContainerForIndexPath(IndexPath ip, bool lastVisible = false, bool forceRealize = false)
         {
             if (ip != null && ip.GetSize() > 0)
             {
@@ -5475,13 +5610,13 @@ namespace iNKORE.UI.WPF.Modern.Controls
                     // This will return null if requesting children containers of
                     // items in the primary list, or unrealized items in the overflow popup.
                     // However this should not happen.
-                    return GetContainerForIndexPath(container, ip, lastVisible);
+                    return GetContainerForIndexPath(container, ip, lastVisible, forceRealize);
                 }
             }
             return null;
         }
 
-        NavigationViewItemBase GetContainerForIndexPath(UIElement firstContainer, IndexPath ip, bool lastVisible)
+        NavigationViewItemBase GetContainerForIndexPath(UIElement firstContainer, IndexPath ip, bool lastVisible, bool forceRealize)
         {
             var container = firstContainer;
             if (ip.GetSize() > 2)
@@ -5498,7 +5633,7 @@ namespace iNKORE.UI.WPF.Modern.Controls
 
                         if (nvi.GetRepeater() is { } nviRepeater)
                         {
-                            if (nviRepeater.TryGetElement(ip.GetAt(i)) is { } nextContainer)
+                            if ((forceRealize ? nviRepeater.GetOrCreateElement(i) : nviRepeater.TryGetElement(ip.GetAt(i))) is { } nextContainer)
                             {
                                 container = nextContainer;
                                 succeededGettingNextContainer = true;
@@ -5814,6 +5949,57 @@ namespace iNKORE.UI.WPF.Modern.Controls
             return IsRootItemsRepeater(GetParentItemsRepeaterForContainer(nvib));
         }
 
+        // TODOTODO
+        /*
+         * bool NavigationView::IsVisible(const winrt::DependencyObject& obj)
+{
+    // We'll go up the visual tree until we find this NavigationView.
+    // If everything up the tree was visible, then this object was visible.
+    winrt::DependencyObject current = obj;
+    winrt::NavigationView navView = *this;
+
+    while (current && current != navView)
+    {
+        if (auto currentAsUIE = current.try_as<winrt::UIElement>())
+        {
+            if (currentAsUIE.Visibility() != winrt::Visibility::Visible)
+            {
+                return false;
+            }
+        }
+
+        current = winrt::VisualTreeHelper::GetParent(current);
+    }
+
+    // If we found this NavigationView, then this is both in the visual tree and visible.
+    // Otherwise, it's not in the visual tree, and thus is not visible.
+    return current == navView;
+}
+
+        void NavigationView::OnSelectedItemLayoutUpdated(const winrt::IInspectable& sender, const winrt::IInspectable&)
+{
+    if (m_isSelectionChangedPending)
+    {
+        m_isSelectionChangedPending = false;
+
+        auto item = m_pendingSelectionChangedItem;
+        auto direction = m_pendingSelectionChangedDirection;
+
+        m_pendingSelectionChangedItem = nullptr;
+        m_pendingSelectionChangedDirection = NavigationRecommendedTransitionDirection::Default;
+
+        m_selectedItemLayoutUpdatedRevoker.revoke();
+
+        if (auto const nvi = NavigationViewItemOrSettingsContentFromData(item))
+        {
+            AnimateSelectionChanged(nvi);
+        }
+
+        RaiseSelectionChangedEvent(item, IsSettingsItem(item), direction);
+    }
+}
+         */
+
         DependencyObject IControlProtected.GetTemplateChild(string childName)
         {
             return GetTemplateChild(childName);
@@ -5858,6 +6044,8 @@ namespace iNKORE.UI.WPF.Modern.Controls
         ItemsRepeater m_topNavRepeaterOverflowView;
         Grid m_topNavGrid;
         Border m_topNavContentOverlayAreaGrid;
+        Grid m_shadowCaster;
+        Storyboard m_shadowCasterEaseOutStoryBoard;
 
         // Indicator animations
         UIElement m_prevIndicator;
@@ -5887,6 +6075,7 @@ namespace iNKORE.UI.WPF.Modern.Controls
         ColumnDefinition m_paneHeaderCloseButtonColumn;
         ColumnDefinition m_paneHeaderToggleButtonColumn;
         RowDefinition m_paneHeaderContentBorderRow;
+        FrameworkElement m_itemsContainer;
 
         NavigationViewItem m_lastItemExpandedIntoFlyout;
 
