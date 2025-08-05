@@ -775,11 +775,8 @@ namespace iNKORE.UI.WPF.Modern.Controls
                     {
                         return menuItemsSource;
                     }
-                    else
-                    {
                         UpdateSelectionForMenuItems();
                         return MenuItems;
-                    }
                 };
                 itemsSource = init();
             }
