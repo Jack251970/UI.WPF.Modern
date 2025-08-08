@@ -1,14 +1,14 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:iNKORE.UI.WPF.Modern.Controls"
-    xmlns:primitives="clr-namespace:iNKORE.UI.WPF.Modern.Controls.Primitives"
-    xmlns:converters="clr-namespace:iNKORE.UI.WPF.Modern.Common.Converters"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    xmlns:m="clr-namespace:iNKORE.UI.WPF.Modern.Markup"
     xmlns:chelper="clr-namespace:iNKORE.UI.WPF.Modern.Controls.Helpers"
     xmlns:common="clr-namespace:iNKORE.UI.WPF.Modern.Common"
-    xmlns:root="clr-namespace:iNKORE.UI.WPF.Modern">
+    xmlns:converters="clr-namespace:iNKORE.UI.WPF.Modern.Common.Converters"
+    xmlns:local="clr-namespace:iNKORE.UI.WPF.Modern.Controls"
+    xmlns:m="clr-namespace:iNKORE.UI.WPF.Modern.Markup"
+    xmlns:primitives="clr-namespace:iNKORE.UI.WPF.Modern.Controls.Primitives"
+    xmlns:root="clr-namespace:iNKORE.UI.WPF.Modern"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <Style x:Key="TitleBarBackButtonStyle" TargetType="primitives:TitleBarButton">
         <Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
@@ -42,9 +42,9 @@
         x:Key="AeroWindowChrome"
         x:Shared="False"
         CaptionHeight="{DynamicResource {x:Static primitives:TitleBar.HeightKey}}"
+        CornerRadius="0"
         GlassFrameThickness="-1"
         NonClientFrameEdges="None"
-        CornerRadius="0"
         ResizeBorderThickness="4"
         UseAeroCaptionButtons="False" />
 
@@ -67,7 +67,7 @@
         <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="root:ThemeManager.IsThemeAware" Value="True" />
-        <Setter Property="chelper:WindowHelper.Acrylic10Color" Value="{DynamicResource {x:Static root:ThemeKeys.LayerOnAcrylicFillColorDefaultKey}}"/>
+        <Setter Property="chelper:WindowHelper.Acrylic10Color" Value="{DynamicResource {x:Static root:ThemeKeys.LayerOnAcrylicFillColorDefaultKey}}" />
         <Setter Property="primitives:TitleBar.Background" Value="{DynamicResource ControlFillColorTransparentBrush}" />
         <Setter Property="primitives:TitleBar.Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
         <Setter Property="primitives:TitleBar.InactiveBackground" Value="{DynamicResource ControlFillColorTransparentBrush}" />
@@ -103,10 +103,11 @@
                                 </Rectangle>
                             </Grid>
 
-                            <Border x:Name="WindowBorder"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    CornerRadius="{TemplateBinding chelper:ControlHelper.CornerRadius}">
+                            <Border
+                                x:Name="WindowBorder"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding chelper:ControlHelper.CornerRadius}">
                                 <Grid x:Name="ContentGrid">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -115,14 +116,16 @@
 
                                     <primitives:TitleBarControl
                                         Title="{TemplateBinding Title}"
-                                        Panel.ZIndex="1"
                                         Height="{TemplateBinding primitives:TitleBar.Height}"
+                                        Panel.ZIndex="1"
                                         BackButtonCommand="{TemplateBinding primitives:TitleBar.BackButtonCommand}"
                                         BackButtonCommandParameter="{TemplateBinding primitives:TitleBar.BackButtonCommandParameter}"
                                         BackButtonCommandTarget="{TemplateBinding primitives:TitleBar.BackButtonCommandTarget}"
                                         BackButtonStyle="{TemplateBinding primitives:TitleBar.BackButtonStyle}"
                                         Background="{TemplateBinding primitives:TitleBar.Background}"
+                                        ButtonGlyphStyle="{TemplateBinding primitives:TitleBar.ButtonGlyphStyle}"
                                         ButtonStyle="{TemplateBinding primitives:TitleBar.ButtonStyle}"
+                                        CloseButtonAvailability="{TemplateBinding primitives:TitleBar.CloseButtonAvailability}"
                                         ExtendViewIntoTitleBar="{TemplateBinding primitives:TitleBar.ExtendViewIntoTitleBar}"
                                         Foreground="{TemplateBinding primitives:TitleBar.Foreground}"
                                         Icon="{TemplateBinding Icon}"
@@ -132,15 +135,16 @@
                                         IsBackButtonVisible="{TemplateBinding primitives:TitleBar.IsBackButtonVisible}"
                                         IsBackEnabled="{TemplateBinding primitives:TitleBar.IsBackEnabled}"
                                         IsIconVisible="{TemplateBinding primitives:TitleBar.IsIconVisible}"
-                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                         MaximizeButtonAvailability="{TemplateBinding primitives:TitleBar.MaximizeButtonAvailability}"
                                         MinimizeButtonAvailability="{TemplateBinding primitives:TitleBar.MinimizeButtonAvailability}"
-                                        CloseButtonAvailability="{TemplateBinding primitives:TitleBar.CloseButtonAvailability}"
-                                        ButtonGlyphStyle="{TemplateBinding primitives:TitleBar.ButtonGlyphStyle}"
                                         ResizeBorderThickness="{TemplateBinding primitives:TitleBar.ResizeBorderThickness}"
+                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                         Style="{TemplateBinding primitives:TitleBar.Style}" />
 
-                                    <AdornerDecorator x:Name="AdornerDecorator" Grid.Row="1" CacheMode="{Binding RelativeSource={RelativeSource Self}, Path=(common:ShadowAssist.CacheMode)}">
+                                    <AdornerDecorator
+                                        x:Name="AdornerDecorator"
+                                        Grid.Row="1"
+                                        CacheMode="{Binding RelativeSource={RelativeSource Self}, Path=(common:ShadowAssist.CacheMode)}">
                                         <local:ContentPresenterEx Foreground="{TemplateBinding Foreground}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                                     </AdornerDecorator>
 
@@ -194,13 +198,14 @@
                         </MultiTrigger>
 
                         <Trigger Property="chelper:WindowHelper.ApplyBackground" Value="False">
-                            <Setter TargetName="LayoutRoot" Property="Background" Value="{x:Null}"/>
+                            <Setter TargetName="LayoutRoot" Property="Background" Value="{x:Null}" />
                         </Trigger>
                         <Trigger Property="chelper:WindowHelper.ApplyNoise" Value="True">
-                            <Setter TargetName="Background" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="Background" Property="Visibility" Value="Visible" />
                             <Setter TargetName="NoiseLayer" Property="Fill">
                                 <Setter.Value>
-                                    <ImageBrush x:Name="ImageBrush_NoiseLayerBrush"
+                                    <ImageBrush
+                                        x:Name="ImageBrush_NoiseLayerBrush"
                                         ImageSource="/iNKORE.UI.WPF.Modern;component/Resources/Images/NoiseAsset_256X256_PNG.png"
                                         Stretch="None"
                                         TileMode="Tile"
@@ -250,8 +255,8 @@
         <Setter Property="WindowChrome.WindowChrome" Value="{Dynami cResource AcrylicWindowChrome}" />
     </Style>-->
 
-    <converters:BackdropUtilityConverter x:Key="BackdropIsSupportedConverter"/>
-    <converters:BackdropUtilityConverter x:Key="BackdropIsManualBackgroundNeededConverter" ConverterType="ManualBackgroundNeeded"/>
+    <converters:BackdropUtilityConverter x:Key="BackdropIsSupportedConverter" />
+    <converters:BackdropUtilityConverter x:Key="BackdropIsManualBackgroundNeededConverter" ConverterType="ManualBackgroundNeeded" />
 
     <Style
         x:Key="TheWindowStyle"
@@ -263,12 +268,12 @@
 
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding Path=(chelper:WindowHelper.SystemBackdropType), Converter={StaticResource BackdropIsSupportedConverter}, RelativeSource={RelativeSource Mode=Self}}" Value="True"/>
-                    <Condition Binding="{Binding Path=(chelper:WindowHelper.SystemBackdropType), Converter={StaticResource BackdropIsManualBackgroundNeededConverter}, RelativeSource={RelativeSource Mode=Self}}" Value="False"/>
+                    <Condition Binding="{Binding Path=(chelper:WindowHelper.SystemBackdropType), Converter={StaticResource BackdropIsSupportedConverter}, RelativeSource={RelativeSource Mode=Self}}" Value="True" />
+                    <Condition Binding="{Binding Path=(chelper:WindowHelper.SystemBackdropType), Converter={StaticResource BackdropIsManualBackgroundNeededConverter}, RelativeSource={RelativeSource Mode=Self}}" Value="False" />
                 </MultiDataTrigger.Conditions>
-                <Setter Property="chelper:WindowHelper.ApplyBackground" Value="False"/>
+                <Setter Property="chelper:WindowHelper.ApplyBackground" Value="False" />
             </MultiDataTrigger>
-            
+
             <!--<Trigger Property="chelper:WindowHelper.SystemBackdropType" Value="Acrylic">
                 <Setter Property="chelper:WindowHelper.ApplyNoise" Value="True"/>
             </Trigger>
